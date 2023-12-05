@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-import MainPage from "./Components/TopNav";
+import MainPage from "./Pages/MainPage";
 
 export default function App() {
   return (
