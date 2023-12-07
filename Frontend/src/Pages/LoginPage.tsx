@@ -3,16 +3,23 @@ import styled from "styled-components";
 import bk from "../Images/LoginBackground.png"
 
 const FrameWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
   width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FAF7F7;
+  // flex-direction: row;
 `;
 
 const MainWrapper = styled.div`
-  max-height: 100vh; 
-  max-width: 100vw; 
-  overflow: hidden; 
+// display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 40px 360px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0; 
 	background: url(${bk}), lightgray -0.15px 0px / 100.016% 100% no-repeat;
 `;
 
@@ -26,7 +33,9 @@ const Article = styled.div`
   height: auto;
   left: 30px;
   position: relative;
-  width: auto;
+  width: 1200px;
+  height: 1000px;
+  flex-shrink: 0;
 `;
 
 const OverlapGroup = styled.div`
