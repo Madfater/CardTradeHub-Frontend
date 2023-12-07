@@ -3,19 +3,18 @@ import styled from "styled-components";
 import bk from "../Images/LoginBackground.png"
 
 const FrameWrapper = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
+  width: 1920px;
+  height: 1080px;
   justify-content: center;
   align-items: center;
   background: #FAF7F7;
-  // flex-direction: row;
 `;
 
 const MainWrapper = styled.div`
-// display: flex;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  width: 1920px;
+  height: 1080px;
   padding: 40px 360px;
   justify-content: center;
   align-items: center;
@@ -23,16 +22,7 @@ const MainWrapper = styled.div`
 	background: url(${bk}), lightgray -0.15px 0px / 100.016% 100% no-repeat;
 `;
 
-const Main = styled.div`
-  background-position: 50% 50%;
-  background-size: cover;
-  height: auto;
-`;
-
 const Article = styled.div`
-  height: auto;
-  left: 30px;
-  position: relative;
   width: 1200px;
   height: 1000px;
   flex-shrink: 0;
@@ -49,6 +39,12 @@ const OverlapGroup = styled.div`
 `;
 
 const Section = styled.div`
+  display: inline-flex;
+  padding: 86px 333.33px 0px 0px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 16px;
   height: 197px;
   left: 359px;
   position: absolute;
@@ -57,229 +53,334 @@ const Section = styled.div`
 `;
 
 const Heading = styled.div`
-  color: #ffffff;
-  font-family: "Noto Sans TC-Medium", Helvetica;
-  font-size: 36px;
-  font-weight: 500;
+  display: flex;
+  width: 429.387px;
   height: 52px;
+  flex-direction: column;
+  justify-content: center;
+  color: #FFF;
+  font-family: Noto Sans TC;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 54px; /* 150% */
+  letter-spacing: 3px;  
   left: 0;
-  letter-spacing: 3px;
-  line-height: 54px;
   position: absolute;
   top: 85px;
-  white-space: nowrap;
-  width: 500px;
 `;
 
 const Div = styled.div`
-  background-color: #3e51fe;
-  border-radius: 5px;
+  width: 60px;
   height: 4px;
+  border-radius: 5px;
+  background: #3E51FE;
   left: 0;
   position: absolute;
   top: 140px;
-  width: 430px;
 `;
 
 const TextWrapper = styled.div`
-  color: #ffffff;
-  font-family: "Noto Sans TC-DemiLight", Helvetica;
-  font-size: 16px;
-  font-weight: 300;
+  display: flex;
+  width: 440px;
   height: 24px;
+  flex-direction: column;
+  justify-content: center;
+  color: #FFF;
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 24px; /* 150% */
+  letter-spacing: 3px;
   left: 0;
   letter-spacing: 3px;
   line-height: 24px;
   position: absolute;
   top: 172px;
-  white-space: nowrap;
-  width: 440px;
 `;
 
 const Aside = styled.div`
-  background-color: #ffffff;
+  width: 548px;
+  height: 622px;
+  flex-shrink: 0;
   border-radius: 8px;
-  height: 500px;
+  background: #FFF;
   left: 1100px;
   position: absolute;
   top: 230px;
-  width: 548px;
+  left: 1100px;
+  position: absolute;
+  top: 230px;
 `;
 
 const FormHeading = styled.div`
+  display: flex;
+  width: 507.67px;
   height: 60px;
+  padding: 1px 167.006px 1px 168.33px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
   left: 21px;
   position: absolute;
   top: 13px;
-  width: 508px;
 `;
 
 const TextWrapper2 = styled.div`
-  color: #1f100b;
-  font-family: "Noto Sans TC-Medium", Helvetica;
-  font-size: 40px;
-  font-weight: 500;
+  display: flex;
+  width: 172.334px;
   height: 58px;
-  left: 168px;
-  letter-spacing: 3px;
-  line-height: 60px;
-  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1F100B;
   text-align: center;
+  font-family: Noto Sans TC;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 60px; /* 150% */
+  letter-spacing: 3px;
+  left: 168px;
+  position: absolute;
   top: 0;
-  white-space: nowrap;
-  width: 172px;
+
 `;
 
 const FormMain = styled.div`
+  width: 507.67px;
   height: 168px;
+  flex-shrink: 0;
+
   left: 21px;
   position: absolute;
   top: 102px;
-  width: 508px;
+ 
 `;
 
 const MainSectionLabel = styled.p`
-  color: transparent;
-  font-family: "Noto Sans TC-Medium", Helvetica;
-  font-size: 12px;
-  font-weight: 500;
+  display: flex;
+  width: 89.868px;
   height: 17px;
-  left: 0;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1F100B;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
   letter-spacing: 3px;
-  line-height: 18px;
   opacity: 0.6;
-  position: absolute;
-  top: -1px;
-  white-space: nowrap;
-  width: 90px;
+  // color: transparent;
+  // font-family: "Noto Sans TC-Medium", Helvetica;
+  // font-size: 12px;
+  // font-weight: 500;
+  // height: 17px;
+  // left: 0;
+  // letter-spacing: 3px;
+  // line-height: 18px;
+  // opacity: 0.6;
+  // position: absolute;
+  // top: -1px;
+  // white-space: nowrap;
+  // width: 90px;
 `;
 
 const Span = styled.span`
   color: #1f100b;
 `;
 
-const TextWrapper3 = styled.span`
-  color: #ff0000;
-`;
 
 const MainSectionInput = styled.div`
-  background-color: #ffffff;
-  border: 1px solid;
-  border-color: #dfe3ea;
-  border-radius: 8px;
+  width: 507.67px;
   height: 48px;
-  left: 0;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid #DFE3EA;
+  background: #FFF;
   position: absolute;
   top: 26px;
   width: 508px;
+  // background-color: #ffffff;
+  // border: 1px solid;
+  // border-color: #dfe3ea;
+  // border-radius: 8px;
+  // height: 48px;
+  // left: 0;
+  // position: absolute;
+  // top: 26px;
+  // width: 508px;
 `;
 
 const P = styled.p`
-  color: transparent;
-  font-family: "Noto Sans TC-Medium", Helvetica;
-  font-size: 12px;
-  font-weight: 500;
+  display: flex;
+  width: 89.868px;
   height: 17px;
-  left: 0;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1F100B;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
   letter-spacing: 3px;
-  line-height: 18px;
   opacity: 0.6;
+  color: #F00;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 3px;
+
+  // color: transparent;
+  // font-family: "Noto Sans TC-Medium", Helvetica;
+  // font-size: 12px;
+  // font-weight: 500;
+  // height: 17px;
+  // left: 0;
+  // letter-spacing: 3px;
+  // line-height: 18px;
+  // opacity: 0.6;
   position: absolute;
   top: 93px;
-  white-space: nowrap;
-  width: 90px;
+  // white-space: nowrap;
+  // width: 90px;
 `;
 
 const MainSectionInput2 = styled.div`
-  background-color: #ffffff;
-  border: 1px solid;
-  border-color: #dfe3ea;
-  border-radius: 8px;
+  width: 507.67px;
   height: 48px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid #DFE3EA;
+  background: #FFF;
+
   left: 0;
   position: absolute;
   top: 120px;
-  width: 508px;
+
 `;
 
 const Form = styled.div`
-  height: 20px;
+  display: flex;
+  width: 507.67px;
+  padding: 10.81px 0px 0px 428px;
+  justify-content: flex-end;
+  align-items: center;
   left: 21px;
   position: absolute;
   top: 280px;
-  width: 508px;
 `;
 
 const Link = styled.div`
-  color: #3e51fe;
-  font-family: "Noto Sans TC-DemiLight", Helvetica;
-  font-size: 13.6px;
-  font-weight: 300;
+  display: flex;
+  width: 83.298px;
   height: 20px;
-  left: 428px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #3E51FE;
+  font-family: Noto Sans TC;
+  font-size: 13.6px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 20.4px; /* 150% */
   letter-spacing: 3px;
-  line-height: 20.4px;
+
+  left: 428px;
   position: absolute;
   top: 10px;
-  white-space: nowrap;
-  width: 83px;
+
 `;
 
 const FormButton = styled.div`
-  background-color: #3e51fe;
-  border: 1px solid;
-  border-color: #dfe3ea;
+  display: flex;
+  width: 507.67px;
+  height: 48px;
+  // padding: 15.72px 0px 17.28px 0px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
   border-radius: 8px;
+  border: 1px solid #DFE3EA;
+  background: #3E51FE;
+
   height: 48px;
   left: 21px;
   position: absolute;
   top: 321px;
-  width: 508px;
+ 
 `;
 
 const TextWrapper4 = styled.div`
-  color: #ffffff;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 13.6px;
-  font-weight: 500;
-  height: 15px;
-  left: 202px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 15px;
-  white-space: nowrap;
-  width: 105px;
+display: flex;
+width: 105px;
+height: 15px;
+flex-direction: column;
+justify-content: center;
+flex-shrink: 0;
+color: #FFF;
+text-align: center;
+font-family: Inter;
+font-size: 13.6px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 `;
 
 const Form2 = styled.div`
+  display: flex;
+  width: 200px;
   height: 36px;
+  padding: 0px 2.138px 1px 2.48px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
   left: 175px;
   position: absolute;
   top: 398px;
-  width: 200px;
+
 `;
 
 const Div2 = styled.p`
-  color: transparent;
-  font-family: "Noto Sans TC-Light", Helvetica;
-  font-size: 12px;
-  font-weight: 300;
+  width: 195.382px;
   height: 17px;
-  left: 2px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1F100B;
+  text-align: center;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 18px; /* 150% */
   letter-spacing: 1px;
-  line-height: 18px;
+
+  left: 2px;
   position: absolute;
   text-align: center;
   top: -1px;
   white-space: nowrap;
-  width: 195px;
 `;
 
 const TextWrapper5 = styled.span`
-  color: #47180b;
-  text-decoration: underline;
+  color: #47180B;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 18px;
+  letter-spacing: 1px;
+  text-decoration-line: underline;
 `;
 
 const Link2 = styled.p`
@@ -299,38 +400,49 @@ const Link2 = styled.p`
 `;
 
 const FormFooter = styled.div`
+  display: flex;
+  width: 200px;
   height: 18px;
+  padding: 0px 6.796px 1px 7.14px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
   left: 175px;
   position: absolute;
   top: 454px;
-  width: 200px;
+
 `;
 
 const Div3 = styled.p`
-  color: transparent;
-  font-family: "Noto Sans TC-Light", Helvetica;
-  font-size: 12px;
-  font-weight: 300;
-  height: 17px;
-  left: 7px;
-  letter-spacing: 1px;
-  line-height: 18px;
-  position: absolute;
-  text-align: center;
-  top: -1px;
-  white-space: nowrap;
-  width: 186px;
+width: 186.064px;
+height: 17px;
+flex-direction: column;
+justify-content: center;
+flex-shrink: 0;
+color: #1F100B;
+text-align: center;
+font-family: Noto Sans TC;
+font-size: 12px;
+font-style: normal;
+font-weight: 350;
+line-height: 18px; /* 150% */
+letter-spacing: 1px;
 `;
 
 const TextWrapper6 = styled.span`
-  color: #3e51fe;
+  color: #3E51FE;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 18px;
+  letter-spacing: 1px;
 `;
 
 export default function MemberLogin() {
   return (
     <FrameWrapper>
       <MainWrapper>
-        <Main>
           <Article>
             <OverlapGroup>
               <Section>
@@ -344,13 +456,11 @@ export default function MemberLogin() {
                 </FormHeading>
                 <FormMain>
                   <MainSectionLabel>
-                    <Span>使用者帳號</Span>
-                    <TextWrapper3> *</TextWrapper3>
+                    使用者帳號*
                   </MainSectionLabel>
                   <MainSectionInput />
                   <P>
-                    <Span>使用者密碼</Span>
-                    <TextWrapper3> *</TextWrapper3>
+                    <Span>使用者密碼*</Span>
                   </P>
                   <MainSectionInput2 />
                 </FormMain>
@@ -381,7 +491,6 @@ export default function MemberLogin() {
               </Aside>
             </OverlapGroup>
           </Article>
-        </Main>
       </MainWrapper>
     </FrameWrapper>
   );
