@@ -11,8 +11,8 @@ def get_user_info():
 
 @app.route('/api/user', methods=['POST'])
 def submit_user_info():
-    sql.manageCommand(request.get_json())
-    return jsonify("success")
+    result = sql.manageCommand(request.get_json())
+    return result
 
 '''@app.route('/api/user')
 def renderHtml():

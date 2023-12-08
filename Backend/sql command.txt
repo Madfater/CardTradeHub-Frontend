@@ -11,7 +11,7 @@ CREATE TABLE Shopping_Cart
 CREATE TABLE Store
 (
   Store_ID INT NOT NULL,
-  Descirbe INT NOT NULL,
+  Description VARCHAR(10) NOT NULL,
   ModiefiedDate DATE NOT NULL,
   PRIMARY KEY (Store_ID)
 );
