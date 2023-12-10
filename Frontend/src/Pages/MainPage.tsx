@@ -35,7 +35,7 @@ const SortNavCombobox = styled.div`
   display: inline-flex;
   height: 90%;
   width: 60%;
-	padding: 0 5% 0 0;
+  padding: 0 5% 0 0;
   align-items: center;
   justify-content: right;
   flex-shrink: 0;
@@ -44,10 +44,139 @@ const SortNavCombobox = styled.div`
   background: #fff;
 `;
 
+const ItemContainer = styled.main`
+  padding: 10px 20px 20px;
+  flex: 1 1;
+`;
+
+const ContainerMain = styled.article`
+  overflow: hidden;
+  margin-right: -10px;
+  margin-left: -10px;
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: 25px;
+`;
+
+const FilterBoxWrap = styled.aside`
+  margin-right: 10px;
+  margin-left: 10px;
+  width: 280px;
+`;
+
+const FilterBox = styled.ol`
+  padding: 5px 0;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #dfe3ea;
+`;
+
+const FilterLi = styled.li`
+  padding: 15px 20px;
+  border-bottom: 1px solid #dfe3ea;
+  font-size: 0.85rem;
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const FilterTitle = styled.h2`
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-bottom: 10px;
+`;
+
+const FilterButton = styled.a`
+  width: 100%;
+  border-color: #3e51fe;
+  background-color: #f0f1ff;
+  color: #0116d5;
+  display: inline-flex;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #dfe3ea;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+`;
+
+const FilterList = styled.ul`
+  overflow: auto;
+  max-height: 340px;
+`;
+
+const Filter = styled.li`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 9px;
+  width: 100%;
+`;
+
+const FilterLabel = styled.label`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-flow: row;
+`;
+
+const FilterInput = styled.input`
+  margin-right: 5px;
+  min-width: 12px;
+  width: 12px;
+  height: 12px;
+`;
+
+const ProductGridWrap = styled.main`
+  flex: 1 1;
+  margin-right: 10px;
+  margin-left: 10px;
+`;
+
+const ProductGrid = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+`;
+
+const Productblock = styled.li`
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #dfe3ea;
+`;
+
+const ProductContentWrap = styled.a`
+  display: flex;
+  flex-flow: row;
+  text-decoration: none;
+`;
+
+const ProductImg = styled.aside`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-right: 15px;
+  width: 130px;
+  height: 180px;
+  background: black;
+`;
+
+const ProductInfo = styled.article`
+  position: relative;
+  flex: 1 1;
+  color: #1f100b;
+  font-size: 0.75rem;
+`;
+
+
 export default function MainPage() {
   return (
     <>
-      <TopNav></TopNav>
+      <TopNav />
+
       <SortNav>
         <SortNavGroup>
           <SortNavText>排序方式：</SortNavText>
@@ -79,6 +208,72 @@ export default function MainPage() {
           </SortNavCombobox>
         </SortNavGroup>
       </SortNav>
+
+      <ItemContainer>
+        <ContainerMain>
+          <FilterBoxWrap>
+            <form>
+              <FilterBox>
+                <FilterLi>
+                  <FilterTitle>進階搜尋</FilterTitle>
+                  <FilterButton>搜尋賣家</FilterButton>
+                </FilterLi>
+
+                <FilterLi>
+                  <FilterTitle>搜尋條件</FilterTitle>
+                  <FilterList>
+                    <Filter>
+                      <FilterLabel>
+                        <FilterInput type="checkbox" />
+                        <span>測試</span>
+                      </FilterLabel>
+                    </Filter>
+                  </FilterList>
+                </FilterLi>
+              </FilterBox>
+            </form>
+          </FilterBoxWrap>
+
+          <ProductGridWrap>
+            <article style={{ width: "100%" }}>
+              <ProductGrid>
+                <Productblock>
+                  <ProductContentWrap>
+                      <ProductImg></ProductImg>
+                      <ProductInfo>
+                        <h3>測試</h3>
+                      </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                      <ProductImg></ProductImg>
+                      <ProductInfo>
+                        <h3>測試</h3>
+                      </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                      <ProductImg></ProductImg>
+                      <ProductInfo>
+                        <h3>測試</h3>
+                      </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                      <ProductImg></ProductImg>
+                      <ProductInfo>
+                        <h3>測試</h3>
+                      </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+              </ProductGrid>
+            </article>
+          </ProductGridWrap>
+        </ContainerMain>
+      </ItemContainer>
     </>
   );
 }
