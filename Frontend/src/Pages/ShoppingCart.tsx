@@ -12,6 +12,9 @@ const Container = styled.main`
   flex: 1 1;
   padding: 25px 40px;
   background: #FAF7F7;
+  font-family: Noto Sans TC,sans-serif;
+  letter-spacing: 3px;
+  line-height: 1.5;
 `;
 
 const Cart = styled.ul`
@@ -130,7 +133,15 @@ const MarginRightBTN = styled.a`
   border: 1px solid #dfe3ea;
   align-items: center;
   justify-content: center;
-  
+  background: none;
+
+  &:hover {
+  color: #e6b800;
+  }
+
+  &:active {
+    color: #e6b800;  
+  }
 `;
 
 const CartItems = styled.ul`
@@ -201,6 +212,7 @@ const CartPackageFooter = styled.footer`
   vertical-align: baseline;
   font: inherit;
   font-size: 100%;
+  
 `;
 
 const CartPackageTotal = styled.section`
@@ -224,6 +236,8 @@ const CartPackageP = styled.p`
   align-items: center;
   flex-flow: row;
   margin: 0;
+  margin-right: 60px
+ 
 `;
 
 const CartPackageSpan = styled.span`
@@ -265,8 +279,6 @@ const CartPackageText2 = styled.span`
   // margin-left: 500px;
 `;
 
-
-
 const CartPackageSelect = styled.select`
   padding: 10px;
   outline: none;
@@ -275,6 +287,44 @@ const CartPackageSelect = styled.select`
   background-color: #fff;
   cursor: pointer;
   margin-right: 90px;
+`;
+
+const CartPaymentHeader = styled.header`
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-flow: row;
+`;
+
+const CartPaymentSelect = styled.ul`
+  flex: 1 1;
+  display: flex;
+  flex-flow: row;
+`;
+
+const CartPaymentSelectLi = styled.li`
+  margin-left: 0;
+  display: flex;
+  justify-content: space-between;
+      margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font: inherit;
+    font-size: 100%;
+`;
+
+const CartPaymentInfo = styled.article`
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px dashed #dfe3ea;
+  border-bottom: 1px dashed #dfe3ea;
+  padding: 20px;
+`;
+
+const CartPaymentInfoItem = styled.ul`
+  color: #747693;
+  font-size: 1rem;
 `;
 
 export default function ShoppingCart() {
@@ -309,7 +359,7 @@ export default function ShoppingCart() {
                   </CartPackageHeader> 
 
                   <CartItems>
-                   <CartItemFirst>
+                  <CartItemFirst>
                     <CartItemSectionFirst>
                       <CartCheckBox type="checkbox"/>
                       <img src ={card} width="60px" />
@@ -326,7 +376,7 @@ export default function ShoppingCart() {
                     <CartItemSection># 2</CartItemSection>
                     <CartItemSection>$ 80</CartItemSection>
                     <MarginRightBTN>刪除商品</MarginRightBTN>
-                   </CartItemFirst>
+                  </CartItemFirst>
                   </CartItems>
 
                   <CartPackageFooter>
@@ -346,10 +396,45 @@ export default function ShoppingCart() {
                     </CartPackageP>
                     <CartPackageP>總計: $140</CartPackageP>
                     </CartPackageTotal>
-                  </CartPackageFooter>
-
-          
+                  </CartPackageFooter>          
                 </CartLi>
+
+                <CartLi>
+                  <CartPaymentHeader>
+                    付款方式:
+                    <CartPaymentSelect>
+                      <MarginRightBTN>信用卡</MarginRightBTN>
+                      <MarginRightBTN>網路ATM</MarginRightBTN>
+                      <MarginRightBTN>超商代碼</MarginRightBTN>
+                      <MarginRightBTN>貨到付款</MarginRightBTN>
+                    </CartPaymentSelect>
+                  </CartPaymentHeader>
+                  <CartPaymentInfo>
+                    <CartPaymentInfoItem>
+                      <CartPaymentSelectLi>
+                        <CartPackageP>包裹數 : </CartPackageP>
+                        <CartPackageP>1</CartPackageP>
+                      </CartPaymentSelectLi>
+                      <CartPaymentSelectLi>
+                        <CartPackageP>商品數 : </CartPackageP>
+                        <CartPackageP>2</CartPackageP>
+                      </CartPaymentSelectLi>
+                      <CartPaymentSelectLi>
+                        <CartPackageP>商品總金額 : </CartPackageP>
+                        <CartPackageP>80</CartPackageP>
+                      </CartPaymentSelectLi>
+                      <CartPaymentSelectLi>
+                        <CartPackageP>運費總金額 : </CartPackageP>
+                        <CartPackageP>60</CartPackageP>
+                      </CartPaymentSelectLi>
+                      <CartPaymentSelectLi>
+                        <CartPackageP>交易總金額 : </CartPackageP>
+                        <CartPackageP>140</CartPackageP>
+                      </CartPaymentSelectLi>
+                    </CartPaymentInfoItem>
+                  </CartPaymentInfo>
+                </CartLi>
+
 
               </Cart>
             </Container>
