@@ -13,8 +13,7 @@ CREATE TABLE Shopping_Cart
 (
   Cart_ID INT NOT NULL,
   Total_Price INT NOT NULL,
-  PRIMARY KEY (Cart_ID),
-
+  PRIMARY KEY (Cart_ID)
 );
 
 CREATE TABLE Store
@@ -30,7 +29,7 @@ CREATE TABLE ActualCard
   Card_ID INT NOT NULL,
   Name VARCHAR(10) NOT NULL,
   Catagory VARCHAR(10) NOT NULL,
-  Descibe VARCHAR(10) NOT NULL,
+  Description VARCHAR(10) NOT NULL,
   imgPath VARCHAR(10) NOT NULL,
   PRIMARY KEY (Card_ID)
 );
@@ -55,7 +54,7 @@ CREATE TABLE StoreCard
 (
   Card_ID INT NOT NULL,
   Price INT NOT NULL,
-  Status VARCHAR(10) NOT NULL,
+  Description VARCHAR(10) NOT NULL,
   Quantity INT NOT NULL,
   ACCard_ID INT NOT NULL,
   PRIMARY KEY (Card_ID),

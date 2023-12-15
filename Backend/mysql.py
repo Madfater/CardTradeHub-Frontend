@@ -60,12 +60,32 @@ def checkStore(data:dict):
     result = list(command(cmd)[0])
     return {"Description" : result[1],"ModiefiedDate" : result[2]}
 
+# 取得storecard
+def GetCard(data:dict):
+    cmd = f'''
+    Select * from storeCard sc
+    where sc.ACCard_ID IN 
+    (select Card_ID from ActualCard 
+    where Name like {data['param']} or Description like {data['param']})
+    Limit {(data['page']-1)*data['limit']},{data['limit']}
+    '''
+    return command(cmd)
+
+# 取得ActualCard
+def GetActualCard(data:dict):
+    cmd = f"select * from ActualCard where Card_ID = {data['Card_ID']}"
+    return command(cmd)
+
 # 處理傳入的json 跟據 json['type']來判斷操作
 def manageCommand(data:dict):
     if data['type'] == "register":
         return registerUser(data)
     if data['type'] == "login":
         return loginUser(data)
+    if data['type'] == "GetCard":
+        return GetCard(data)
+    if data['type'] == "GetActualCard":
+        return GetActualCard(data)
     if data['type'] == "checkCart":
         return checkCart(data)
     if data['type'] == "checkStore":
