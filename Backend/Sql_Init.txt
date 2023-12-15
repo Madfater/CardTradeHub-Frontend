@@ -1,7 +1,0 @@
-create database mydb;
-use mydb;
-CREATE TABLE User(
-    id int PRIMARY KEY,
-    username VARCHAR(45),
-    password VARCHAR(45)
-);
