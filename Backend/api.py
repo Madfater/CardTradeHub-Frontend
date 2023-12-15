@@ -11,12 +11,12 @@ def get_user_info():
 
 @app.route('/api/user', methods=['POST'])
 def submit_user_info():
-    sql.manageCommand(request.get_json())
-    return jsonify("success")
+    result = sql.manageCommand(request.get_json())
+    return jsonify(result)
 
 '''@app.route('/api/user')
 def renderHtml():
     return render_template('home.html')'''
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug = True)
