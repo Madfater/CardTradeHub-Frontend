@@ -1,51 +1,62 @@
 create database mydb;
 use mydb;
+
+CREATE TABLE Order_List
+(
+  Order_ID INT NOT NULL,
+  Address VARCHAR(10),
+  Total_Price INT NOT NULL,
+  PRIMARY KEY (Order_ID)
+);
+
 CREATE TABLE Shopping_Cart
 (
   Cart_ID INT NOT NULL,
-  Address VARCHAR(10) NOT NULL,
   Total_Price INT NOT NULL,
-  PRIMARY KEY (Cart_ID)
+  PRIMARY KEY (Cart_ID),
+
 );
 
 CREATE TABLE Store
 (
   Store_ID INT NOT NULL,
-  Description VARCHAR(10) NOT NULL,
+  Description VARCHAR(10),
   ModiefiedDate DATE NOT NULL,
   PRIMARY KEY (Store_ID)
 );
 
 CREATE TABLE ActualCard
 (
+  Card_ID INT NOT NULL,
   Name VARCHAR(10) NOT NULL,
   Catagory VARCHAR(10) NOT NULL,
-  imgPath VARCHAR(10) NOT NULL,
-  Card_ID INT NOT NULL,
   Descibe VARCHAR(10) NOT NULL,
+  imgPath VARCHAR(10) NOT NULL,
   PRIMARY KEY (Card_ID)
 );
 
 CREATE TABLE User
 (
   User_ID INT NOT NULL,
-  Password VARCHAR(10) NOT NULL,
-  User_Name VARCHAR(10) NOT NULL,
   Email VARCHAR(10) NOT NULL,
+  User_Name VARCHAR(10) NOT NULL,
+  Password VARCHAR(10) NOT NULL,
   IsManager INT NOT NULL,
   Cart_ID INT NOT NULL,
   Store_ID INT NOT NULL,
+  Order_ID INT NOT NULL,
   PRIMARY KEY (User_ID),
   FOREIGN KEY (Cart_ID) REFERENCES Shopping_Cart(Cart_ID),
-  FOREIGN KEY (Store_ID) REFERENCES Store(Store_ID)
+  FOREIGN KEY (Store_ID) REFERENCES Store(Store_ID),
+  FOREIGN KEY (Order_ID) REFERENCES Order_List(Order_ID)
 );
 
 CREATE TABLE StoreCard
 (
-  Status VARCHAR(10) NOT NULL,
-  Price INT NOT NULL,
-  Quantity INT NOT NULL,
   Card_ID INT NOT NULL,
+  Price INT NOT NULL,
+  Status VARCHAR(10) NOT NULL,
+  Quantity INT NOT NULL,
   ACCard_ID INT NOT NULL,
   PRIMARY KEY (Card_ID),
   FOREIGN KEY (ACCard_ID) REFERENCES ActualCard(Card_ID)
@@ -53,9 +64,9 @@ CREATE TABLE StoreCard
 
 CREATE TABLE comment
 (
-  Context VARCHAR(10) NOT NULL,
-  Score INT NOT NULL,
   Comment_ID INT NOT NULL,
+  Score INT NOT NULL,
+  Context VARCHAR(10) NOT NULL,
   Store_ID INT NOT NULL,
   User_ID INT NOT NULL,
   PRIMARY KEY (Comment_ID),
@@ -80,5 +91,14 @@ CREATE TABLE Card_to_Store_Table
   Card_ID INT NOT NULL,
   PRIMARY KEY (Table_ID),
   FOREIGN KEY (Store_ID) REFERENCES Store(Store_ID),
+  FOREIGN KEY (Card_ID) REFERENCES StoreCard(Card_ID)
+);
+CREATE TABLE Order_to_Card_Table
+(
+  Table_ID INT NOT NULL,
+  Order_ID INT NOT NULL,
+  Card_ID INT NOT NULL,
+  PRIMARY KEY (Table_ID),
+  FOREIGN KEY (Order_ID) REFERENCES Order_List(Order_ID),
   FOREIGN KEY (Card_ID) REFERENCES StoreCard(Card_ID)
 );
