@@ -16,4 +16,12 @@ POST 127.0.0.1:5000/api/user
 
 測試用JSON檔
 
-{ "type": "login" , "username": "username", "password": "password" }
+
+### request json format
+login
+{ "type": "login" , "email": "123@gmail.com", "password": "passwd" }
+return "login success" or "login failed"
+
+
+register
+{ "type": "register", "password": "passwd" ,"username": "alan", "email": "123@gmail.com"}
