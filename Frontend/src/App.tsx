@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
 import MainPage from "./Pages/MainPage"
