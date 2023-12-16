@@ -93,20 +93,18 @@ const Section2 = styled.div`
   height: 50px;
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: 50%;
+  align-items: center;
+  justify-content: space-between;
   background: #fff;
   box-shadow: 0px 2px 15px -10px rgba(0, 0, 0, 0.5);
 `;
 
 const ButtonList = styled.div`
   display: flex;
-  width: 25%;
+  width: 20%;
   height: 100%;
-  padding-left: 2%;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 12.5%;
   flex-shrink: 0;
 `;
 
@@ -135,9 +133,17 @@ const NavButtonFont = styled.div`
   letter-spacing: 3px;
 `;
 
+const CircleNavButtonlist = styled.div`
+  display: flex;
+  height : 100%;
+  width : 10%;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
 const CircleNavButton = styled.div`
   display: flex;
-
   padding: 10px;
   justify-content: center;
   align-items: center;
@@ -201,14 +207,14 @@ export default function MainPage() {
       <Section2>
         <ButtonList>
           <NavButton>
-            <NavButtonFont>競標中心</NavButtonFont>
+            <NavButtonFont>首頁</NavButtonFont>
           </NavButton>
           <NavButton>
             <NavButtonFont>競標中心</NavButtonFont>
           </NavButton>
         </ButtonList>
 
-        <ButtonList>
+        <CircleNavButtonlist>
           <FavoriteButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -269,7 +275,7 @@ export default function MainPage() {
               </defs>
             </svg>
           </ShopCartButton>
-        </ButtonList>
+        </CircleNavButtonlist>
       </Section2>
     </Wrap>
   );
