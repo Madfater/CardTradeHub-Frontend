@@ -132,17 +132,17 @@ const LoginButton = styled.button`
 `;
 
 const Formfooter = styled.footer`
-margin-right: auto;
-margin-left: auto;
-min-width: 100%;
-text-align: center;
-letter-spacing: 1px;
-font-size: .75rem;
-margin-top: 20px;
-`
+  margin-right: auto;
+  margin-left: auto;
+  min-width: 100%;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+  margin-top: 20px;
+`;
 const BlueText = styled.a`
   color: #3e51fe;
-`
+`;
 
 export default function MemberLogin() {
   return (
@@ -189,7 +189,7 @@ export default function MemberLogin() {
               <LoginButton>帳號登入</LoginButton>
 
               <Formfooter>
-                您還沒有帳號嗎？ 
+                您還沒有帳號嗎？
                 <BlueText>即刻註冊吧！</BlueText>
               </Formfooter>
             </From>

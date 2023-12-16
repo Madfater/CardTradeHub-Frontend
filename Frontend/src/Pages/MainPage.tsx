@@ -171,7 +171,6 @@ const ProductInfo = styled.article`
   font-size: 0.75rem;
 `;
 
-
 export default function MainPage() {
   return (
     <>
@@ -239,34 +238,34 @@ export default function MainPage() {
               <ProductGrid>
                 <Productblock>
                   <ProductContentWrap>
-                      <ProductImg></ProductImg>
-                      <ProductInfo>
-                        <h3>測試</h3>
-                      </ProductInfo>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
                   </ProductContentWrap>
                 </Productblock>
                 <Productblock>
                   <ProductContentWrap>
-                      <ProductImg></ProductImg>
-                      <ProductInfo>
-                        <h3>測試</h3>
-                      </ProductInfo>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
                   </ProductContentWrap>
                 </Productblock>
                 <Productblock>
                   <ProductContentWrap>
-                      <ProductImg></ProductImg>
-                      <ProductInfo>
-                        <h3>測試</h3>
-                      </ProductInfo>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
                   </ProductContentWrap>
                 </Productblock>
                 <Productblock>
                   <ProductContentWrap>
-                      <ProductImg></ProductImg>
-                      <ProductInfo>
-                        <h3>測試</h3>
-                      </ProductInfo>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
                   </ProductContentWrap>
                 </Productblock>
               </ProductGrid>
@@ -277,4 +276,3 @@ export default function MainPage() {
     </>
   );
 }
-

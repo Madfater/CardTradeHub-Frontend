@@ -2,6 +2,7 @@ import React from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
+
 const FrameWrapper = styled.div`
   width: 100%;
   height: 100%;
