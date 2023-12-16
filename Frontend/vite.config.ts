@@ -23,15 +23,15 @@ export default defineConfig({
         alias: {
           "@remix-run/router": path.resolve(
             __dirname,
-            "../../packages/router/index.ts",
+            "../../packages/router/index.ts"
           ),
           "react-router": path.resolve(
             __dirname,
-            "../../packages/react-router/index.ts",
+            "../../packages/react-router/index.ts"
           ),
           "react-router-dom": path.resolve(
             __dirname,
-            "../../packages/react-router-dom/index.tsx",
+            "../../packages/react-router-dom/index.tsx"
           ),
         },
       }
