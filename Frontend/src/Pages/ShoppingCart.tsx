@@ -1,24 +1,26 @@
 import React from "react";
-import TopNav from "../Components/TopNav"
+import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
 const FrameWrapper = styled.div`
-  width:100%;
+  width: 100%;
   height: 100%;
-  background: #FAF7F7;
+  background: #faf7f7;
 `;
 
 const Container = styled.main`
   flex: 1 1;
   padding: 25px 40px;
-  background: #FAF7F7;
-  font-family: Noto Sans TC,sans-serif;
+  background: #faf7f7;
+  font-family:
+    Noto Sans TC,
+    sans-serif;
   letter-spacing: 3px;
   line-height: 1.5;
 `;
 
 const Cart = styled.ul`
-  font-size: .85rem;
+  font-size: 0.85rem;
   display: flex;
   flex-flow: column;
 `;
@@ -45,8 +47,7 @@ const CartItem = styled.article`
   align-items: center;
   flex-flow: row;
   border-radius: 8px;
-  border: 1px solid #DFE3EA;  
-
+  border: 1px solid #dfe3ea;
 `;
 
 const CartItemSectionFirst = styled.section`
@@ -79,7 +80,7 @@ const CartItemSection = styled.section`
 const CartCheckBox = styled.input`
   margin-right: 15px;
   margin-bottom: 5px;
-  opacity: .8;
+  opacity: 0.8;
   cursor: pointer;
   width: 20px;
   height: 20px;
@@ -136,11 +137,11 @@ const MarginRightBTN = styled.a`
   background: none;
 
   &:hover {
-  color: #e6b800;
+    color: #e6b800;
   }
 
   &:active {
-    color: #e6b800;  
+    color: #e6b800;
   }
 `;
 
@@ -164,7 +165,7 @@ const CartItemInfoSpan = styled.span`
   font: inherit;
   font-size: 100%;
   color: #747693;
-  `;
+`;
 
 const CartItemInfo = styled.a`
   color: #3e51fe;
@@ -181,7 +182,7 @@ const CartItemInfo = styled.a`
 `;
 
 const CartItemInfoB = styled.b`
-  font-size: .85rem;
+  font-size: 0.85rem;
   margin: 0;
   padding: 0;
   border: 0;
@@ -201,7 +202,6 @@ const CartItemFirst = styled.li`
   // flex-flow: row;
   align-items: center;
   display: flex;
-
 `;
 
 const CartPackageFooter = styled.footer`
@@ -212,7 +212,6 @@ const CartPackageFooter = styled.footer`
   vertical-align: baseline;
   font: inherit;
   font-size: 100%;
-  
 `;
 
 const CartPackageTotal = styled.section`
@@ -236,8 +235,7 @@ const CartPackageP = styled.p`
   align-items: center;
   flex-flow: row;
   margin: 0;
-  margin-right: 60px
- 
+  margin-right: 60px;
 `;
 
 const CartPackageSpan = styled.span`
@@ -251,19 +249,19 @@ const CartPackageSpan = styled.span`
 `;
 
 const CartPackageText = styled.span`
-width: 99px;
-height: 20px;
-flex-direction: column;
-justify-content: center;
-flex-shrink: 0;
-color: #1F100B;
-font-family: Noto Sans TC;
-font-size: 13.6px;
-font-style: normal;
-font-weight: 350;
-line-height: 20.4px; /* 150% */
-letter-spacing: 3px;
-margin-right: 10px;
+  width: 99px;
+  height: 20px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1f100b;
+  font-family: Noto Sans TC;
+  font-size: 13.6px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 20.4px; /* 150% */
+  letter-spacing: 3px;
+  margin-right: 10px;
 `;
 
 const CartPackageText2 = styled.span`
@@ -273,9 +271,9 @@ const CartPackageText2 = styled.span`
   flex-flow: row;
   display: flex;
   margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
   // margin-left: 500px;
 `;
 
@@ -306,12 +304,12 @@ const CartPaymentSelectLi = styled.li`
   margin-left: 0;
   display: flex;
   justify-content: space-between;
-      margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: baseline;
-    font: inherit;
-    font-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  font: inherit;
+  font-size: 100%;
 `;
 
 const CartPaymentInfo = styled.article`
@@ -328,142 +326,121 @@ const CartPaymentInfoItem = styled.ul`
 `;
 
 export default function ShoppingCart() {
-    return (
-        <>
-          <FrameWrapper>
-          <TopNav/>
-            <Container>
-              <Cart>
+  return (
+    <>
+      <FrameWrapper>
+        <TopNav />
+        <Container>
+          <Cart>
+            <CartLi>
+              <CartItem>
+                <CartItemSectionFirst>
+                  <CartCheckBox type="checkbox" />
+                  商品資訊
+                </CartItemSectionFirst>
+                <CartItemSection>單價</CartItemSection>
+                <CartItemSection>數量</CartItemSection>
+                <CartItemSection>統計</CartItemSection>
+                <CartItemSection>操作</CartItemSection>
+              </CartItem>
+            </CartLi>
 
-                <CartLi>
-                  <CartItem>
-                    <CartItemSectionFirst>
-                      <CartCheckBox type="checkbox"/>商品資訊
-                    </CartItemSectionFirst>
-                    <CartItemSection>單價</CartItemSection>
-                    <CartItemSection>數量</CartItemSection>
-                    <CartItemSection>統計</CartItemSection>
-                    <CartItemSection>操作</CartItemSection>
-                  </CartItem>
-                </CartLi>
+            <CartLi>
+              <CartPackageHeader>
+                <CartSpan>
+                  <CartCheckBox type="checkbox" />
+                  玄玄卡鋪:遊戲王卡牌專門販售
+                </CartSpan>
+                <CartPackageHeaderAction>
+                  <MarginRightBTN>申請議價</MarginRightBTN>
+                  <MarginRightBTN>刪除店家</MarginRightBTN>
+                </CartPackageHeaderAction>
+              </CartPackageHeader>
 
-                <CartLi>
-                  <CartPackageHeader>
-                    <CartSpan>
-                    <CartCheckBox type="checkbox"/>玄玄卡鋪:遊戲王卡牌專門販售
-                    </CartSpan>
-                    <CartPackageHeaderAction>
-                      <MarginRightBTN>申請議價</MarginRightBTN>
-                      <MarginRightBTN>刪除店家</MarginRightBTN>
-                    </CartPackageHeaderAction>
-                  </CartPackageHeader>
-                   
-
-                  <CartItems>
-                  <CartItemFirst>
-                    <CartItemSectionFirst>
-                      <CartCheckBox type="checkbox"/>
-                      <img src ={card} width="60px" />
-                      <CartItemInfoSpan>
+              <CartItems>
+                <CartItemFirst>
+                  <CartItemSectionFirst>
+                    <CartCheckBox type="checkbox" />
+                    <img
+                      src={card}
+                      width="60px"
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <CartItemInfoSpan>
                       <div>新時代的主角</div>
                       <div>SD35-JP001</div>
                       <div>索隆十郎(異圖卡)</div>
-                      </CartItemInfoSpan>
-                      <CartItemInfoSpan>
+                    </CartItemInfoSpan>
+                    <CartItemInfoSpan>
                       <div>卡況:正常</div>
-                      </CartItemInfoSpan>
-                    </CartItemSectionFirst>
-                    <CartItemSection>$ 40</CartItemSection>
-                    <CartItemSection># 2</CartItemSection>
-                    <CartItemSection>$ 80</CartItemSection>
-                    <MarginRightBTN>刪除商品</MarginRightBTN>
-                  </CartItemFirst>
-                  <CartItemFirst>
-                    <CartItemSectionFirst>
-                      <CartCheckBox type="checkbox"/>
-                      <img src ={card} width="60px" />
-                      <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                      </CartItemInfoSpan>
-                      <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                      </CartItemInfoSpan>
-                    </CartItemSectionFirst>
-                    <CartItemSection>$ 40</CartItemSection>
-                    <CartItemSection># 2</CartItemSection>
-                    <CartItemSection>$ 80</CartItemSection>
-                    <MarginRightBTN>刪除商品</MarginRightBTN>
-                  </CartItemFirst>
-                  </CartItems>
+                    </CartItemInfoSpan>
+                  </CartItemSectionFirst>
+                  <CartItemSection>$ 40</CartItemSection>
+                  <CartItemSection># 2</CartItemSection>
+                  <CartItemSection>$ 80</CartItemSection>
+                  <MarginRightBTN>刪除商品</MarginRightBTN>
+                </CartItemFirst>
+              </CartItems>
 
-                  
-
-                  <CartPackageFooter>
-                    <CartPackageTotal>
-                    <CartPackageP>
-                      <CartPackageSpan>
-                        <CartPackageText>寄送方式 :</CartPackageText> 
+              <CartPackageFooter>
+                <CartPackageTotal>
+                  <CartPackageP>
+                    <CartPackageSpan>
+                      <CartPackageText>寄送方式 :</CartPackageText>
                       <CartPackageSelect>
-                      <option value="standard">7-11</option>
-                      <option value="express">全家</option>
-                      <option value="pickup">萊爾富</option>
-                      <option value="pickup">OK</option>
+                        <option value="standard">7-11</option>
+                        <option value="express">全家</option>
+                        <option value="pickup">萊爾富</option>
+                        <option value="pickup">OK</option>
                       </CartPackageSelect>
-                      <CartPackageText>寄送費用:  $60 (滿10,000免運費)</CartPackageText> 
-                      
-                      </CartPackageSpan>
-                    </CartPackageP>
-                    <CartPackageP>總計: $140</CartPackageP>
-                    </CartPackageTotal>
-                  </CartPackageFooter>          
-                </CartLi>
+                      <CartPackageText>
+                        寄送費用: $60 (滿10,000免運費)
+                      </CartPackageText>
+                    </CartPackageSpan>
+                  </CartPackageP>
+                  <CartPackageP>總計: $140</CartPackageP>
+                </CartPackageTotal>
+              </CartPackageFooter>
+            </CartLi>
 
-                
-
-                <CartLi>
-                  <CartPaymentHeader>
-                    付款方式:
-                    <CartPaymentSelect>
-                      <MarginRightBTN>信用卡</MarginRightBTN>
-                      <MarginRightBTN>網路ATM</MarginRightBTN>
-                      <MarginRightBTN>超商代碼</MarginRightBTN>
-                      <MarginRightBTN>貨到付款</MarginRightBTN>
-                    </CartPaymentSelect>
-                  </CartPaymentHeader>
-                  <CartPaymentInfo>
-                    <CartPaymentInfoItem>
-                      <CartPaymentSelectLi>
-                        <CartPackageP>包裹數 : </CartPackageP>
-                        <CartPackageP>1</CartPackageP>
-                      </CartPaymentSelectLi>
-                      <CartPaymentSelectLi>
-                        <CartPackageP>商品數 : </CartPackageP>
-                        <CartPackageP>2</CartPackageP>
-                      </CartPaymentSelectLi>
-                      <CartPaymentSelectLi>
-                        <CartPackageP>商品總金額 : </CartPackageP>
-                        <CartPackageP>80</CartPackageP>
-                      </CartPaymentSelectLi>
-                      <CartPaymentSelectLi>
-                        <CartPackageP>運費總金額 : </CartPackageP>
-                        <CartPackageP>60</CartPackageP>
-                      </CartPaymentSelectLi>
-                      <CartPaymentSelectLi>
-                        <CartPackageP>交易總金額 : </CartPackageP>
-                        <CartPackageP>140</CartPackageP>
-                      </CartPaymentSelectLi>
-                    </CartPaymentInfoItem>
-                  </CartPaymentInfo>
-                </CartLi>
-
-
-              </Cart>
-            </Container>
-          </FrameWrapper>
-        </>
-        
-    );
+            <CartLi>
+              <CartPaymentHeader>
+                付款方式:
+                <CartPaymentSelect>
+                  <MarginRightBTN>信用卡</MarginRightBTN>
+                  <MarginRightBTN>網路ATM</MarginRightBTN>
+                  <MarginRightBTN>超商代碼</MarginRightBTN>
+                  <MarginRightBTN>貨到付款</MarginRightBTN>
+                </CartPaymentSelect>
+              </CartPaymentHeader>
+              <CartPaymentInfo>
+                <CartPaymentInfoItem>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>包裹數 : </CartPackageP>
+                    <CartPackageP>1</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品數 : </CartPackageP>
+                    <CartPackageP>2</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品總金額 : </CartPackageP>
+                    <CartPackageP>80</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>運費總金額 : </CartPackageP>
+                    <CartPackageP>60</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>交易總金額 : </CartPackageP>
+                    <CartPackageP>140</CartPackageP>
+                  </CartPaymentSelectLi>
+                </CartPaymentInfoItem>
+              </CartPaymentInfo>
+            </CartLi>
+          </Cart>
+        </Container>
+      </FrameWrapper>
+    </>
+  );
 }
-
