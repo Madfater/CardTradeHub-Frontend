@@ -191,7 +191,7 @@ const CartItemInfoB = styled.b`
 `;
 
 const CartItemFirst = styled.li`
-  margin-top: 0;
+  margin-top: 10px;
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #dfe3ea;
@@ -356,7 +356,8 @@ export default function ShoppingCart() {
                       <MarginRightBTN>申請議價</MarginRightBTN>
                       <MarginRightBTN>刪除店家</MarginRightBTN>
                     </CartPackageHeaderAction>
-                  </CartPackageHeader> 
+                  </CartPackageHeader>
+                   
 
                   <CartItems>
                   <CartItemFirst>
@@ -377,7 +378,27 @@ export default function ShoppingCart() {
                     <CartItemSection>$ 80</CartItemSection>
                     <MarginRightBTN>刪除商品</MarginRightBTN>
                   </CartItemFirst>
+                  <CartItemFirst>
+                    <CartItemSectionFirst>
+                      <CartCheckBox type="checkbox"/>
+                      <img src ={card} width="60px" />
+                      <CartItemInfoSpan>
+                      <div>新時代的主角</div>
+                      <div>SD35-JP001</div>
+                      <div>索隆十郎(異圖卡)</div>
+                      </CartItemInfoSpan>
+                      <CartItemInfoSpan>
+                      <div>卡況:正常</div>
+                      </CartItemInfoSpan>
+                    </CartItemSectionFirst>
+                    <CartItemSection>$ 40</CartItemSection>
+                    <CartItemSection># 2</CartItemSection>
+                    <CartItemSection>$ 80</CartItemSection>
+                    <MarginRightBTN>刪除商品</MarginRightBTN>
+                  </CartItemFirst>
                   </CartItems>
+
+                  
 
                   <CartPackageFooter>
                     <CartPackageTotal>
@@ -398,6 +419,8 @@ export default function ShoppingCart() {
                     </CartPackageTotal>
                   </CartPackageFooter>          
                 </CartLi>
+
+                
 
                 <CartLi>
                   <CartPaymentHeader>

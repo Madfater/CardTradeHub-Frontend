@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-// import MainPage from "./Components/TopNav";
 import LoginPage from "./Pages/LoginPage";
-import MainPage from "./Components/TopNav";
+import MainPage from "./Pages/MainPage"
+import ShoppingCart from "./Pages/ShoppingCart";
 
 export default function App() {
   return (
@@ -10,8 +10,8 @@ export default function App() {
       <Routes>
       <Route path="/">
        <Route index element={<MainPage/>}/>
-       {/* <Route index element={<MainPage/>}/> */}
        <Route path="/login" element={<LoginPage/>}/>
+       <Route path="/shopcart" element={<ShoppingCart/>}/>
       </Route>
       </Routes>
     </div>
