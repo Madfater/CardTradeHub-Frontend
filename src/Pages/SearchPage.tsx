@@ -218,7 +218,6 @@ export default function SearchPage() {
             <Container>
                 <ContainerArticle>
                     <CartItems>
-
                         <CartItem>
                             <CartItemInfo>
                                 <CartItemAvatar>L</CartItemAvatar>
@@ -251,12 +250,9 @@ export default function SearchPage() {
                                 <ItemFooterLink><a href=" ">前往賣場</a></ItemFooterLink>
                             </ItemFooter>
                         </CartItem>
-
-                    
                     </CartItems>
                 </ContainerArticle>
             </Container>
-
         </>
     );
 }
