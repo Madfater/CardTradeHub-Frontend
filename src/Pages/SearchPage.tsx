@@ -16,7 +16,6 @@ const HeaderSearch = styled.header`
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    
 
     &:before {
         background-color: #1f100b;
@@ -32,7 +31,6 @@ const HeaderSearch = styled.header`
 
     }
 `;
-
 
 const HeaderTitle = styled.h2`
     position: relative;
@@ -115,7 +113,6 @@ const CartItemInfo = styled.main`
     padding: 20px;
     display: flex;
     flex-flow: row;
-    
 `;
 
 const CartItemAvatar = styled.article`
@@ -175,7 +172,6 @@ const ItemFooterLink = styled.a`
     margin-right: 1rem;
     color: #3e51fe;
     transition: color .3s;
-    
 `;
 
 export default function SearchPage() {
