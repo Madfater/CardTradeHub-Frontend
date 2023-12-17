@@ -1,27 +1,21 @@
-# CardShop
+---
+title: Basics
+toc: false
+order: 1
+---
 
-## 測試POST 改後端資料庫成功
+# Basic Example
 
-### HOW TO TEST
+This example demonstrates some of the basic features of React Router, including:
 
-開MySQL 執行 [腳本](https://github.com/Madfater/CardShop/blob/backend_qq816/Backend/Sql_Init.txt)
+- Layouts and nested `<Route>`s
+- Index `<Route>`s
+- Catch-all `<Route>`s
+- Using `<Outlet>` as a placeholder for child routes
+- Using `<Link>`s for navigation
 
-Python套件記得裝
+## Preview
 
-記得改MySQL密碼 [這裡](https://github.com/Madfater/CardShop/blob/backend_qq816/Backend/mysql.py)
+Open this example on [StackBlitz](https://stackblitz.com):
 
-執行[api.py](https://github.com/Madfater/CardShop/blob/backend_qq816/Backend/api.py)
-
-POST 127.0.0.1:5000/api/user
-
-測試用JSON檔
-
-
-### request json format
-login
-{ "type": "login" , "email": "123@gmail.com", "password": "passwd" }
-return "login success" or "login failed"
-
-
-register
-{ "type": "register", "password": "passwd" ,"username": "alan", "email": "123@gmail.com"}
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router/tree/main/examples/basic?file=src/App.tsx)
