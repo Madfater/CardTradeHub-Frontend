@@ -1,6 +1,8 @@
 import React from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const SortNav = styled.div`
   display: flex;
@@ -269,6 +271,10 @@ export default function MainPage() {
                   </ProductContentWrap>
                 </Productblock>
               </ProductGrid>
+
+              <Stack alignItems="center">
+                <Pagination/>
+              </Stack>
             </article>
           </ProductGridWrap>
         </ContainerMain>
