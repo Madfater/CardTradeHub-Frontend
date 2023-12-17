@@ -329,8 +329,8 @@ const CartPaymentInfoItem = styled.ul`
 export default function ShoppingCart() {
   return (
     <>
+      <TopNav />
       <FrameWrapper>
-        <TopNav />
         <Container>
           <Cart>
             <CartLi>
