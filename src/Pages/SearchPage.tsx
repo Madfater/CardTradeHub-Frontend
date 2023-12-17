@@ -28,7 +28,6 @@ const HeaderSearch = styled.header`
         width: 100%;
         height: 100%;
         content: "";
-
     }
 `;
 
@@ -39,7 +38,6 @@ const HeaderTitle = styled.h2`
     font-weight: 500;
     display: flex;
     flex-flow: column;
-    
 `;
 
 const FormSearch = styled.form`
@@ -92,7 +90,6 @@ const CartItems = styled.ul`
     grid-template-columns: repeat(2,1fr);
     grid-gap: 15px;
 `;
-
 
 const CartItem = styled.li`
     display: inline-flex;
@@ -166,7 +163,6 @@ const ItemFooter = styled.footer`
     flex-wrap: wrap;
     padding: 10px 20px;
     border-top: 1px solid #dfe3ea;
-    
 `;
 const ItemFooterLink = styled.a`
     margin-right: 1rem;
