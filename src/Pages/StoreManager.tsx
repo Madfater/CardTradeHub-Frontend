@@ -1,8 +1,12 @@
-import React from "react";
+import React,{useState} from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import ConfirmationDialog from "../Dialogs/ConfirmDialog";
+import EditProductDialog from "../Dialogs/EditionDialog";
+import useDialog from "../Hooks/useDialog";
+
 
 const SortNav = styled.div`
   display: flex;
@@ -201,8 +205,33 @@ const BlueButton = styled.button`
 `;
 
 export default function MainPage() {
+  const { isOpen: isEditDialogOpen, openDialog: openEditDialog, closeDialog: closeEditDialog } = useDialog();
+  const { isOpen: isConFirmDialogOpen, openDialog: openonFirmDialog, closeDialog: closeonFirmDialog } = useDialog();
+
+
+  const handleConfirmDelete = () => {
+    console.log("Item deleted");
+    closeonFirmDialog();
+  };
+
+  const handleSaveProduct = (updatedProduct: { quantity: number; cardId: string; price: number }) => {
+    console.log('Product updated:', updatedProduct);
+  };
+
   return (
     <>
+      <ConfirmationDialog
+        open={isConFirmDialogOpen}
+        onClose={closeonFirmDialog}
+        onConfirm={handleConfirmDelete}
+      />
+
+      <EditProductDialog
+      open={isEditDialogOpen}
+      onClose={closeEditDialog}
+      onSave={handleSaveProduct}
+      />
+
       <TopNav />
 
       <SortNav>
@@ -267,8 +296,8 @@ export default function MainPage() {
                       <h3>測試</h3>
                     </ProductInfo>
                     <ButtonContainer>
-                      <RedButton>刪除</RedButton>
-                      <BlueButton>修改</BlueButton>
+                      <RedButton onClick={openonFirmDialog}>刪除</RedButton>
+                      <BlueButton onClick={openEditDialog}>修改</BlueButton>
                     </ButtonContainer>
                   </ProductContentWrap>
                 </Productblock>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import Pagination from "@mui/material/Pagination";
@@ -174,6 +174,7 @@ const ProductInfo = styled.article`
 `;
 
 export default function MainPage() {
+  
   return (
     <>
       <TopNav />
@@ -273,7 +274,7 @@ export default function MainPage() {
               </ProductGrid>
 
               <Stack alignItems="center">
-                <Pagination/>
+                <Pagination />
               </Stack>
             </article>
           </ProductGridWrap>
