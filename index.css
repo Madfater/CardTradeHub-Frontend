@@ -34,10 +34,6 @@ code {
     monospace;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 @font-face {
   font-family: "ABeeZee";
   src: local("ABeeZee"), url(./fonts/ABeeZee-Regular.ttf);
@@ -51,12 +47,6 @@ code {
 .App {
   text-align: center;
   padding: 50px;
-}
-
-img {
-  max-width: 100%;
-  width: 100%;
-  transition: transform 0.3s ease-in-out;
 }
 
 .zoomed {
