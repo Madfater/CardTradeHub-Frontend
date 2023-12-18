@@ -168,30 +168,6 @@ const CartItemInfoSpan = styled.span`
   color: #747693;
 `;
 
-const CartItemInfo = styled.a`
-  color: #3e51fe;
-  text-decoration: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  font: inherit;
-  font-size: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const CartItemInfoB = styled.b`
-  font-size: 0.85rem;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  font: inherit;
-  box-sizing: border-box;
-`;
-
 const CartItemFirst = styled.li`
   margin-top: 10px;
   border-radius: 8px;
@@ -219,16 +195,6 @@ const CartPackageTotal = styled.section`
   padding: 20px;
   display: flex;
   justify-content: space-between;
-`;
-
-const ShippingIcon = styled.span`
-  margin-right: 15px;
-  margin-left: 1rem;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const CartPackageP = styled.p`
@@ -263,19 +229,6 @@ const CartPackageText = styled.span`
   line-height: 20.4px; /* 150% */
   letter-spacing: 3px;
   margin-right: 10px;
-`;
-
-const CartPackageText2 = styled.span`
-  color: #747693;
-  font-size: 1rem;
-  align-items: center;
-  flex-flow: row;
-  display: flex;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  // margin-left: 500px;
 `;
 
 const CartPackageSelect = styled.select`
