@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "dev:local": "cp .env.local .env && vite",
+    "dev:production": "cp .env.production .env && vite",
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
