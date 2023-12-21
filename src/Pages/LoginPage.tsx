@@ -174,7 +174,7 @@ export default function MemberLogin() {
                 <FromRow>
                   <section>
                     <FromLabel>
-                      使用者帳號
+                      使用者密碼
                       <span>*</span>
                     </FromLabel>
                     <FromInput />
