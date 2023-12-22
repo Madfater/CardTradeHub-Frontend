@@ -11,7 +11,7 @@ body {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   color: #1f100b;  
-
+  letter-spacing: 3px;
 }
 
 #root {
