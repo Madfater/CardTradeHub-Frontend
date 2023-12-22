@@ -6,6 +6,7 @@ import {
   StoreManager,
   SearchPage,
   RegisterPage,
+  CardIntro,
   StorePage,
   OrderPage
 } from "./Pages";
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/storemanager" element={<StoreManager />} />
             <Route path="/searchpage" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage/>}/>
+            <Route path="/cardintroduction" element={<CardIntro/>}/>
             <Route path="/storepage" element={<StorePage/>}/>
             <Route path="/orderpage" element={<OrderPage/>}/>
           </Route>
