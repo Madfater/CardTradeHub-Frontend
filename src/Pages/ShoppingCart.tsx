@@ -279,6 +279,30 @@ const CartPaymentInfoItem = styled.ul`
   font-size: 1rem;
 `;
 
+const CheckBTN = styled.button`
+  cursor: pointer;
+  padding: 14px 30px;
+  letter-spacing: 5px;
+  font-size: 1.15rem;
+  min-width: 140px;
+  color: #fff !important;
+  background-color: #3e51fe;
+  display: inline-flex;
+  border-radius: 8px;
+  transition: background-color .3s;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dfe3ea;
+`;
+
+const CartPaymentFooter = styled.footer`
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  flex-flow: row;
+  padding: 20px;
+`;
+
 export default function ShoppingCart() {
   return (
     <>
@@ -312,6 +336,28 @@ export default function ShoppingCart() {
               </CartPackageHeader>
 
               <CartItems>
+                <CartItemFirst>
+                  <CartItemSectionFirst>
+                    <CartCheckBox type="checkbox" />
+                    <img
+                      src={card}
+                      width="60px"
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <CartItemInfoSpan>
+                      <div>新時代的主角</div>
+                      <div>SD35-JP001</div>
+                      <div>索隆十郎(異圖卡)</div>
+                    </CartItemInfoSpan>
+                    <CartItemInfoSpan>
+                      <div>卡況:正常</div>
+                    </CartItemInfoSpan>
+                  </CartItemSectionFirst>
+                  <CartItemSection>$ 40</CartItemSection>
+                  <CartItemSection># 2</CartItemSection>
+                  <CartItemSection>$ 80</CartItemSection>
+                  <MarginRightBTN>刪除商品</MarginRightBTN>
+                </CartItemFirst>
                 <CartItemFirst>
                   <CartItemSectionFirst>
                     <CartCheckBox type="checkbox" />
@@ -391,6 +437,9 @@ export default function ShoppingCart() {
                   </CartPaymentSelectLi>
                 </CartPaymentInfoItem>
               </CartPaymentInfo>
+              <CartPaymentFooter>
+                <CheckBTN>前往結帳</CheckBTN>
+              </CartPaymentFooter>
             </CartLi>
           </Cart>
         </Container>
