@@ -6,6 +6,7 @@ import {
   StoreManager,
   SearchPage,
   RegisterPage,
+  CardIntro,
 } from "./Pages";
 import { AuthProvider } from "./Contexts/AuthContext";
 
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/storemanager" element={<StoreManager />} />
             <Route path="/searchpage" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage/>}/>
+            <Route path="/cardintroduction" element={<CardIntro/>}/>
           </Route>
         </Routes>
       </AuthProvider>
