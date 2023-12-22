@@ -7,6 +7,8 @@ import {
   SearchPage,
   RegisterPage,
   CardIntro,
+  StorePage,
+  OrderPage
 } from "./Pages";
 import { AuthProvider } from "./Contexts/AuthContext";
 
@@ -23,6 +25,8 @@ export default function App() {
             <Route path="/searchpage" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage/>}/>
             <Route path="/cardintroduction" element={<CardIntro/>}/>
+            <Route path="/storepage" element={<StorePage/>}/>
+            <Route path="/orderpage" element={<OrderPage/>}/>
           </Route>
         </Routes>
       </AuthProvider>

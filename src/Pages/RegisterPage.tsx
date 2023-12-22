@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import bk from "../Images/LoginBackground.jpg";
+import { useNavigate } from "react-router-dom";
+import api from "../Components/API";
+import { useAuth } from "../Contexts/AuthContext";
 
 const FrameWrapper = styled.div`
   position: relative;
   background-color: #faf7f7;
   color: #1f100b;
   letter-spacing: 3px;
-  font-family:
-    Noto Sans TC,
-    sans-serif;
+  font-family: Noto Sans TC, sans-serif;
   line-height: 1.5;
 `;
 
@@ -107,13 +108,6 @@ const FromInput = styled.input`
   border: 1px solid #dfe3ea;
 `;
 
-const ForgetButton = styled.span`
-  display: flex;
-  margin-top: -10px;
-  justify-content: flex-end;
-  color: #1f100b;
-  letter-spacing: 3px;
-`;
 
 const LoginButton = styled.button`
   padding: 12px;
@@ -142,9 +136,44 @@ const Formfooter = styled.footer`
 `;
 const BlueText = styled.a`
   color: #3e51fe;
+  cursor: pointer;
 `;
 
 export default function MemberLogin() {
+  const nav = useNavigate();
+
+  const { userId, setUserId } = useAuth();
+
+  const [accountValue, setAccountValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [rpasswordValue, setRPasswordValue] = useState("");
+
+  const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAccountValue(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordValue(e.target.value);
+  };
+
+  const handleRPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRPasswordValue(e.target.value);
+  };
+
+  const handleGotoLoginButton = () => {
+    nav("/login");
+  };
+
+  const registerAccount = async () => {
+    try {
+      const response = await api.post("/register");
+      const data = response?.data;
+      setUserId?.(data || null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <FrameWrapper>
       <Bkb />
@@ -167,7 +196,10 @@ export default function MemberLogin() {
                       使用者帳號
                       <span>*</span>
                     </FromLabel>
-                    <FromInput />
+                    <FromInput
+                      value={accountValue}
+                      onChange={handleAccountChange}
+                    />
                   </section>
                 </FromRow>
 
@@ -177,7 +209,10 @@ export default function MemberLogin() {
                       使用者密碼
                       <span>*</span>
                     </FromLabel>
-                    <FromInput />
+                    <FromInput
+                      value={passwordValue}
+                      onChange={handlePasswordChange}
+                    />
                   </section>
                 </FromRow>
 
@@ -187,17 +222,21 @@ export default function MemberLogin() {
                       確認密碼
                       <span>*</span>
                     </FromLabel>
-                    <FromInput />
+                    <FromInput
+                      value={rpasswordValue}
+                      onChange={handleRPasswordChange}
+                    />
                   </section>
                 </FromRow>
               </main>
-
 
               <LoginButton>註冊帳號</LoginButton>
 
               <Formfooter>
                 您還已有帳號嗎？
-                <BlueText>即刻登入吧！</BlueText>
+                <BlueText onClick={handleGotoLoginButton}>
+                  即刻登入吧！
+                </BlueText>
               </Formfooter>
             </From>
           </Aside>

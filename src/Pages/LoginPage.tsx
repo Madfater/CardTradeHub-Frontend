@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
+import api from "../Components/API";
 import styled from "styled-components";
 import bk from "../Images/LoginBackground.jpg";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const FrameWrapper = styled.div`
   position: relative;
   background-color: #faf7f7;
   color: #1f100b;
   letter-spacing: 3px;
-  font-family:
-    Noto Sans TC,
-    sans-serif;
+  font-family: Noto Sans TC, sans-serif;
   line-height: 1.5;
 `;
 
@@ -142,9 +143,49 @@ const Formfooter = styled.footer`
 `;
 const BlueText = styled.a`
   color: #3e51fe;
+  cursor:pointer;
 `;
 
 export default function MemberLogin() {
+
+  const nav = useNavigate();
+
+  const { userId, setUserId } = useAuth();
+
+  const [accountValue, setAccountValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+
+  const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAccountValue(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordValue(e.target.value);
+  };
+
+  
+
+  const verifyAccount = async () => {
+    try {
+      const response = await api.get("/login");
+      const data = response?.data;
+      setUserId?.(data || null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleConfirmButton = async () => {
+    await verifyAccount();
+    if (userId != null) {
+      nav("/");
+    }
+  };
+
+  const handleGotoRegisterButton = () => {
+    nav("/registerpage");
+  };
+
   return (
     <FrameWrapper>
       <Bkb />
@@ -167,7 +208,10 @@ export default function MemberLogin() {
                       使用者帳號
                       <span>*</span>
                     </FromLabel>
-                    <FromInput />
+                    <FromInput
+                      value={accountValue}
+                      onChange={handleAccountChange}
+                    />
                   </section>
                 </FromRow>
 
@@ -177,20 +221,19 @@ export default function MemberLogin() {
                       使用者密碼
                       <span>*</span>
                     </FromLabel>
-                    <FromInput />
+                    <FromInput
+                      value={passwordValue}
+                      onChange={handlePasswordChange}
+                    />
                   </section>
                 </FromRow>
               </main>
 
-              <ForgetButton>
-                <BlueText>忘記密碼?</BlueText>
-              </ForgetButton>
-
-              <LoginButton>帳號登入</LoginButton>
+              <LoginButton onClick={handleConfirmButton}>帳號登入</LoginButton>
 
               <Formfooter>
                 您還沒有帳號嗎？
-                <BlueText>即刻註冊吧！</BlueText>
+                <BlueText onClick={handleGotoRegisterButton}>即刻註冊吧！</BlueText>
               </Formfooter>
             </From>
           </Aside>

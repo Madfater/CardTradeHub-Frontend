@@ -1,4 +1,3 @@
-import React,{useState} from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import Pagination from "@mui/material/Pagination";
@@ -90,21 +89,6 @@ const FilterTitle = styled.h2`
   font-weight: 700;
   font-size: 0.75rem;
   margin-bottom: 10px;
-`;
-
-const FilterButton = styled.a`
-  width: 100%;
-  border-color: #3e51fe;
-  background-color: #f0f1ff;
-  color: #0116d5;
-  display: inline-flex;
-  padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid #dfe3ea;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
 `;
 
 const FilterList = styled.ul`
@@ -205,9 +189,9 @@ const BlueButton = styled.button`
 `;
 
 export default function MainPage() {
+
   const { isOpen: isEditDialogOpen, openDialog: openEditDialog, closeDialog: closeEditDialog } = useDialog();
   const { isOpen: isConFirmDialogOpen, openDialog: openonFirmDialog, closeDialog: closeonFirmDialog } = useDialog();
-
 
   const handleConfirmDelete = () => {
     console.log("Item deleted");
