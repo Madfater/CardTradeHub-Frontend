@@ -13,9 +13,7 @@ const Container = styled.main`
   flex: 1 1;
   padding: 25px 40px;
   background: #faf7f7;
-  font-family:
-    Noto Sans TC,
-    sans-serif;
+  font-family: Noto Sans TC, sans-serif;
   letter-spacing: 3px;
   line-height: 1.5;
 `;
@@ -47,8 +45,6 @@ const CartItem = styled.article`
   display: flex;
   align-items: center;
   flex-flow: row;
-  border-radius: 8px;
-  border: 1px solid #dfe3ea;
 `;
 
 const CartItemSectionFirst = styled.section`
@@ -287,19 +283,6 @@ export default function ShoppingCart() {
         <Container>
           <Cart>
             <CartLi>
-              <CartItem>
-                <CartItemSectionFirst>
-                  <CartCheckBox type="checkbox" />
-                  商品資訊
-                </CartItemSectionFirst>
-                <CartItemSection>單價</CartItemSection>
-                <CartItemSection>數量</CartItemSection>
-                <CartItemSection>統計</CartItemSection>
-                <CartItemSection>操作</CartItemSection>
-              </CartItem>
-            </CartLi>
-
-            <CartLi>
               <CartPackageHeader>
                 <CartSpan>
                   <CartCheckBox type="checkbox" />
@@ -312,6 +295,13 @@ export default function ShoppingCart() {
               </CartPackageHeader>
 
               <CartItems>
+                <CartItem>
+                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                  <CartItemSection>單價</CartItemSection>
+                  <CartItemSection>數量</CartItemSection>
+                  <CartItemSection>統計</CartItemSection>
+                  <CartItemSection>操作</CartItemSection>
+                </CartItem>
                 <CartItemFirst>
                   <CartItemSectionFirst>
                     <CartCheckBox type="checkbox" />
