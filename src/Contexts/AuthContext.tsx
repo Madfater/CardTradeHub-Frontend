@@ -1,5 +1,6 @@
 // AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   userId: string | null;
@@ -13,7 +14,11 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(() => Cookies.get('userId') || null);
+
+  useEffect(() => {
+    Cookies.set('userId', userId!);
+  }, [userId]);
 
   const handleSetUserId = (newUserId: string) => {
     setUserId(newUserId);
