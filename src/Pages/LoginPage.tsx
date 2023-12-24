@@ -108,18 +108,8 @@ const FromInput = styled.input`
   border: 1px solid #dfe3ea;
 `;
 
-const ForgetButton = styled.span`
-  display: flex;
-  margin-top: -10px;
-  justify-content: flex-end;
-  color: #1f100b;
-  letter-spacing: 3px;
-`;
-
-const LoginButton = styled.button`
+const LoginButton = styled.div`
   padding: 12px;
-  min-height: 3rem;
-  width: 100%;
   border-radius: 8px;
   font-weight: 500;
   font-size: 0.85rem;
@@ -143,17 +133,18 @@ const Formfooter = styled.footer`
 `;
 const BlueText = styled.a`
   color: #3e51fe;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 export default function MemberLogin() {
-
   const nav = useNavigate();
 
   const { userId, setUserId } = useAuth();
 
   const [accountValue, setAccountValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+
+  console.log(userId);
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAccountValue(e.target.value);
@@ -163,22 +154,30 @@ export default function MemberLogin() {
     setPasswordValue(e.target.value);
   };
 
-  
-
   const verifyAccount = async () => {
     try {
-      const response = await api.get("/login");
+      const body = {
+        email: accountValue,
+        password: passwordValue,
+      };
+      console.log(body);
+      const response = await api.post("/user/login",body);
       const data = response?.data;
-      setUserId?.(data || null);
+      console.log(data);
+
+      return data;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const handleConfirmButton = async () => {
-    await verifyAccount();
-    if (userId != null) {
-      nav("/");
+    
+    const result = await verifyAccount();
+    if(result!="this email isn't register yet")
+    {
+      setUserId?.(accountValue);
+      nav("/")
     }
   };
 
@@ -233,7 +232,9 @@ export default function MemberLogin() {
 
               <Formfooter>
                 您還沒有帳號嗎？
-                <BlueText onClick={handleGotoRegisterButton}>即刻註冊吧！</BlueText>
+                <BlueText onClick={handleGotoRegisterButton}>
+                  即刻註冊吧！
+                </BlueText>
               </Formfooter>
             </From>
           </Aside>
