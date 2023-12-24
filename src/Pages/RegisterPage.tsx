@@ -109,10 +109,8 @@ const FromInput = styled.input`
 `;
 
 
-const LoginButton = styled.button`
+const RegisterButton = styled.div`
   padding: 12px;
-  min-height: 3rem;
-  width: 100%;
   border-radius: 8px;
   font-weight: 500;
   font-size: 0.85rem;
@@ -230,7 +228,7 @@ export default function MemberLogin() {
                 </FromRow>
               </main>
 
-              <LoginButton>註冊帳號</LoginButton>
+              <RegisterButton>註冊帳號</RegisterButton>
 
               <Formfooter>
                 您還已有帳號嗎？
