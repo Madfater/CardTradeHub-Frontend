@@ -4,6 +4,10 @@ import styled from "styled-components";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useAuth } from "../Contexts/AuthContext";
+import useDialog from "../Hooks/useDialog";
+import { useParams } from "react-router-dom";
+import internal from "stream";
+import api from "../Components/API";
 
 const SortNav = styled.div`
   display: flex;
@@ -174,9 +178,74 @@ const ProductInfo = styled.article`
   font-size: 0.75rem;
 `;
 
-export default function MainPage() {
+const ProductTitle = styled.section`
+  color: #1f100b;
+`;
 
+const ProductText = styled.section`
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+`;
+
+const ProductPrice = styled.b`
+  color: #3e51fe;
+  font-weight: 700;
+`;
+
+interface RouteParams {
+  page?: string;
+  pageLimit?: string;
+  keyword?: string;
+  orderWay?: string;
+  ascending?: string;
+  [key: string]: string | undefined;
+}
+
+interface SearchResultProps {
+  items: Array<Array<any>>;
+  totalPage: number;
+}
+
+export default function MainPage() {
   const { userId } = useAuth();
+
+  const [searchResults, setSearchResults] = useState<SearchResultProps>();
+
+  const { page, pageLimit, keyword, orderWay, ascending } =
+    useParams<RouteParams>();
+
+  const currentPage = page ? parseInt(page, 10) : 1;
+  const currentLimit = pageLimit ? parseInt(pageLimit, 10) : 10;
+  const currentKeyword = keyword || "";
+  const currentOrderWay = orderWay || "id";
+  const isAscending = ascending === "true";
+
+  const searchCards = async () => {
+    try {
+      const response = await api.get(
+        `/card/search?page=${currentPage}&pageLimit=${currentLimit}&orderWay=${currentOrderWay}&ascending=${isAscending}&keyword=${currentKeyword}`
+      );
+      const data = response?.data;
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(`Page changed to: ${value}`);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await searchCards();
+      setSearchResults(data || []);
+    };
+
+    fetchData();
+  }, [currentPage, currentLimit, currentOrderWay, isAscending, currentKeyword]);
 
   return (
     <>
@@ -242,42 +311,36 @@ export default function MainPage() {
           <ProductGridWrap>
             <article style={{ width: "100%" }}>
               <ProductGrid>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
+                {searchResults?.items.map((item, index) => (
+                  <>
+                    <Productblock key={index}>
+                      <ProductContentWrap>
+                        <ProductImg></ProductImg>
+                        <ProductInfo>
+                          <ProductTitle>
+                            <h4>遊戲王</h4>
+                          </ProductTitle>
+                          <ProductText>
+                            <h3>{item[1]}</h3>
+                            <h5>
+                              {item[6]}個存貨
+                              <br />
+                              價格
+                              <ProductPrice>NT{item[4]}</ProductPrice>
+                            </h5>
+                          </ProductText>
+                          <ProductTitle>
+                            <h5>{item[9]}</h5>
+                          </ProductTitle>
+                        </ProductInfo>
+                      </ProductContentWrap>
+                    </Productblock>
+                  </>
+                ))}
               </ProductGrid>
 
               <Stack alignItems="center">
-                <Pagination />
+                <Pagination count={searchResults?.totalPage} page={currentPage} onChange={handleChangePage}/>
               </Stack>
             </article>
           </ProductGridWrap>
