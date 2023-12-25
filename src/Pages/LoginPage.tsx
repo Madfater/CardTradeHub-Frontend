@@ -176,7 +176,7 @@ export default function MemberLogin() {
     const result = await verifyAccount();
     if(result!="this email isn't register yet")
     {
-      setUserId?.(accountValue);
+      setUserId?.(result);
       nav("/")
     }
   };
