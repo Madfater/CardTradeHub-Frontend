@@ -4,6 +4,8 @@ import bk from "../Images/LoginBackground.jpg";
 import { useNavigate } from "react-router-dom";
 import api from "../Components/API";
 import { useAuth } from "../Contexts/AuthContext";
+import useDialog from "../Hooks/useDialog";
+import TextDialog from "../Dialogs/TextDialog";
 
 const FrameWrapper = styled.div`
   position: relative;
@@ -108,7 +110,6 @@ const FromInput = styled.input`
   border: 1px solid #dfe3ea;
 `;
 
-
 const RegisterButton = styled.div`
   padding: 12px;
   border-radius: 8px;
@@ -140,14 +141,24 @@ const BlueText = styled.a`
 export default function MemberLogin() {
   const nav = useNavigate();
 
-  const { userId, setUserId } = useAuth();
-
   const [accountValue, setAccountValue] = useState("");
+  const [userIDValue, setuserIDValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [rpasswordValue, setRPasswordValue] = useState("");
+  const [textContent, setTextContent] = useState("");
+
+  const {
+    isOpen: isTextDialogOpen,
+    openDialog: openTextDialog,
+    closeDialog: closeTextDialog,
+  } = useDialog();
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAccountValue(e.target.value);
+  };
+
+  const handleUserIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setuserIDValue(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,83 +174,128 @@ export default function MemberLogin() {
   };
 
   const registerAccount = async () => {
+
+    if(passwordValue!=rpasswordValue)
+    {
+      setTextContent("密碼不一致");
+      openTextDialog();
+      return;
+    }
+
     try {
-      const response = await api.post("/register");
+      const body = {
+        password: passwordValue,
+        email: accountValue,
+        username: userIDValue,
+      };
+      const response = await api.post("/user/register", body);
       const data = response?.data;
-      setUserId?.(data || null);
+
+      console.log(data);
+
+      if (data == "register success") nav("/login");
+      else if(data == "User already exist")
+      {
+        setTextContent("用戶已註冊");
+        openTextDialog();
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   return (
-    <FrameWrapper>
-      <Bkb />
-      <MainWrapper>
-        <Article>
-          <Section>
-            <SectionText>CardShop</SectionText>
-            <Alter></Alter>
-            <span>超過數萬張的卡牌交易，即在CardShop!</span>
-          </Section>
+    <>
+      <TextDialog
+        open={isTextDialogOpen}
+        onClose={openTextDialog}
+        onConfirm={closeTextDialog}
+        Text={textContent}
+      />
 
-          <Aside>
-            <From>
-              <FromTitle>會員註冊</FromTitle>
+      <FrameWrapper>
+        <Bkb />
+        <MainWrapper>
+          <Article>
+            <Section>
+              <SectionText>CardShop</SectionText>
+              <Alter></Alter>
+              <span>超過數萬張的卡牌交易，即在CardShop!</span>
+            </Section>
 
-              <main>
-                <FromRow>
-                  <section>
-                    <FromLabel>
-                      使用者帳號
-                      <span>*</span>
-                    </FromLabel>
-                    <FromInput
-                      value={accountValue}
-                      onChange={handleAccountChange}
-                    />
-                  </section>
-                </FromRow>
+            <Aside>
+              <From>
+                <FromTitle>會員註冊</FromTitle>
 
-                <FromRow>
-                  <section>
-                    <FromLabel>
-                      使用者密碼
-                      <span>*</span>
-                    </FromLabel>
-                    <FromInput
-                      value={passwordValue}
-                      onChange={handlePasswordChange}
-                    />
-                  </section>
-                </FromRow>
+                <main>
+                  <FromRow>
+                    <section>
+                      <FromLabel>
+                        電子郵件
+                        <span>*</span>
+                      </FromLabel>
+                      <FromInput
+                        value={accountValue}
+                        onChange={handleAccountChange}
+                      />
+                    </section>
+                  </FromRow>
 
-                <FromRow>
-                  <section>
-                    <FromLabel>
-                      確認密碼
-                      <span>*</span>
-                    </FromLabel>
-                    <FromInput
-                      value={rpasswordValue}
-                      onChange={handleRPasswordChange}
-                    />
-                  </section>
-                </FromRow>
-              </main>
+                  <FromRow>
+                    <section>
+                      <FromLabel>
+                        使用者名稱
+                        <span>*</span>
+                      </FromLabel>
+                      <FromInput
+                        value={userIDValue}
+                        onChange={handleUserIDChange}
+                      />
+                    </section>
+                  </FromRow>
 
-              <RegisterButton>註冊帳號</RegisterButton>
+                  <FromRow>
+                    <section>
+                      <FromLabel>
+                        使用者密碼
+                        <span>*</span>
+                      </FromLabel>
+                      <FromInput
+                        value={passwordValue}
+                        onChange={handlePasswordChange}
+                      />
+                    </section>
+                  </FromRow>
 
-              <Formfooter>
-                您還已有帳號嗎？
-                <BlueText onClick={handleGotoLoginButton}>
-                  即刻登入吧！
-                </BlueText>
-              </Formfooter>
-            </From>
-          </Aside>
-        </Article>
-      </MainWrapper>
-    </FrameWrapper>
+                  <FromRow>
+                    <section>
+                      <FromLabel>
+                        確認密碼
+                        <span>*</span>
+                      </FromLabel>
+                      <FromInput
+                        value={rpasswordValue}
+                        onChange={handleRPasswordChange}
+                      />
+                    </section>
+                  </FromRow>
+                </main>
+
+                <RegisterButton onClick={registerAccount}>
+                  註冊帳號
+                </RegisterButton>
+
+                <Formfooter>
+                  您還已有帳號嗎？
+                  <BlueText onClick={handleGotoLoginButton}>
+                    即刻登入吧！
+                  </BlueText>
+                </Formfooter>
+              </From>
+            </Aside>
+          </Article>
+        </MainWrapper>
+      </FrameWrapper>
+    </>
   );
 }
