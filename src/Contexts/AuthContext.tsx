@@ -15,8 +15,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userId, setUserId] = useState<number | null>(() => {
-    const storedUserId = Cookies.get('userId');
-    return storedUserId === 'null' ? null : (parseInt(storedUserId!, 10) || null);
+    return parseInt(Cookies.get('userId')!, 10) || null;
   });
 
   useEffect(() => {
