@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Wrap = styled.div`
   display: flex;
@@ -71,6 +73,7 @@ const LoginButton = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  cursor: pointer; 
 `;
 
 const LoginButtonFont = styled.div`
@@ -86,6 +89,9 @@ const LoginButtonFont = styled.div`
   font-weight: 350;
   line-height: 18px; /* 150% */
   letter-spacing: 3px;
+
+
+}
 `;
 
 const Section2 = styled.div`
@@ -157,6 +163,22 @@ const ShopCartButton = styled(CircleNavButton)`
 `;
 
 export default function MainPage() {
+  const nav = useNavigate();
+  const { userId, setUserId } = useAuth();
+  console.log("userId:", userId); // 在这里添加调试信息
+
+  const handleGotologinButton = () => {
+    nav("/login");
+  };
+
+  const [isUserIdAvailable, setIsUserIdAvailable] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (userId !== null) {
+      setIsUserIdAvailable(true);
+    }
+  }, [userId]);
+
   return (
     <Wrap>
       <Section1>
@@ -193,9 +215,14 @@ export default function MainPage() {
             </svg>
           </SearchBarButton>
         </SearchBar>
-        <LoginButton>
-          <LoginButtonFont>登入/註冊</LoginButtonFont>
-        </LoginButton>
+        
+        {isUserIdAvailable ? (
+          <LoginButtonFont>歡迎 {userId}</LoginButtonFont>
+        ) : (
+          <LoginButton>
+          <LoginButtonFont onClick={handleGotologinButton}>登入/註冊</LoginButtonFont>
+          </LoginButton>
+        )}
       </Section1>
 
       <Section2>
