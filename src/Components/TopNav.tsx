@@ -3,29 +3,26 @@ import styled from "styled-components";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Wrap = styled.div`
+const Wrap = styled.nav`
+  position: relative;
+  z-index: 100;
+  width: 100%;
   display: flex;
-  width: auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  flex-flow: column;
 `;
 
-const Section1 = styled.div`
-  display: flex;
-  height: 70px;
-  width: 100%;
-  justify-content: center;
+const Section1 = styled.section`
+  padding: 0 40px;
   align-items: center;
-  gap: 10%;
-  background: #232540;
+  height: 70px;
+  background-color: #232540;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const PageTitle = styled.div`
   display: flex;
-  padding: 3px 0px 10px 0px;
-  justify-content: center;
-  align-items: center;
+  flex-flow: column;
 `;
 
 const PageTitleFont = styled.div`
@@ -37,43 +34,47 @@ const PageTitleFont = styled.div`
   letter-spacing: 3px;
 `;
 
-const SearchBar = styled.div`
-  display: flex;
-  justify-content: center;
+const SearchBar = styled.form`
   width: 50%;
   height: 40px;
-  align-items: flex-start;
   border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  justify-content: flex-end;
 `;
 
-const SearchBarInput = styled.div`
-  display: flex;
-  width: 90%;
+const SearchBarInput = styled.input`
+  border-radius: 8px 0 0 8px;
+  color: #747693;
+  writing-mode: horizontal-tb !important;
+  padding-block: 1px;
+  padding-inline: 2px;
+  padding: 0 20px;
+  width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  border-radius: 8px 0px 0px 8px;
-  background: #fff;
+  outline: none;
+  border: none;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
 `;
 
 const SearchBarButton = styled.div`
+  width: 50px;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  background-color: #3e51fe;
+  cursor: pointer;
+  transition: background-color 0.3s;
   display: flex;
-  width: 10%;
-  height: 100%;
-  justify-content: center;
   align-items: center;
-  flex-shrink: 0;
-  border-radius: 0px 8px 8px 0px;
-  background: #3e51fe;
+  justify-content: center;
 `;
 
 const LoginButton = styled.div`
-  width: 10%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  cursor: pointer; 
+  cursor: pointer;
 `;
 
 const LoginButtonFont = styled.div`
@@ -89,9 +90,25 @@ const LoginButtonFont = styled.div`
   font-weight: 350;
   line-height: 18px; /* 150% */
   letter-spacing: 3px;
+`;
 
+const NavUl = styled.ul`
+  flex-basis: 140px;
+  justify-content: flex-end;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-flow: row;
+  box-sizing: border-box;
+`;
 
-}
+const NavLi = styled.li`
+  position: relative;
+  height: 100%;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Section2 = styled.div`
@@ -141,8 +158,8 @@ const NavButtonFont = styled.div`
 
 const CircleNavButtonlist = styled.div`
   display: flex;
-  height : 100%;
-  width : 10%;
+  height: 100%;
+  width: 10%;
   justify-content: space-evenly;
   align-items: center;
   flex-shrink: 0;
@@ -164,8 +181,7 @@ const ShopCartButton = styled(CircleNavButton)`
 
 export default function MainPage() {
   const nav = useNavigate();
-  const { userId, setUserId } = useAuth();
-  console.log("userId:", userId); // 在这里添加调试信息
+  const { userId, setUserId, logout } = useAuth();
 
   const handleGotologinButton = () => {
     nav("/login");
@@ -174,10 +190,18 @@ export default function MainPage() {
   const [isUserIdAvailable, setIsUserIdAvailable] = useState<boolean>(false);
 
   useEffect(() => {
-    if (userId !== null) {
+    if (userId != null) {
       setIsUserIdAvailable(true);
     }
+    else{
+      setIsUserIdAvailable(false);
+    }
   }, [userId]);
+  console.log(userId);
+
+  const handleLogoutClick = () => {
+    logout();
+  };
 
   return (
     <Wrap>
@@ -187,7 +211,9 @@ export default function MainPage() {
         </PageTitle>
 
         <SearchBar>
-          <SearchBarInput></SearchBarInput>
+          <article style={{ boxSizing: "border-box", width: "100%" }}>
+            <SearchBarInput></SearchBarInput>
+          </article>
           <SearchBarButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -215,14 +241,31 @@ export default function MainPage() {
             </svg>
           </SearchBarButton>
         </SearchBar>
-        
-        {isUserIdAvailable ? (
-          <LoginButtonFont>歡迎 {userId}</LoginButtonFont>
-        ) : (
-          <LoginButton>
-          <LoginButtonFont onClick={handleGotologinButton}>登入/註冊</LoginButtonFont>
-          </LoginButton>
-        )}
+
+        <NavUl>
+          {isUserIdAvailable ? (
+            <>
+              <NavLi>
+                <LoginButtonFont>歡迎 {userId}</LoginButtonFont>
+              </NavLi>
+              <NavLi>
+                <LoginButton>
+                  <LoginButtonFont onClick={handleLogoutClick}>
+                    登出
+                  </LoginButtonFont>
+                </LoginButton>
+              </NavLi>
+            </>
+          ) : (
+            <NavLi>
+              <LoginButton>
+                <LoginButtonFont onClick={handleGotologinButton}>
+                  登入/註冊
+                </LoginButtonFont>
+              </LoginButton>
+            </NavLi>
+          )}
+        </NavUl>
       </Section1>
 
       <Section2>
@@ -236,7 +279,6 @@ export default function MainPage() {
         </ButtonList>
 
         <CircleNavButtonlist>
-          
           <ShopCartButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
