@@ -1,10 +1,10 @@
-// AuthContext.tsx
 import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 interface AuthContextType {
-  userId: string | null;
-  setUserId?: Dispatch<SetStateAction<string | null>>;
+  userId: number | null;
+  setUserId?: Dispatch<SetStateAction<number | null>>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,21 +14,26 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [userId, setUserId] = useState<string | null>(() => {
+  const [userId, setUserId] = useState<number | null>(() => {
     const storedUserId = Cookies.get('userId');
-    return storedUserId === 'null' ? null : (storedUserId || null);
+    return storedUserId === 'null' ? null : (parseInt(storedUserId!, 10) || null);
   });
 
   useEffect(() => {
-    Cookies.set('userId', userId!);
+    Cookies.set('userId', userId != null ? String(userId) : 'null');
   }, [userId]);
 
-  const handleSetUserId = (newUserId: string) => {
+  const handleSetUserId = (newUserId: number) => {
     setUserId(newUserId);
   };
 
+  const logout = () => {
+    Cookies.remove('userId');
+    setUserId(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ userId, setUserId: handleSetUserId as  Dispatch<SetStateAction<string | null>>}}>
+    <AuthContext.Provider value={{ userId, setUserId: handleSetUserId as Dispatch<SetStateAction<number | null>> , logout}}>
       {children}
     </AuthContext.Provider>
   );
