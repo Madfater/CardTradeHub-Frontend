@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "./API";
 
 const Wrap = styled.nav`
   position: relative;
@@ -181,7 +182,8 @@ const ShopCartButton = styled(CircleNavButton)`
 
 export default function MainPage() {
   const nav = useNavigate();
-  const { userId, setUserId, logout } = useAuth();
+  const { userId, logout } = useAuth();
+  const [userName, setUserName] = useState<string>();
 
   const handleGotologinButton = () => {
     nav("/login");
@@ -189,15 +191,31 @@ export default function MainPage() {
 
   const [isUserIdAvailable, setIsUserIdAvailable] = useState<boolean>(false);
 
+  const getUserName = async () => {
+    try {
+      const response = await api.get(`/user/name?id=${userId}`);
+      const data = response?.data;
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
     if (userId != null) {
       setIsUserIdAvailable(true);
-    }
-    else{
+    } else {
       setIsUserIdAvailable(false);
     }
   }, [userId]);
-  console.log(userId);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getUserName();
+      setUserName(data);
+    };
+    fetchData();
+  }, []);
 
   const handleLogoutClick = () => {
     logout();
@@ -246,7 +264,7 @@ export default function MainPage() {
           {isUserIdAvailable ? (
             <>
               <NavLi>
-                <LoginButtonFont>歡迎 {userId}</LoginButtonFont>
+                <LoginButtonFont>歡迎 {userName}</LoginButtonFont>
               </NavLi>
               <NavLi>
                 <LoginButton>
