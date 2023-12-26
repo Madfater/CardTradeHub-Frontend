@@ -1,7 +1,9 @@
-import React from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
+import api from "../Components/API";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../Contexts/AuthContext";
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -300,6 +302,27 @@ const CartPaymentFooter = styled.footer`
 `;
 
 export default function ShoppingCart() {
+
+  const [cartData, setCartData] = useState(null);
+  const { userId } = useAuth();
+  console.log(userId);
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        // 在這裡發送與後端的請求，將 userId 傳遞給後端
+        const response = await api.get(`cart?user_id=${userId}`);
+        const data = response?.data;
+        setCartData(data);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+  
+    fetchCartData();
+  }, [userId]);
+
+
+
   return (
     <>
       <TopNav />
