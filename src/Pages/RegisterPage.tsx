@@ -174,9 +174,7 @@ export default function MemberLogin() {
   };
 
   const registerAccount = async () => {
-
-    if(passwordValue!=rpasswordValue)
-    {
+    if (passwordValue != rpasswordValue) {
       setTextContent("密碼不一致");
       openTextDialog();
       return;
@@ -194,8 +192,7 @@ export default function MemberLogin() {
       console.log(data);
 
       if (data == "register success") nav("/login");
-      else if(data == "User already exist")
-      {
+      else if (data == "User already exist") {
         setTextContent("用戶已註冊");
         openTextDialog();
       }
@@ -208,7 +205,7 @@ export default function MemberLogin() {
     <>
       <TextDialog
         open={isTextDialogOpen}
-        onClose={openTextDialog}
+        onClose={closeTextDialog}
         onConfirm={closeTextDialog}
         Text={textContent}
       />
