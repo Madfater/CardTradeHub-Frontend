@@ -36,12 +36,12 @@ code {
 
 @font-face {
   font-family: "ABeeZee";
-  src: local("ABeeZee"), url(./fonts/ABeeZee-Regular.ttf);
+  src: local("ABeeZee"), url(./src/fonts/ABeeZee-Regular.ttf);
 }
 
 @font-face {
   font-family: "Montserrat";
-  src: local("Montserrat"), url(./fonts/Montserrat-VariableFont_wght.ttf);
+  src: local("Montserrat"), url(./src/fonts/Montserrat-VariableFont_wght.ttf);
 }
 
 .App {
