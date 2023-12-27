@@ -95,11 +95,11 @@ export default function MainPage() {
 
     fetchData();
   }, [
+    currentKeyword,
     currentPage,
     currentLimit,
     currentOrderWay,
     isAscending,
-    currentKeyword,
     currentCatagory,
   ]);
 

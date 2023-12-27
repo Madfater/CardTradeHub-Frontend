@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import useDialog from "../Hooks/useDialog";
 import TextDialog from "../Dialogs/TextDialog";
 
-
 export default function MemberLogin() {
   const nav = useNavigate();
 
