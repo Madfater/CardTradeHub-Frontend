@@ -146,7 +146,9 @@ export default function MainPage() {
               <FilterBox>
                 <FilterLi>
                   <FilterTitle>進階搜尋</FilterTitle>
-                  <FilterButton onClick={()=>nav('/searchpage')}>搜尋賣家</FilterButton>
+                  <FilterButton onClick={() => nav("/searchpage")}>
+                    搜尋賣家
+                  </FilterButton>
                 </FilterLi>
                 <FilterLi>
                   <FilterTitle>卡片類型</FilterTitle>
@@ -194,7 +196,12 @@ export default function MainPage() {
               ) : (
                 <ProductGrid>
                   {searchResults?.items.map((item, index) => (
-                    <Productblock key={index}>
+                    <Productblock
+                      key={index}
+                      onClick={() =>
+                        nav(`/cardintroduction/${item.storeCardId}`)
+                      }
+                    >
                       <ProductContentWrap>
                         <ProductImg></ProductImg>
                         <ProductInfo>
@@ -391,6 +398,7 @@ const Productblock = styled.li`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #dfe3ea;
+  cursor: pointer;
 `;
 
 const ProductContentWrap = styled.a`
