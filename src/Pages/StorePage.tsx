@@ -7,6 +7,100 @@ import ConfirmationDialog from "../Dialogs/ConfirmDialog";
 import EditProductDialog from "../Dialogs/EditionDialog";
 import useDialog from "../Hooks/useDialog";
 
+export default function Store() {
+  return (
+    <>
+      <TopNav />
+      <ContainerWarp>
+        <ContainerArticle>
+          <ContainerHeader>
+            <BackButton>店家列表</BackButton>
+          </ContainerHeader>
+          <StoreInfo>
+            <Introduction>
+              <ul>
+                <InfoTitle>測試</InfoTitle>
+                <InfoDescription>測試</InfoDescription>
+              </ul>
+            </Introduction>
+
+            <Comment>
+              <h2>商家評價</h2>
+              <article style={{ width: "100%" }}>
+                <CommentGrid>
+                  <Commentblock>
+                    <CommentContentWrap>
+                      <CommentInfo>
+                        <h3>測試</h3>
+                      </CommentInfo>
+                    </CommentContentWrap>
+                  </Commentblock>
+
+                  <Commentblock>
+                    <CommentContentWrap>
+                      <CommentInfo>
+                        <h3>測試</h3>
+                      </CommentInfo>
+                    </CommentContentWrap>
+                  </Commentblock>
+                </CommentGrid>
+
+                <Stack alignItems="center">
+                  <Pagination />
+                </Stack>
+              </article>
+            </Comment>
+          </StoreInfo>
+
+          <ContainerLineBar>店家商品列表</ContainerLineBar>
+
+          <article style={{ width: "100%" }}>
+              <ProductGrid>
+                <Productblock>
+                  <ProductContentWrap>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+                <Productblock>
+                  <ProductContentWrap>
+                    <ProductImg></ProductImg>
+                    <ProductInfo>
+                      <h3>測試</h3>
+                    </ProductInfo>
+                  </ProductContentWrap>
+                </Productblock>
+              </ProductGrid>
+
+              <Stack alignItems="center">
+                <Pagination />
+              </Stack>
+            </article>
+        </ContainerArticle>
+      </ContainerWarp>
+    </>
+  );
+}
+
+
 const ContainerWarp = styled.main`
   padding: 25px 40px;
   flex: 1 1;
@@ -155,96 +249,3 @@ const ProductInfo = styled.article`
   color: #1f100b;
   font-size: 0.75rem;
 `;
-
-export default function Store() {
-  return (
-    <>
-      <TopNav />
-      <ContainerWarp>
-        <ContainerArticle>
-          <ContainerHeader>
-            <BackButton>店家列表</BackButton>
-          </ContainerHeader>
-          <StoreInfo>
-            <Introduction>
-              <ul>
-                <InfoTitle>測試</InfoTitle>
-                <InfoDescription>測試</InfoDescription>
-              </ul>
-            </Introduction>
-
-            <Comment>
-              <h2>商家評價</h2>
-              <article style={{ width: "100%" }}>
-                <CommentGrid>
-                  <Commentblock>
-                    <CommentContentWrap>
-                      <CommentInfo>
-                        <h3>測試</h3>
-                      </CommentInfo>
-                    </CommentContentWrap>
-                  </Commentblock>
-
-                  <Commentblock>
-                    <CommentContentWrap>
-                      <CommentInfo>
-                        <h3>測試</h3>
-                      </CommentInfo>
-                    </CommentContentWrap>
-                  </Commentblock>
-                </CommentGrid>
-
-                <Stack alignItems="center">
-                  <Pagination />
-                </Stack>
-              </article>
-            </Comment>
-          </StoreInfo>
-
-          <ContainerLineBar>店家商品列表</ContainerLineBar>
-
-          <article style={{ width: "100%" }}>
-              <ProductGrid>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-              </ProductGrid>
-
-              <Stack alignItems="center">
-                <Pagination />
-              </Stack>
-            </article>
-        </ContainerArticle>
-      </ContainerWarp>
-    </>
-  );
-}

@@ -3,6 +3,145 @@ import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
 
+export default function ShoppingCart() {
+  return (
+    <>
+      <TopNav />
+      <FrameWrapper>
+        <Container>
+          <Cart>
+            <CartLi>
+              <CartPackageHeader>
+                <CartSpan>
+                  <CartCheckBox type="checkbox" />
+                  玄玄卡鋪:遊戲王卡牌專門販售
+                </CartSpan>
+                <CartPackageHeaderAction>
+                  <MarginRightBTN>申請議價</MarginRightBTN>
+                  <MarginRightBTN>刪除店家</MarginRightBTN>
+                </CartPackageHeaderAction>
+              </CartPackageHeader>
+
+              <CartItems>
+                <CartItem>
+                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                  <CartItemSection>單價</CartItemSection>
+                  <CartItemSection>數量</CartItemSection>
+                  <CartItemSection>統計</CartItemSection>
+                  <CartItemSection>操作</CartItemSection>
+                </CartItem>
+                <CartItemFirst>
+                  <CartItemSectionFirst>
+                    <CartCheckBox type="checkbox" />
+                    <img
+                      src={card}
+                      width="60px"
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <CartItemInfoSpan>
+                      <div>新時代的主角</div>
+                      <div>SD35-JP001</div>
+                      <div>索隆十郎(異圖卡)</div>
+                    </CartItemInfoSpan>
+                    <CartItemInfoSpan>
+                      <div>卡況:正常</div>
+                    </CartItemInfoSpan>
+                  </CartItemSectionFirst>
+                  <CartItemSection>$ 40</CartItemSection>
+                  <CartItemSection># 2</CartItemSection>
+                  <CartItemSection>$ 80</CartItemSection>
+                  <MarginRightBTN>刪除商品</MarginRightBTN>
+                </CartItemFirst>
+                <CartItemFirst>
+                  <CartItemSectionFirst>
+                    <CartCheckBox type="checkbox" />
+                    <img
+                      src={card}
+                      width="60px"
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <CartItemInfoSpan>
+                      <div>新時代的主角</div>
+                      <div>SD35-JP001</div>
+                      <div>索隆十郎(異圖卡)</div>
+                    </CartItemInfoSpan>
+                    <CartItemInfoSpan>
+                      <div>卡況:正常</div>
+                    </CartItemInfoSpan>
+                  </CartItemSectionFirst>
+                  <CartItemSection>$ 40</CartItemSection>
+                  <CartItemSection># 2</CartItemSection>
+                  <CartItemSection>$ 80</CartItemSection>
+                  <MarginRightBTN>刪除商品</MarginRightBTN>
+                </CartItemFirst>
+              </CartItems>
+
+              <CartPackageFooter>
+                <CartPackageTotal>
+                  <CartPackageP>
+                    <CartPackageSpan>
+                      <CartPackageText>寄送方式 :</CartPackageText>
+                      <CartPackageSelect>
+                        <option value="standard">7-11</option>
+                        <option value="express">全家</option>
+                        <option value="pickup">萊爾富</option>
+                        <option value="pickup">OK</option>
+                      </CartPackageSelect>
+                      <CartPackageText>
+                        寄送費用: $60 (滿10,000免運費)
+                      </CartPackageText>
+                    </CartPackageSpan>
+                  </CartPackageP>
+                  <CartPackageP>總計: $140</CartPackageP>
+                </CartPackageTotal>
+              </CartPackageFooter>
+            </CartLi>
+
+            <CartLi>
+              <CartPaymentHeader>
+                付款方式:
+                <CartPaymentSelect>
+                  <MarginRightBTN>信用卡</MarginRightBTN>
+                  <MarginRightBTN>網路ATM</MarginRightBTN>
+                  <MarginRightBTN>超商代碼</MarginRightBTN>
+                  <MarginRightBTN>貨到付款</MarginRightBTN>
+                </CartPaymentSelect>
+              </CartPaymentHeader>
+              <CartPaymentInfo>
+                <CartPaymentInfoItem>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>包裹數 : </CartPackageP>
+                    <CartPackageP>1</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品數 : </CartPackageP>
+                    <CartPackageP>2</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品總金額 : </CartPackageP>
+                    <CartPackageP>80</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>運費總金額 : </CartPackageP>
+                    <CartPackageP>60</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>交易總金額 : </CartPackageP>
+                    <CartPackageP>140</CartPackageP>
+                  </CartPaymentSelectLi>
+                </CartPaymentInfoItem>
+              </CartPaymentInfo>
+              <CartPaymentFooter>
+                <CheckBTN>前往結帳</CheckBTN>
+              </CartPaymentFooter>
+            </CartLi>
+          </Cart>
+        </Container>
+      </FrameWrapper>
+    </>
+  );
+}
+
 const FrameWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -298,142 +437,3 @@ const CartPaymentFooter = styled.footer`
   flex-flow: row;
   padding: 20px;
 `;
-
-export default function ShoppingCart() {
-  return (
-    <>
-      <TopNav />
-      <FrameWrapper>
-        <Container>
-          <Cart>
-            <CartLi>
-              <CartPackageHeader>
-                <CartSpan>
-                  <CartCheckBox type="checkbox" />
-                  玄玄卡鋪:遊戲王卡牌專門販售
-                </CartSpan>
-                <CartPackageHeaderAction>
-                  <MarginRightBTN>申請議價</MarginRightBTN>
-                  <MarginRightBTN>刪除店家</MarginRightBTN>
-                </CartPackageHeaderAction>
-              </CartPackageHeader>
-
-              <CartItems>
-                <CartItem>
-                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
-                  <CartItemSection>單價</CartItemSection>
-                  <CartItemSection>數量</CartItemSection>
-                  <CartItemSection>統計</CartItemSection>
-                  <CartItemSection>操作</CartItemSection>
-                </CartItem>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <CartCheckBox type="checkbox" />
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                  <MarginRightBTN>刪除商品</MarginRightBTN>
-                </CartItemFirst>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <CartCheckBox type="checkbox" />
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                  <MarginRightBTN>刪除商品</MarginRightBTN>
-                </CartItemFirst>
-              </CartItems>
-
-              <CartPackageFooter>
-                <CartPackageTotal>
-                  <CartPackageP>
-                    <CartPackageSpan>
-                      <CartPackageText>寄送方式 :</CartPackageText>
-                      <CartPackageSelect>
-                        <option value="standard">7-11</option>
-                        <option value="express">全家</option>
-                        <option value="pickup">萊爾富</option>
-                        <option value="pickup">OK</option>
-                      </CartPackageSelect>
-                      <CartPackageText>
-                        寄送費用: $60 (滿10,000免運費)
-                      </CartPackageText>
-                    </CartPackageSpan>
-                  </CartPackageP>
-                  <CartPackageP>總計: $140</CartPackageP>
-                </CartPackageTotal>
-              </CartPackageFooter>
-            </CartLi>
-
-            <CartLi>
-              <CartPaymentHeader>
-                付款方式:
-                <CartPaymentSelect>
-                  <MarginRightBTN>信用卡</MarginRightBTN>
-                  <MarginRightBTN>網路ATM</MarginRightBTN>
-                  <MarginRightBTN>超商代碼</MarginRightBTN>
-                  <MarginRightBTN>貨到付款</MarginRightBTN>
-                </CartPaymentSelect>
-              </CartPaymentHeader>
-              <CartPaymentInfo>
-                <CartPaymentInfoItem>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>包裹數 : </CartPackageP>
-                    <CartPackageP>1</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品數 : </CartPackageP>
-                    <CartPackageP>2</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品總金額 : </CartPackageP>
-                    <CartPackageP>80</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>運費總金額 : </CartPackageP>
-                    <CartPackageP>60</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>交易總金額 : </CartPackageP>
-                    <CartPackageP>140</CartPackageP>
-                  </CartPaymentSelectLi>
-                </CartPaymentInfoItem>
-              </CartPaymentInfo>
-              <CartPaymentFooter>
-                <CheckBTN>前往結帳</CheckBTN>
-              </CartPaymentFooter>
-            </CartLi>
-          </Cart>
-        </Container>
-      </FrameWrapper>
-    </>
-  );
-}

@@ -6,157 +6,6 @@ import api from "./API";
 import TextDialog from "../Dialogs/TextDialog";
 import useDialog from "../Hooks/useDialog";
 
-const Wrap = styled.nav`
-  position: relative;
-  z-index: 100;
-  width: 100%;
-  display: flex;
-  flex-flow: column;
-`;
-
-const Section1 = styled.section`
-  padding: 0 40px;
-  align-items: center;
-  height: 70px;
-  background-color: #232540;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const PageTitle = styled.div`
-  display: flex;
-  flex-flow: column;
-`;
-
-const PageTitleFont = styled.div`
-  color: #fff;
-  font-family: ABeeZee;
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 20px; /* 150% */
-  letter-spacing: 3px;
-`;
-
-const SearchBar = styled.form`
-  width: 50%;
-  height: 40px;
-  border-radius: 8px;
-  background-color: #fff;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const SearchBarInput = styled.input`
-  border-radius: 8px 0 0 8px;
-  color: #747693;
-  writing-mode: horizontal-tb !important;
-  padding-block: 1px;
-  padding-inline: 2px;
-  padding: 0 20px;
-  width: 100%;
-  height: 100%;
-  outline: none;
-  border: none;
-  letter-spacing: 3px;
-  font-size: 0.75rem;
-`;
-
-const SearchBarButton = styled.div`
-  width: 50px;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  background-color: #3e51fe;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const LoginButton = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  cursor: pointer;
-`;
-
-const LoginButtonFont = styled.div`
-  display: flex;
-  height: 18px;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #fff;
-  font-family: Noto Sans TC;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 350;
-  line-height: 18px; /* 150% */
-  letter-spacing: 3px;
-`;
-
-const NavUl = styled.ul`
-  flex-basis: 140px;
-  justify-content: flex-end;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  flex-flow: row;
-  box-sizing: border-box;
-`;
-
-const NavLi = styled.li`
-  position: relative;
-  height: 100%;
-  margin-left: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Section2 = styled.section`
-  padding: 0 40px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ButtonList = styled.ul`
-  display: flex;
-  flex-flow: row;
-`;
-
-const NavButton = styled.li`
-  display: inline-flex;
-  margin-right: 60px;
-`;
-
-const NavButtonFont = styled.a`
-  color: #1f100b;
-  font-size: 0.85rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CircleNavButtonlist = styled.div`
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ShopCartButton = styled.div`
-  display: flex;
-  padding: 10px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  border-radius: 36px;
-  opacity: 0.5;
-  background: #3e51fe;
-`;
-
 export default function MainPage() {
   const nav = useNavigate();
   const { userId, logout } = useAuth();
@@ -331,3 +180,154 @@ export default function MainPage() {
     </>
   );
 }
+
+const Wrap = styled.nav`
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+`;
+
+const Section1 = styled.section`
+  padding: 0 40px;
+  align-items: center;
+  height: 70px;
+  background-color: #232540;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const PageTitle = styled.div`
+  display: flex;
+  flex-flow: column;
+`;
+
+const PageTitleFont = styled.div`
+  color: #fff;
+  font-family: ABeeZee;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 20px; /* 150% */
+  letter-spacing: 3px;
+`;
+
+const SearchBar = styled.form`
+  width: 50%;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const SearchBarInput = styled.input`
+  border-radius: 8px 0 0 8px;
+  color: #747693;
+  writing-mode: horizontal-tb !important;
+  padding-block: 1px;
+  padding-inline: 2px;
+  padding: 0 20px;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+`;
+
+const SearchBarButton = styled.div`
+  width: 50px;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  background-color: #3e51fe;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const LoginButton = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const LoginButtonFont = styled.div`
+  display: flex;
+  height: 18px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-family: Noto Sans TC;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 18px; /* 150% */
+  letter-spacing: 3px;
+`;
+
+const NavUl = styled.ul`
+  flex-basis: 140px;
+  justify-content: flex-end;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-flow: row;
+  box-sizing: border-box;
+`;
+
+const NavLi = styled.li`
+  position: relative;
+  height: 100%;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Section2 = styled.section`
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ButtonList = styled.ul`
+  display: flex;
+  flex-flow: row;
+`;
+
+const NavButton = styled.li`
+  display: inline-flex;
+  margin-right: 60px;
+`;
+
+const NavButtonFont = styled.a`
+  color: #1f100b;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CircleNavButtonlist = styled.div`
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ShopCartButton = styled.div`
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 36px;
+  opacity: 0.5;
+  background: #3e51fe;
+`;
