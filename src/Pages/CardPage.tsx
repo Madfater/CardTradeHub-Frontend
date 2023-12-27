@@ -36,7 +36,7 @@ export default function CardIntro() {
   const [cardDetails, setCardDetails] = useState<CardDetails>();
 
   const [numberOption, setNumberOption] = useState<any>();
-	const [textContent, setTextContent] = useState("");
+  const [textContent, setTextContent] = useState("");
 
   const {
     isOpen: isTextDialogOpen,
@@ -69,8 +69,8 @@ export default function CardIntro() {
 
   const addToShoppingcart = async () => {
     try {
-			if(userId===null)
-				return "fail"
+      if (userId === null)
+        return "fail"
       const body = {
         userId: userId,
         cardId: cardInfo?.storeCardId,
@@ -87,15 +87,14 @@ export default function CardIntro() {
   const handleAddToCart = () => {
     const transData = async () => {
       const data = await addToShoppingcart();
-			if(data==="added")
-			{
-				setTextContent("加入成功")
-				openTextDialog()
-			}
-			else{
-				setTextContent("加入失敗")
-				openTextDialog()
-			}
+      if (data === "added") {
+        setTextContent("加入成功")
+        openTextDialog()
+      }
+      else {
+        setTextContent("加入失敗")
+        openTextDialog()
+      }
     };
 
     transData();
@@ -140,6 +139,9 @@ export default function CardIntro() {
       />
       <TopNav />
       <Container>
+        <ContainerHeader>
+          <BackButton onClick={() => nav("/")}>商品列表</BackButton>
+        </ContainerHeader>
         <ContainerMain>
           <ToastBox>
             <span>
@@ -158,22 +160,21 @@ export default function CardIntro() {
           </ToastBox>
 
           <ProductInfo>
-            <ProductInfoHeader>
-              <ProductInfoHeaderTitle>
-                <h1>{cardDetails?.name}</h1>
-              </ProductInfoHeaderTitle>
-            </ProductInfoHeader>
-
             <ProductInfoContainer>
               <ProductInfoImage>
                 <ImageStyle></ImageStyle>
               </ProductInfoImage>
+
               <ProductInfoContent>
+                <ProductInfoHeaderTitle>
+                  <h1>{cardDetails?.name}</h1>
+                </ProductInfoHeaderTitle>
+
                 <ProductInfoStore>
                   <ProductInfoItem>
                     <ProductInfoLi>
                       <ItemStore>
-                        <a style={{cursor:"pointer"}} onClick={()=>nav(`/storepage/${cardInfo?.storeId}`)}>{cardInfo?.storeName}</a>
+                        <a style={{ cursor: "pointer" }} onClick={() => nav(`/storepage/${cardInfo?.storeId}`)}>{cardInfo?.storeName}</a>
                         <StoreBades></StoreBades>
                         <h4>備貨日期：2天</h4>
                       </ItemStore>
@@ -204,7 +205,9 @@ export default function CardIntro() {
                   <li>卡牌種類:{cardDetails?.catagory}</li>
                 </ProductDetail>
               </ProductInfoContent>
+
             </ProductInfoContainer>
+
           </ProductInfo>
         </ContainerMain>
       </Container>
@@ -474,4 +477,23 @@ const ProductDetail = styled.ul`
   li {
     margin-bottom: 5px;
   }
+`;
+
+const ContainerHeader = styled.article`
+  margin-bottom: 25px;
+`;
+
+const BackButton = styled.a`
+  padding: 8px 18px;
+  min-width: 140px;
+  color: #fff !important;
+  background-color: #3e51fe;
+  transition: background-color 0.3s;
+  display: inline-flex;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #dfe3ea;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 `;
