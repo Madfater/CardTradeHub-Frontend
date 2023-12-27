@@ -20,7 +20,7 @@ export default function App() {
           <Route path="/">
             <Route index element={<MainPage />} />
             <Route
-              path="/search/:keyword/:page/:pageLimit/:orderWay/:ascending"
+              path="/search/:page/:pageLimit/:orderWay/:ascending/:keyword/:catagory"
               element={<MainPage />}
             />
             <Route path="/login" element={<LoginPage />} />
