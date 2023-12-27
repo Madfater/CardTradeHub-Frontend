@@ -13,6 +13,8 @@ import {
 import { AuthProvider } from "./Contexts/AuthContext";
 
 export default function App() {
+
+
   return (
     <div>
       <AuthProvider>
@@ -26,7 +28,7 @@ export default function App() {
             <Route path="/searchpage" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage />} />
             <Route path="/cardintroduction/:cardID" element={<CardIntro />} />
-            <Route path="/storepage" element={<StorePage />} />
+            <Route path="/storepage/:storeID" element={<StorePage />} />
             <Route path="/orderpage" element={<OrderPage />} />
           </Route>
         </Routes>
