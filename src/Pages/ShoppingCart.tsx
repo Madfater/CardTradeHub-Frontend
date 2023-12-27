@@ -6,85 +6,107 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 
 export default function ShoppingCart() {
-    const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
-    const { userId } = useAuth();
-  
-    useEffect(() => {
-      const fetchCartData = async () => {
-        try {
-          const response = await api.get(`cart?userId=${userId}`);
-          const data = response?.data;
-          if (data && typeof data.items === 'object') {
-            const itemsData = data.items as Record<string, Item[]>;
-            const renamedData = Object.fromEntries(
-              Object.entries(itemsData).map(([storeId, items]) => [
-                storeId,
-                items.map((item) => ({
-                  cardCategory: item.cardCategory,
-                  cardDescription: item.cardDescription,
-                  cardName: item.cardName,
-                  storeCardId: item.storeCardId,
-                  storeCardPrice: item.storeCardPrice,
-                  storeCardQuantity: item.storeCardQuantity,
-                  storeCardStatus: item.storeCardStatus,
-                })),
-              ])
-            );
-            setCartData(renamedData);
-          }
-        } catch (error) {
-          console.error("Error fetching cart data:", error);
+  const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
+  const [storeName, setStoreName] = useState<string>("玄玄店鋪");
+  const { userId } = useAuth();
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await api.get(`cart?userId=${userId}`);
+        const data = response?.data;
+        if (data && typeof data.items === 'object') {
+          const itemsData = data.items as Record<string, Item[]>;
+
+          const renamedData = Object.fromEntries(
+            await Promise.all(
+              Object.entries(itemsData).map(async ([storeId, items]) => {
+                const storeResponse = await api.get(`https://cardshop.sub.jeff3.win/store?id=${storeId}`);
+                const storeData = storeResponse?.data;
+                const updatedStoreName = storeData?.storeName || 'Unknown Store';
+                setStoreName(updatedStoreName);
+
+                return [
+                  updatedStoreName,
+                  items.map((item) => ({
+                    cardCategory: item.cardCategory,
+                    cardDescription: item.cardDescription,
+                    cardName: item.cardName,
+                    storeCardId: item.storeCardId,
+                    storeCardPrice: item.storeCardPrice,
+                    storeCardQuantity: item.storeCardQuantity,
+                    storeCardStatus: item.storeCardStatus,
+                  })),
+                ];
+              })
+            )
+          );
+          setCartData(renamedData);
         }
-      };
-  
-      fetchCartData();
-    }, [userId],);
-  
-    const calculateTotal = () => {
-      let total = 0;
-  
-      if (cartData) {
-        Object.values(cartData).forEach((items) => {
-          items.forEach((item) => {
-            total += item.storeCardPrice * item.storeCardQuantity;
-          });
-        });
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
       }
-  
-      return total;
     };
-  
-    const getPackageCount = () => {
-      return cartData ? Object.keys(cartData).length : 0;
-    };
-  
-    const getItemCount = () => {
-      let itemCount = 0;
-  
-      if (cartData) {
-        Object.values(cartData).forEach((items) => {
-          itemCount += items.length;
-        });
-      }
-  
-      return itemCount;
-    };
-  
-    const getShippingCost = () => {
-      return 60;
-    };
+
+    fetchCartData();
+  }, [userId]);
     
-    return (
-      <>
-        <TopNav />
-        <FrameWrapper>
-          <Container>
-            <Cart>
+  const calculateTotalForStore = (items: Item[]) => {
+    let total = 0;
+  
+    items.forEach((item) => {
+      total += item.storeCardPrice * item.storeCardQuantity;
+    });
+  
+    return total;
+  };
+
+  const calculateTotal = () => {
+    let total = 0;
+
+    if (cartData) {
+      Object.values(cartData).forEach((items) => {
+        items.forEach((item) => {
+          total += item.storeCardPrice * item.storeCardQuantity;
+        });
+      });
+    }
+
+    return total;
+  };
+
+  const getPackageCount = () => {
+    return cartData ? Object.keys(cartData).length : 0;
+  };
+
+  const getItemCount = () => {
+    let itemCount = 0;
+
+    if (cartData) {
+      Object.values(cartData).forEach((items) => {
+        itemCount += items.length;
+      });
+    }
+
+    return itemCount;
+  };
+
+  const getShippingCost = () => {
+    return 60;
+  };
+  
+  return (
+    <>
+      <TopNav/>
+      <FrameWrapper>
+        <Container>
+          {cartData && Object.entries(cartData).map(([storeName, items]) => (
+            <Cart key={storeName}>
               <CartLi>
                 <CartPackageHeader>
                   <CartSpan>
                     <CartCheckBox type="checkbox" />
-                    玄玄卡鋪:遊戲王卡牌專門販售
+                    {storeName}
                   </CartSpan>
                   <CartPackageHeaderAction>
                     <MarginRightBTN>申請議價</MarginRightBTN>
@@ -99,32 +121,29 @@ export default function ShoppingCart() {
                     <CartItemSection>統計</CartItemSection>
                     <CartItemSection>操作</CartItemSection>
                   </CartItem>
-  
-                  {cartData &&
-                  Object.entries(cartData).map(([storeId, items]) =>
-                    items.map((item, index) => (
-                      <CartItemFirst key={`${storeId}-${index}`}>
-                        <CartItemSectionFirst>
-                          <CartCheckBox type="checkbox" />
-                          <img src={card} width="60px" style={{ marginLeft: "10px" }} />
-                          <CartItemInfoSpan>
-                            <div>{item.cardCategory}</div>
-                            <div>{item.cardName}</div>
-                            <div>{item.cardDescription}</div>
-                          </CartItemInfoSpan>
-                          <CartItemInfoSpan>
-                            <div>卡況: {item.storeCardStatus}</div>
-                          </CartItemInfoSpan>
-                        </CartItemSectionFirst>
-                        <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                        <CartItemSection># {item.storeCardQuantity}</CartItemSection>
-                        <CartItemSection>${item.storeCardPrice * item.storeCardQuantity}</CartItemSection>
-                        <MarginRightBTN>刪除商品</MarginRightBTN>
-                      </CartItemFirst>
-                    ))
-                  )}
+
+                  {items.map((item, index) => (
+                    <CartItemFirst key={`${storeName}-${index}`}>
+                      <CartItemSectionFirst>
+                        <CartCheckBox type="checkbox" />
+                        <img src={card} width="60px" style={{ marginLeft: "10px" }} alt="Card" />
+                        <CartItemInfoSpan>
+                          <div>{item.cardCategory}</div>
+                          <div>{item.cardName}</div>
+                          <div>{item.cardDescription}</div>
+                        </CartItemInfoSpan>
+                        <CartItemInfoSpan>
+                          <div>卡況: {item.storeCardStatus}</div>
+                        </CartItemInfoSpan>
+                      </CartItemSectionFirst>
+                      <CartItemSection>${item.storeCardPrice}</CartItemSection>
+                      <CartItemSection># {item.storeCardQuantity}</CartItemSection>
+                      <CartItemSection>${item.storeCardPrice * item.storeCardQuantity}</CartItemSection>
+                      <MarginRightBTN>刪除商品</MarginRightBTN>
+                    </CartItemFirst>
+                  ))}
                 </CartItems>
-  
+
                 <CartPackageFooter>
                   <CartPackageTotal>
                     <CartPackageP>
@@ -141,55 +160,56 @@ export default function ShoppingCart() {
                         </CartPackageText>
                       </CartPackageSpan>
                     </CartPackageP>
-                    <CartPackageP>總計: ${calculateTotal()}</CartPackageP>
+                    <CartPackageP>總計: ${calculateTotalForStore(items)}</CartPackageP>
                   </CartPackageTotal>
                 </CartPackageFooter>
               </CartLi>
-  
-              <CartLi>
-                <CartPaymentHeader>
-                  付款方式:
-                  <CartPaymentSelect>
-                    <MarginRightBTN>信用卡</MarginRightBTN>
-                    <MarginRightBTN>網路ATM</MarginRightBTN>
-                    <MarginRightBTN>超商代碼</MarginRightBTN>
-                    <MarginRightBTN>貨到付款</MarginRightBTN>
-                  </CartPaymentSelect>
-                </CartPaymentHeader>
-                <CartPaymentInfo>
-                  <CartPaymentInfoItem>
-                    <CartPaymentSelectLi>
-                    <CartPackageP>包裹數 : </CartPackageP>
-                      <CartPackageP>{getPackageCount()}</CartPackageP>
-                    </CartPaymentSelectLi>
-                    <CartPaymentSelectLi>
-                      <CartPackageP>商品數 : </CartPackageP>
-                      <CartPackageP>{getItemCount()}</CartPackageP>
-                    </CartPaymentSelectLi>
-                    <CartPaymentSelectLi>
-                      <CartPackageP>商品總金額 : </CartPackageP>
-                      <CartPackageP>${calculateTotal()}</CartPackageP>
-                    </CartPaymentSelectLi>
-                    <CartPaymentSelectLi>
-                      <CartPackageP>運費總金額 : </CartPackageP>
-                      <CartPackageP>${getShippingCost()}</CartPackageP>
-                    </CartPaymentSelectLi>
-                    <CartPaymentSelectLi>
-                      <CartPackageP>交易總金額 : </CartPackageP>
-                      <CartPackageP>${calculateTotal() + getShippingCost()}</CartPackageP>
-                    </CartPaymentSelectLi>
-                  </CartPaymentInfoItem>
-                </CartPaymentInfo>
-                <CartPaymentFooter>
-                  <CheckBTN>前往結帳</CheckBTN>
-                </CartPaymentFooter>
-              </CartLi>
             </Cart>
-          </Container>
-        </FrameWrapper>
-      </>
-    );
-  }
+          ))}
+                        <CartLi>
+              <CartPaymentHeader>
+                付款方式:
+                <CartPaymentSelect>
+                  <MarginRightBTN>信用卡</MarginRightBTN>
+                  <MarginRightBTN>網路ATM</MarginRightBTN>
+                  <MarginRightBTN>超商代碼</MarginRightBTN>
+                  <MarginRightBTN>貨到付款</MarginRightBTN>
+                </CartPaymentSelect>
+              </CartPaymentHeader>
+              <CartPaymentInfo>
+                <CartPaymentInfoItem>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>包裹數 : </CartPackageP>
+                    <CartPackageP>{getPackageCount()}</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品數 : </CartPackageP>
+                    <CartPackageP>{getItemCount()}</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>商品總金額 : </CartPackageP>
+                    <CartPackageP>${calculateTotal()}</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>運費總金額 : </CartPackageP>
+                    <CartPackageP>${getShippingCost()}</CartPackageP>
+                  </CartPaymentSelectLi>
+                  <CartPaymentSelectLi>
+                    <CartPackageP>交易總金額 : </CartPackageP>
+                    <CartPackageP>${calculateTotal() + getShippingCost()}</CartPackageP>
+                  </CartPaymentSelectLi>
+                </CartPaymentInfoItem>
+              </CartPaymentInfo>
+              <CartPaymentFooter>
+                <CheckBTN>前往結帳</CheckBTN>
+              </CartPaymentFooter>
+            </CartLi>
+        </Container>
+      </FrameWrapper>
+    </>
+  );
+}
+  
 
 
 const FrameWrapper = styled.div`
