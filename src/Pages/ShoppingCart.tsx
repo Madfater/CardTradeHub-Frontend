@@ -55,7 +55,7 @@ export default function ShoppingCart() {
     let total = 0;
   
     items.forEach((item) => {
-      total += item.storeCardPrice * item.storeCardQuantity;
+      total += item.storeCardPrice;
     });
   
     return total;
@@ -67,7 +67,7 @@ export default function ShoppingCart() {
     if (cartData) {
       Object.values(cartData).forEach((items) => {
         items.forEach((item) => {
-          total += item.storeCardPrice * item.storeCardQuantity;
+          total += item.storeCardPrice;
         });
       });
     }
@@ -137,8 +137,8 @@ export default function ShoppingCart() {
                         </CartItemInfoSpan>
                       </CartItemSectionFirst>
                       <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                      <CartItemSection># {item.storeCardQuantity}</CartItemSection>
-                      <CartItemSection>${item.storeCardPrice * item.storeCardQuantity}</CartItemSection>
+                      <CartItemSection># 1</CartItemSection>
+                      <CartItemSection>${item.storeCardPrice}</CartItemSection>
                       <MarginRightBTN>刪除商品</MarginRightBTN>
                     </CartItemFirst>
                   ))}
