@@ -199,7 +199,7 @@ export default function MainPage() {
                     <Productblock
                       key={index}
                       onClick={() =>
-                        nav(`/cardintroduction/${item.storeCardId}`)
+                        nav(`/cardpage/${item.storeCardId}`)
                       }
                     >
                       <ProductContentWrap>

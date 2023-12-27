@@ -1,7 +1,7 @@
 import { Icon } from "@mui/material";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../Components/API";
 import { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
@@ -26,6 +26,9 @@ interface CardDetails {
 }
 
 export default function CardIntro() {
+
+  const nav = useNavigate();
+
   const { cardID } = useParams();
   const { userId } = useAuth();
 
@@ -170,7 +173,7 @@ export default function CardIntro() {
                   <ProductInfoItem>
                     <ProductInfoLi>
                       <ItemStore>
-                        <a href="/search/2">{cardInfo?.storeName}</a>
+                        <a style={{cursor:"pointer"}} onClick={()=>nav(`/storepage/${cardInfo?.storeId}`)}>{cardInfo?.storeName}</a>
                         <StoreBades></StoreBades>
                         <h4>備貨日期：2天</h4>
                       </ItemStore>

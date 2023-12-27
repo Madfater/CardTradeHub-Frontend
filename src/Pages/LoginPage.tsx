@@ -22,14 +22,6 @@ export default function MemberLogin() {
     closeDialog: closeTextDialog,
   } = useDialog();
 
-  const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccountValue(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordValue(e.target.value);
-  };
-
   const verifyAccount = async () => {
     try {
       const body = {
@@ -57,10 +49,6 @@ export default function MemberLogin() {
       setUserId?.(result);
       nav("/");
     }
-  };
-
-  const handleGotoRegisterButton = () => {
-    nav("/registerpage");
   };
 
   return (
@@ -94,7 +82,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={accountValue}
-                        onChange={handleAccountChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setAccountValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -107,7 +97,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={passwordValue}
-                        onChange={handlePasswordChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setPasswordValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -119,7 +111,7 @@ export default function MemberLogin() {
 
                 <Formfooter>
                   您還沒有帳號嗎？
-                  <BlueText onClick={handleGotoRegisterButton}>
+                  <BlueText onClick={() => nav("/registerpage")}>
                     即刻註冊吧！
                   </BlueText>
                 </Formfooter>
