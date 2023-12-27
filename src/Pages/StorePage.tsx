@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import { Pagination, Stack } from "@mui/material/";
-import ConfirmationDialog from "../Dialogs/ConfirmDialog";
-import EditProductDialog from "../Dialogs/EditionDialog";
-import useDialog from "../Hooks/useDialog";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../Components/API";
 
 interface Comment {
@@ -41,6 +38,7 @@ interface StoreData {
 }
 
 export default function Store() {
+  const nav = useNavigate();
   const { storeID } = useParams();
 
   const [commentPage, setcommentPage] = useState<number>(1);
@@ -49,7 +47,7 @@ export default function Store() {
 
   const [page, setPage] = useState<number>(1);
   const [storeCards, setStoreCards] = useState<StoreCards>();
-  const PageLimit = 3;
+  const PageLimit = 12;
 
   const [storeData, setStoreData] = useState<StoreData>();
 
@@ -88,7 +86,6 @@ export default function Store() {
     }
   };
 
-  console.log(typeof page)
   useEffect(() => {
     const fetchCommentData = async () => {
       const data = await getComment();
@@ -121,7 +118,7 @@ export default function Store() {
       <ContainerWarp>
         <ContainerArticle>
           <ContainerHeader>
-            <BackButton>店家列表</BackButton>
+            <BackButton onClick={() => nav("/searchpage")}>店家列表</BackButton>
           </ContainerHeader>
           <StoreInfo>
             <Introduction>
@@ -177,7 +174,10 @@ export default function Store() {
             ) : (
               <ProductGrid>
                 {storeCards.items.map((item, index) => (
-                  <Productblock key={index}>
+                  <Productblock
+                    key={index}
+                    onClick={() => nav(`/cardpage/${item.storeCardId}`)}
+                  >
                     <ProductContentWrap>
                       <ProductImg></ProductImg>
                       <ProductInfo>
@@ -202,7 +202,7 @@ export default function Store() {
               <Pagination
                 count={storeCards?.totalPage}
                 page={page}
-                onChange={(event,value:number) =>
+                onChange={(event, value: number) =>
                   setPage(typeof value === "number" ? value : 0)
                 }
               />
@@ -336,6 +336,7 @@ const Productblock = styled.li`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #dfe3ea;
+  cursor: pointer;
 `;
 
 const ProductContentWrap = styled.a`
