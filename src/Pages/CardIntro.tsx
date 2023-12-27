@@ -51,7 +51,6 @@ export default function CardIntro() {
       console.error("Error fetching data:", error);
     }
   };
-	console.log(userId)
 
   const getCardDetails = async () => {
     try {
@@ -292,39 +291,6 @@ const ProductInfoHeaderTitle = styled.div`
       }
     }
   }
-`;
-
-const AddToFavorite = styled.section`
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  font: inherit;
-`;
-
-const AddToFavoriteBTN = styled.a`
-  cursor: pointer;
-  padding: 8px 18px;
-  min-width: 140px;
-  color: #fff !important;
-  background-color: #e05e2e;
-  transition: background-color 0.3s;
-  display: inline-flex;
-  border-radius: 8px;
-  border: 1px solid #dfe3ea;
-  align-items: center;
-  justify-content: center;
-`;
-
-const FavoriteBTNIcon = styled.a`
-  margin-right: 9px;
-  transition: transform 0.3s, -webkit-transform 0.3s, -moz-transform 0.3s;
-  width: 12px;
-  height: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const ProductInfoContainer = styled.section`
