@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
 
 const api = axios.create({
-	baseURL: "http://10.1.4.110:5000/",
+	baseURL: "http://10.1.4.110:5000/api",
   timeout: 5000,
 })
 
