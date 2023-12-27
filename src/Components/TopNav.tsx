@@ -21,6 +21,10 @@ export default function MainPage() {
     nav("/login");
   };
 
+  const handleGoToCartButton = () => {
+    nav("/shoppingcart");
+  }
+
   const [isUserIdAvailable, setIsUserIdAvailable] = useState<boolean>(false);
 
   const getUserName = async () => {
@@ -32,6 +36,7 @@ export default function MainPage() {
       console.error("Error fetching data:", error);
     }
   };
+  console.log(userId);
 
   useEffect(() => {
     if (userId != null) {
@@ -140,7 +145,7 @@ export default function MainPage() {
           </ButtonList>
 
           <CircleNavButtonlist>
-            <ShopCartButton>
+            <ShopCartButton onClick={handleGoToCartButton}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="17"
@@ -330,4 +335,5 @@ const ShopCartButton = styled.div`
   border-radius: 36px;
   opacity: 0.5;
   background: #3e51fe;
+  cursor: pointer;
 `;
