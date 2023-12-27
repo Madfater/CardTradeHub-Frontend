@@ -1,6 +1,196 @@
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
+import api from "../Components/API";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../Contexts/AuthContext";
+
+export default function ShoppingCart() {
+    const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
+    const { userId } = useAuth();
+  
+    useEffect(() => {
+      const fetchCartData = async () => {
+        try {
+          const response = await api.get(`cart?userId=${userId}`);
+          const data = response?.data;
+          if (data && typeof data.items === 'object') {
+            const itemsData = data.items as Record<string, Item[]>;
+            const renamedData = Object.fromEntries(
+              Object.entries(itemsData).map(([storeId, items]) => [
+                storeId,
+                items.map((item) => ({
+                  cardCategory: item.cardCategory,
+                  cardDescription: item.cardDescription,
+                  cardName: item.cardName,
+                  storeCardId: item.storeCardId,
+                  storeCardPrice: item.storeCardPrice,
+                  storeCardQuantity: item.storeCardQuantity,
+                  storeCardStatus: item.storeCardStatus,
+                })),
+              ])
+            );
+            setCartData(renamedData);
+          }
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
+        }
+      };
+  
+      fetchCartData();
+    }, [userId],);
+  
+    const calculateTotal = () => {
+      let total = 0;
+  
+      if (cartData) {
+        Object.values(cartData).forEach((items) => {
+          items.forEach((item) => {
+            total += item.storeCardPrice * item.storeCardQuantity;
+          });
+        });
+      }
+  
+      return total;
+    };
+  
+    const getPackageCount = () => {
+      return cartData ? Object.keys(cartData).length : 0;
+    };
+  
+    const getItemCount = () => {
+      let itemCount = 0;
+  
+      if (cartData) {
+        Object.values(cartData).forEach((items) => {
+          itemCount += items.length;
+        });
+      }
+  
+      return itemCount;
+    };
+  
+    const getShippingCost = () => {
+      return 60;
+    };
+    
+    return (
+      <>
+        <TopNav />
+        <FrameWrapper>
+          <Container>
+            <Cart>
+              <CartLi>
+                <CartPackageHeader>
+                  <CartSpan>
+                    <CartCheckBox type="checkbox" />
+                    玄玄卡鋪:遊戲王卡牌專門販售
+                  </CartSpan>
+                  <CartPackageHeaderAction>
+                    <MarginRightBTN>申請議價</MarginRightBTN>
+                    <MarginRightBTN>刪除店家</MarginRightBTN>
+                  </CartPackageHeaderAction>
+                </CartPackageHeader>
+                <CartItems>
+                  <CartItem>
+                    <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                    <CartItemSection>單價</CartItemSection>
+                    <CartItemSection>數量</CartItemSection>
+                    <CartItemSection>統計</CartItemSection>
+                    <CartItemSection>操作</CartItemSection>
+                  </CartItem>
+  
+                  {cartData &&
+                  Object.entries(cartData).map(([storeId, items]) =>
+                    items.map((item, index) => (
+                      <CartItemFirst key={`${storeId}-${index}`}>
+                        <CartItemSectionFirst>
+                          <CartCheckBox type="checkbox" />
+                          <img src={card} width="60px" style={{ marginLeft: "10px" }} />
+                          <CartItemInfoSpan>
+                            <div>{item.cardCategory}</div>
+                            <div>{item.cardName}</div>
+                            <div>{item.cardDescription}</div>
+                          </CartItemInfoSpan>
+                          <CartItemInfoSpan>
+                            <div>卡況: {item.storeCardStatus}</div>
+                          </CartItemInfoSpan>
+                        </CartItemSectionFirst>
+                        <CartItemSection>${item.storeCardPrice}</CartItemSection>
+                        <CartItemSection># {item.storeCardQuantity}</CartItemSection>
+                        <CartItemSection>${item.storeCardPrice * item.storeCardQuantity}</CartItemSection>
+                        <MarginRightBTN>刪除商品</MarginRightBTN>
+                      </CartItemFirst>
+                    ))
+                  )}
+                </CartItems>
+  
+                <CartPackageFooter>
+                  <CartPackageTotal>
+                    <CartPackageP>
+                      <CartPackageSpan>
+                        <CartPackageText>寄送方式 :</CartPackageText>
+                        <CartPackageSelect>
+                          <option value="standard">7-11</option>
+                          <option value="express">全家</option>
+                          <option value="pickup">萊爾富</option>
+                          <option value="pickup">OK</option>
+                        </CartPackageSelect>
+                        <CartPackageText>
+                          寄送費用: $60 (滿10,000免運費)
+                        </CartPackageText>
+                      </CartPackageSpan>
+                    </CartPackageP>
+                    <CartPackageP>總計: ${calculateTotal()}</CartPackageP>
+                  </CartPackageTotal>
+                </CartPackageFooter>
+              </CartLi>
+  
+              <CartLi>
+                <CartPaymentHeader>
+                  付款方式:
+                  <CartPaymentSelect>
+                    <MarginRightBTN>信用卡</MarginRightBTN>
+                    <MarginRightBTN>網路ATM</MarginRightBTN>
+                    <MarginRightBTN>超商代碼</MarginRightBTN>
+                    <MarginRightBTN>貨到付款</MarginRightBTN>
+                  </CartPaymentSelect>
+                </CartPaymentHeader>
+                <CartPaymentInfo>
+                  <CartPaymentInfoItem>
+                    <CartPaymentSelectLi>
+                    <CartPackageP>包裹數 : </CartPackageP>
+                      <CartPackageP>{getPackageCount()}</CartPackageP>
+                    </CartPaymentSelectLi>
+                    <CartPaymentSelectLi>
+                      <CartPackageP>商品數 : </CartPackageP>
+                      <CartPackageP>{getItemCount()}</CartPackageP>
+                    </CartPaymentSelectLi>
+                    <CartPaymentSelectLi>
+                      <CartPackageP>商品總金額 : </CartPackageP>
+                      <CartPackageP>${calculateTotal()}</CartPackageP>
+                    </CartPaymentSelectLi>
+                    <CartPaymentSelectLi>
+                      <CartPackageP>運費總金額 : </CartPackageP>
+                      <CartPackageP>${getShippingCost()}</CartPackageP>
+                    </CartPaymentSelectLi>
+                    <CartPaymentSelectLi>
+                      <CartPackageP>交易總金額 : </CartPackageP>
+                      <CartPackageP>${calculateTotal() + getShippingCost()}</CartPackageP>
+                    </CartPaymentSelectLi>
+                  </CartPaymentInfoItem>
+                </CartPaymentInfo>
+                <CartPaymentFooter>
+                  <CheckBTN>前往結帳</CheckBTN>
+                </CartPaymentFooter>
+              </CartLi>
+            </Cart>
+          </Container>
+        </FrameWrapper>
+      </>
+    );
+  }
+
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -298,141 +488,12 @@ const CartPaymentFooter = styled.footer`
   padding: 20px;
 `;
 
-export default function ShoppingCart() {
-  return (
-    <>
-      <TopNav />
-      <FrameWrapper>
-        <Container>
-          <Cart>
-            <CartLi>
-              <CartPackageHeader>
-                <CartSpan>
-                  <CartCheckBox type="checkbox" />
-                  玄玄卡鋪:遊戲王卡牌專門販售
-                </CartSpan>
-                <CartPackageHeaderAction>
-                  <MarginRightBTN>申請議價</MarginRightBTN>
-                  <MarginRightBTN>刪除店家</MarginRightBTN>
-                </CartPackageHeaderAction>
-              </CartPackageHeader>
-
-              <CartItems>
-                <CartItem>
-                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
-                  <CartItemSection>單價</CartItemSection>
-                  <CartItemSection>數量</CartItemSection>
-                  <CartItemSection>統計</CartItemSection>
-                  <CartItemSection>操作</CartItemSection>
-                </CartItem>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <CartCheckBox type="checkbox" />
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                  <MarginRightBTN>刪除商品</MarginRightBTN>
-                </CartItemFirst>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <CartCheckBox type="checkbox" />
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                  <MarginRightBTN>刪除商品</MarginRightBTN>
-                </CartItemFirst>
-              </CartItems>
-
-              <CartPackageFooter>
-                <CartPackageTotal>
-                  <CartPackageP>
-                    <CartPackageSpan>
-                      <CartPackageText>寄送方式 :</CartPackageText>
-                      <CartPackageSelect>
-                        <option value="standard">7-11</option>
-                        <option value="express">全家</option>
-                        <option value="pickup">萊爾富</option>
-                        <option value="pickup">OK</option>
-                      </CartPackageSelect>
-                      <CartPackageText>
-                        寄送費用: $60 (滿10,000免運費)
-                      </CartPackageText>
-                    </CartPackageSpan>
-                  </CartPackageP>
-                  <CartPackageP>總計: $140</CartPackageP>
-                </CartPackageTotal>
-              </CartPackageFooter>
-            </CartLi>
-
-            <CartLi>
-              <CartPaymentHeader>
-                付款方式:
-                <CartPaymentSelect>
-                  <MarginRightBTN>信用卡</MarginRightBTN>
-                  <MarginRightBTN>網路ATM</MarginRightBTN>
-                  <MarginRightBTN>超商代碼</MarginRightBTN>
-                  <MarginRightBTN>貨到付款</MarginRightBTN>
-                </CartPaymentSelect>
-              </CartPaymentHeader>
-              <CartPaymentInfo>
-                <CartPaymentInfoItem>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>包裹數 : </CartPackageP>
-                    <CartPackageP>1</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品數 : </CartPackageP>
-                    <CartPackageP>2</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品總金額 : </CartPackageP>
-                    <CartPackageP>80</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>運費總金額 : </CartPackageP>
-                    <CartPackageP>60</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>交易總金額 : </CartPackageP>
-                    <CartPackageP>140</CartPackageP>
-                  </CartPaymentSelectLi>
-                </CartPaymentInfoItem>
-              </CartPaymentInfo>
-              <CartPaymentFooter>
-                <CheckBTN>前往結帳</CheckBTN>
-              </CartPaymentFooter>
-            </CartLi>
-          </Cart>
-        </Container>
-      </FrameWrapper>
-    </>
-  );
+interface Item {
+  cardCategory: string;
+  cardDescription: string;
+  cardName: string;
+  storeCardId: number;
+  storeCardPrice: number;
+  storeCardQuantity: number;
+  storeCardStatus: string;
 }
