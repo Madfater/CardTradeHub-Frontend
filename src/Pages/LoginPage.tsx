@@ -141,7 +141,7 @@ const BlueText = styled.a`
 export default function MemberLogin() {
   const nav = useNavigate();
 
-  const { userId, setUserId } = useAuth();
+  const { setUserId } = useAuth();
 
   const [accountValue, setAccountValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
@@ -152,8 +152,6 @@ export default function MemberLogin() {
     openDialog: openTextDialog,
     closeDialog: closeTextDialog,
   } = useDialog();
-
-  console.log(userId);
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAccountValue(e.target.value);
@@ -169,10 +167,8 @@ export default function MemberLogin() {
         email: accountValue,
         password: passwordValue,
       };
-      console.log(body);
       const response = await api.post("/user/login", body);
       const data = response?.data;
-      console.log(data);
 
       return data;
     } catch (error) {
