@@ -19,16 +19,13 @@ export default function App() {
         <Routes>
           <Route path="/">
             <Route index element={<MainPage />} />
-            <Route
-              path="/search/:keyword?"
-              element={<MainPage />}
-            />
+            <Route path="/search/:keyword?" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/shoppingcart" element={<ShoppingCart />} />
             <Route path="/storemanager" element={<StoreManager />} />
             <Route path="/searchpage" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage />} />
-            <Route path="/cardintroduction" element={<CardIntro />} />
+            <Route path="/cardintroduction/:cardID" element={<CardIntro />} />
             <Route path="/storepage" element={<StorePage />} />
             <Route path="/orderpage" element={<OrderPage />} />
           </Route>
