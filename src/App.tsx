@@ -25,7 +25,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/shoppingcart" element={<ShoppingCart />} />
             <Route path="/storemanager" element={<StoreManager />} />
-            <Route path="/searchpage" element={<SearchPage />} />
+            <Route path="/searchpage:keyword?" element={<SearchPage />} />
             <Route path="/registerpage" element={<RegisterPage />} />
             <Route path="/cardpage/:cardID" element={<CardIntro />} />
             <Route path="/storepage/:storeID" element={<StorePage />} />
