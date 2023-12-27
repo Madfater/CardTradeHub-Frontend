@@ -5,6 +5,66 @@ import card from "../Images/SampleCard.png";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
+export default function ShoppingCart() {
+  return (
+    <>
+      <TopNav />
+      <FrameWrapper>
+        <Container>
+          <h2>我的訂單</h2>
+          <Cart>
+            <CartLi>
+              <CartPackageHeader>
+                <CartSpan>玄玄卡鋪:遊戲王卡牌專門販售</CartSpan>
+              </CartPackageHeader>
+
+              <CartItems>
+                <CartItem>
+                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                  <CartItemSection>單價</CartItemSection>
+                  <CartItemSection>數量</CartItemSection>
+                  <CartItemSection>統計</CartItemSection>
+                </CartItem>
+                <CartItemFirst>
+                  <CartItemSectionFirst>
+                    <img
+                      src={card}
+                      width="60px"
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <CartItemInfoSpan>
+                      <div>新時代的主角</div>
+                      <div>SD35-JP001</div>
+                      <div>索隆十郎(異圖卡)</div>
+                    </CartItemInfoSpan>
+                    <CartItemInfoSpan>
+                      <div>卡況:正常</div>
+                    </CartItemInfoSpan>
+                  </CartItemSectionFirst>
+                  <CartItemSection>$ 40</CartItemSection>
+                  <CartItemSection># 2</CartItemSection>
+                  <CartItemSection>$ 80</CartItemSection>
+                </CartItemFirst>
+              </CartItems>
+
+              <CartPackageFooter>
+                <CartPackageTotal>
+                  <CartPackageP />
+                  <CartPackageP>總計: $140</CartPackageP>
+                </CartPackageTotal>
+              </CartPackageFooter>
+            </CartLi>
+          </Cart>
+
+          <Stack alignItems="center">
+            <Pagination />
+          </Stack>
+        </Container>
+      </FrameWrapper>
+    </>
+  );
+}
+
 const FrameWrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -154,63 +214,3 @@ const CartPackageP = styled.p`
   margin: 0;
   margin-right: 60px;
 `;
-
-export default function ShoppingCart() {
-  return (
-    <>
-      <TopNav />
-      <FrameWrapper>
-        <Container>
-          <h2>我的訂單</h2>
-          <Cart>
-            <CartLi>
-              <CartPackageHeader>
-                <CartSpan>玄玄卡鋪:遊戲王卡牌專門販售</CartSpan>
-              </CartPackageHeader>
-
-              <CartItems>
-                <CartItem>
-                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
-                  <CartItemSection>單價</CartItemSection>
-                  <CartItemSection>數量</CartItemSection>
-                  <CartItemSection>統計</CartItemSection>
-                </CartItem>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                </CartItemFirst>
-              </CartItems>
-
-              <CartPackageFooter>
-                <CartPackageTotal>
-                  <CartPackageP />
-                  <CartPackageP>總計: $140</CartPackageP>
-                </CartPackageTotal>
-              </CartPackageFooter>
-            </CartLi>
-          </Cart>
-
-          <Stack alignItems="center">
-            <Pagination />
-          </Stack>
-        </Container>
-      </FrameWrapper>
-    </>
-  );
-}

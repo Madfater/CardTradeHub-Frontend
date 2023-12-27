@@ -4,7 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import useDialog from "../Hooks/useDialog";
 
 interface TextDialogProps {
   open: boolean;
@@ -19,7 +18,6 @@ const TextDialog: React.FC<TextDialogProps> = ({
   onConfirm,
 	Text
 }) => {
-  const { isOpen, openDialog, closeDialog } = useDialog();
 
   return (
     <Dialog open={open} onClose={onClose}>

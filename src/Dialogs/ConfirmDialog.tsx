@@ -5,7 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import useDialog from "../Hooks/useDialog";
 
 interface DeleteConfirmationDialogProps {
   open: boolean;
@@ -18,7 +17,6 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const { isOpen, openDialog, closeDialog } = useDialog();
 
   return (
     <Dialog open={open} onClose={onClose}>

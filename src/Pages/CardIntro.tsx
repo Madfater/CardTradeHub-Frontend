@@ -2,6 +2,104 @@ import { Icon } from "@mui/material";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 
+export default function CardIntro() {
+    return (
+        <>
+            <TopNav />
+            <Container>
+                <ContainerMain>
+                    <ToastBox>
+                        <span>
+                            <ToastIcon>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 26.846">
+                                <path id="Icon_awesome-check" data-name="Icon awesome-check" d="M12.227,30.9.527,19.2a1.8,1.8,0,0,1,0-2.546L3.073,14.1a1.8,1.8,0,0,1,2.546,0L13.5,21.986,30.382,5.1a1.8,1.8,0,0,1,2.546,0L35.473,7.65a1.8,1.8,0,0,1,0,2.546l-20.7,20.7A1.8,1.8,0,0,1,12.227,30.9Z" transform="translate(0 -4.577)">
+                                </path>
+                            </svg>
+                            "成功加入購物車"
+                            </ToastIcon>
+                        </span>
+                    </ToastBox>
+
+                    <ProductInfo>
+                        <ProductInfoHeader>
+                            <ProductInfoHeaderTitle>
+                                <h1>皮卡丘</h1>
+                                <span>
+                                    <b><a href="">25週年收藏款</a></b>  
+                                </span>
+                            </ProductInfoHeaderTitle>
+                            <AddToFavorite>
+                                <AddToFavoriteBTN>
+                                    <FavoriteBTNIcon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.199 15.576"><path id="Icon_ionic-ios-heart-empty" data-name="Icon ionic-ios-heart-empty" d="M15.213,3.938h-.039a4.431,4.431,0,0,0-3.7,2.025,4.431,4.431,0,0,0-3.7-2.025H7.736a4.4,4.4,0,0,0-4.361,4.4,9.479,9.479,0,0,0,1.861,5.167,32.619,32.619,0,0,0,6.238,6.009,32.619,32.619,0,0,0,6.238-6.009,9.479,9.479,0,0,0,1.861-5.167A4.4,4.4,0,0,0,15.213,3.938Zm1.62,8.925a29.867,29.867,0,0,1-5.358,5.28,29.912,29.912,0,0,1-5.358-5.284A8.4,8.4,0,0,1,4.465,8.338,3.3,3.3,0,0,1,7.744,5.032h.035a3.265,3.265,0,0,1,1.6.421,3.4,3.4,0,0,1,1.184,1.11,1.094,1.094,0,0,0,1.83,0,3.437,3.437,0,0,1,1.184-1.11,3.265,3.265,0,0,1,1.6-.421h.035a3.3,3.3,0,0,1,3.279,3.306A8.507,8.507,0,0,1,16.833,12.863Z" transform="translate(-3.375 -3.938)"></path></svg>
+                                    </FavoriteBTNIcon>
+                                    加入我的最愛
+                                </AddToFavoriteBTN>
+                            </AddToFavorite>
+                        </ProductInfoHeader>
+
+                        <ProductInfoContainer>
+                            <ProductInfoImage>
+                                <ImageStyle>
+                                </ImageStyle>
+                            </ProductInfoImage>
+                            <ProductInfoContent>
+                                <ProductInfoStore>
+                                    <ProductInfoItem>
+                                        <ProductInfoLi>
+                                            <ItemStore>
+                                                <a href="/search/store/6266fe34819763394d2b2250">咪哥卡鋪 PTCG中文版寶可夢卡牌販售</a>  
+                                                <StoreBades></StoreBades>
+                                                <h4>備貨日期：2天</h4>
+                                                <h4>商店評分：5星 (10則評價)</h4>
+                                            </ItemStore>
+                                            <ItemInfo>
+                                               <h3><span>特殊閃（跟隨系列）</span><span>完美卡況</span></h3>
+                                               <h4>NT.20</h4>
+                                               <h5>+NT 65 運費</h5>
+                                            </ItemInfo>
+                                            <CreateCart>
+                                                <ItemNumber>
+                                                    <select>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                    <span>最多5</span>
+                                                </ItemNumber>
+                                                <CreateBTN>加入購物車</CreateBTN>
+                                            </CreateCart>
+                                        </ProductInfoLi>
+                                    </ProductInfoItem>
+                                </ProductInfoStore>
+
+                                <ProductDetail>
+                                    <li>單卡簡介：<br></br>臉頰兩側有著小小的電力袋。遇到危險時就會放電。
+                                        <br></br>
+                                        <br></br>
+                                    </li>
+                                    <li>商品編號：001/028</li>
+                                    <li>細節項目：</li>
+                                    <li>卡牌種類:寶可夢卡</li>
+                                    <li>血量:60</li>
+                                    <li>屬性:電系</li>
+                                    <li>進化:基礎</li>
+                                    <li>弱點/抵抗力/撤退:【鬥】×2/--/1【無】</li>
+                                    <li>招式1:咬 【無】 10</li>
+                                    <li>招式2:電流攻擊 【電】【無】 30擲1次硬幣若為反面，則這隻寶可夢也受到10點傷害。</li>
+                                    <li>繪師:Mitsuhiro</li>
+                                </ProductDetail>
+                            </ProductInfoContent>
+                        </ProductInfoContainer>
+                    </ProductInfo>
+                </ContainerMain>
+            </Container>
+        </>
+    );
+}
+
 const Container = styled.main`
     flex: 1 1;
     padding: 25px 40px;
@@ -299,101 +397,3 @@ const ProductDetail = styled.ul`
         margin-bottom: 5px;
     }
 `;
-
-export default function CardIntro() {
-    return (
-        <>
-            <TopNav />
-            <Container>
-                <ContainerMain>
-                    <ToastBox>
-                        <span>
-                            <ToastIcon>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 26.846">
-                                <path id="Icon_awesome-check" data-name="Icon awesome-check" d="M12.227,30.9.527,19.2a1.8,1.8,0,0,1,0-2.546L3.073,14.1a1.8,1.8,0,0,1,2.546,0L13.5,21.986,30.382,5.1a1.8,1.8,0,0,1,2.546,0L35.473,7.65a1.8,1.8,0,0,1,0,2.546l-20.7,20.7A1.8,1.8,0,0,1,12.227,30.9Z" transform="translate(0 -4.577)">
-                                </path>
-                            </svg>
-                            "成功加入購物車"
-                            </ToastIcon>
-                        </span>
-                    </ToastBox>
-
-                    <ProductInfo>
-                        <ProductInfoHeader>
-                            <ProductInfoHeaderTitle>
-                                <h1>皮卡丘</h1>
-                                <span>
-                                    <b><a href="">25週年收藏款</a></b>  
-                                </span>
-                            </ProductInfoHeaderTitle>
-                            <AddToFavorite>
-                                <AddToFavoriteBTN>
-                                    <FavoriteBTNIcon>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.199 15.576"><path id="Icon_ionic-ios-heart-empty" data-name="Icon ionic-ios-heart-empty" d="M15.213,3.938h-.039a4.431,4.431,0,0,0-3.7,2.025,4.431,4.431,0,0,0-3.7-2.025H7.736a4.4,4.4,0,0,0-4.361,4.4,9.479,9.479,0,0,0,1.861,5.167,32.619,32.619,0,0,0,6.238,6.009,32.619,32.619,0,0,0,6.238-6.009,9.479,9.479,0,0,0,1.861-5.167A4.4,4.4,0,0,0,15.213,3.938Zm1.62,8.925a29.867,29.867,0,0,1-5.358,5.28,29.912,29.912,0,0,1-5.358-5.284A8.4,8.4,0,0,1,4.465,8.338,3.3,3.3,0,0,1,7.744,5.032h.035a3.265,3.265,0,0,1,1.6.421,3.4,3.4,0,0,1,1.184,1.11,1.094,1.094,0,0,0,1.83,0,3.437,3.437,0,0,1,1.184-1.11,3.265,3.265,0,0,1,1.6-.421h.035a3.3,3.3,0,0,1,3.279,3.306A8.507,8.507,0,0,1,16.833,12.863Z" transform="translate(-3.375 -3.938)"></path></svg>
-                                    </FavoriteBTNIcon>
-                                    加入我的最愛
-                                </AddToFavoriteBTN>
-                            </AddToFavorite>
-                        </ProductInfoHeader>
-
-                        <ProductInfoContainer>
-                            <ProductInfoImage>
-                                <ImageStyle>
-                                </ImageStyle>
-                            </ProductInfoImage>
-                            <ProductInfoContent>
-                                <ProductInfoStore>
-                                    <ProductInfoItem>
-                                        <ProductInfoLi>
-                                            <ItemStore>
-                                                <a href="/search/store/6266fe34819763394d2b2250">咪哥卡鋪 PTCG中文版寶可夢卡牌販售</a>  
-                                                <StoreBades></StoreBades>
-                                                <h4>備貨日期：2天</h4>
-                                                <h4>商店評分：5星 (10則評價)</h4>
-                                            </ItemStore>
-                                            <ItemInfo>
-                                               <h3><span>特殊閃（跟隨系列）</span><span>完美卡況</span></h3>
-                                               <h4>NT.20</h4>
-                                               <h5>+NT 65 運費</h5>
-                                            </ItemInfo>
-                                            <CreateCart>
-                                                <ItemNumber>
-                                                    <select>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                    </select>
-                                                    <span>最多5</span>
-                                                </ItemNumber>
-                                                <CreateBTN>加入購物車</CreateBTN>
-                                            </CreateCart>
-                                        </ProductInfoLi>
-                                    </ProductInfoItem>
-                                </ProductInfoStore>
-
-                                <ProductDetail>
-                                    <li>單卡簡介：<br></br>臉頰兩側有著小小的電力袋。遇到危險時就會放電。
-                                        <br></br>
-                                        <br></br>
-                                    </li>
-                                    <li>商品編號：001/028</li>
-                                    <li>細節項目：</li>
-                                    <li>卡牌種類:寶可夢卡</li>
-                                    <li>血量:60</li>
-                                    <li>屬性:電系</li>
-                                    <li>進化:基礎</li>
-                                    <li>弱點/抵抗力/撤退:【鬥】×2/--/1【無】</li>
-                                    <li>招式1:咬 【無】 10</li>
-                                    <li>招式2:電流攻擊 【電】【無】 30擲1次硬幣若為反面，則這隻寶可夢也受到10點傷害。</li>
-                                    <li>繪師:Mitsuhiro</li>
-                                </ProductDetail>
-                            </ProductInfoContent>
-                        </ProductInfoContainer>
-                    </ProductInfo>
-                </ContainerMain>
-            </Container>
-        </>
-    );
-}
