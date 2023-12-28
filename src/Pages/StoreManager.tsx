@@ -1,12 +1,11 @@
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
-import ConfirmationDialog from "../Dialogs/ConfirmDialog";
-import EditProductDialog from "../Dialogs/EditionDialog";
 import useDialog from "../Hooks/useDialog";
 import api from "../Components/API";
 import { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { Pagination, Stack, Autocomplete, TextField } from "@mui/material";
+import { TextDialog, ConfirmDialog, EditionDialog ,AddCardDialog } from "../Dialogs";
 
 
 interface CardData {
@@ -17,7 +16,7 @@ interface CardData {
   storeCardId: number;
   storeId: number;
   storeName: string;
-  desc:string;
+  desc: string;
 }
 
 interface SearchResultProps {
@@ -44,11 +43,29 @@ export default function StoreManager() {
   const { userId } = useAuth();
 
   const [searchResults, setSearchResults] = useState<SearchResultProps>();
+  const [rerender, setRerender] = useState(false);
+
+  const [text, setText] = useState<string>("");
+
+  const [deleteCardId, setDeleteCardId] = useState<number>(0);
+  const [updateCardId, setUpdateCardId] = useState<number>(0);
+
+  const {
+    isOpen: isTextDialogOpen,
+    openDialog: openTextDialog,
+    closeDialog: closeTextDialog,
+  } = useDialog();
+
+  const [editedProduct, setEditedProduct] = useState({
+    quantity: 0,
+    price: 0,
+    desc: ''
+  });
 
   const { isOpen: isEditDialogOpen, openDialog: openEditDialog, closeDialog: closeEditDialog } = useDialog();
-  const { isOpen: isConFirmDialogOpen, openDialog: openonFirmDialog, closeDialog: closeonFirmDialog } = useDialog();
+  const { isOpen: isConfirmDialogOpen, openDialog: openConfirmDialog, closeDialog: closeConfirmDialog } = useDialog();
+  const { isOpen: isAddCardDialogOpen, openDialog: openAddCardDialog, closeDialog: closeAddCardDialog } = useDialog();
 
-  const [currentCatagory, setCurrentCatagory] = useState<string>("");
   const [orderway, setOrderway] = useState<string>("id");
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
@@ -59,7 +76,7 @@ export default function StoreManager() {
       const response = await api.get(
         `/card/store?storeId=${userId}&page=${page}&pageLimit=${PageLimit}&orderWay=${orderway}&ascending=${isAscending}`
       );
-      console.log(`/card/store?storeId=${userId}&page=${page}&pageLimit=${PageLimit}&orderWay=${orderway}&ascending=${isAscending}`)
+
       const data = response?.data;
 
       return data;
@@ -69,7 +86,7 @@ export default function StoreManager() {
   };
   const removeStoreCards = async () => {
     try {
-      const response = await api.get("/card/remove");
+      const response = await api.delete(`/card?userId=${userId}&cardId=${deleteCardId}`);
       const data = response?.data;
 
       return data;
@@ -77,16 +94,16 @@ export default function StoreManager() {
       console.error("Error fetching data:", error);
     }
   };
-  const addStoreCards = async (quantity: number, cardId: string, price: number, description: string) => {
+  const addStoreCards = async (quantity: number, cardId: number, price: number, desc: string) => {
     try {
       const body = {
         "storeId": userId,
         "price": price,
-        "status": description,
+        "status": desc,
         "quantity": quantity,
         "ACCard_ID": cardId
       }
-      const response = await api.post("/card/add", body);
+      const response = await api.post("/card", body);
       const data = response?.data;
 
       return data;
@@ -94,28 +111,23 @@ export default function StoreManager() {
       console.error("Error fetching data:", error);
     }
   };
-  const updateStoreCards = async (quantity: number, cardId: string, price: number, description: string) => {
+  const updateStoreCards = async (quantity: number, price: number, desc: string) => {
     try {
 
       const body = {
-        "cardId": cardId,
+        "cardId": updateCardId,
         "price": price,
-        "status": description,
+        "status": desc,
         "quantity": quantity,
+        "userId": userId
       }
-      const response = await api.post("/card/add", body);
+      const response = await api.put("/card", body);
       const data = response?.data;
 
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
-
-  const handleComboxChange = (filter: string) => {
-    if (currentCatagory == filter) setCurrentCatagory("");
-    else setCurrentCatagory(filter);
-    setPage(1);
   };
 
   const handleChangeOrderway = (
@@ -126,14 +138,51 @@ export default function StoreManager() {
     setIsAscending(value.ascending);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Item deleted");
-    closeonFirmDialog();
+  const handleConfirmDelete = async () => {
+    const result = await removeStoreCards();
+    if (await result === "removed") {
+      setText("刪除成功");
+      openTextDialog();
+      setRerender(!rerender);
+    }
+    else {
+      setText("刪除失敗")
+      openTextDialog();
+    }
+    closeConfirmDialog();
   };
 
-  const handleSaveProduct = (updatedProduct: { quantity: number; price: number; description: string; }) => {
-    console.log('Product updated:', updatedProduct);
+  const handleAddCard = async (addedCard: { actualCard:number; quantity: number; price: number; desc: string; }) => {
+    const result = await addStoreCards(addedCard.quantity,addedCard.actualCard, addedCard.price, addedCard.desc);
+    if (typeof await result === "number") {
+      setText("新增成功");
+      openTextDialog();
+      setRerender(!rerender);
+    }
+    else {
+      setText("新增失敗")
+      openTextDialog();
+    }
+    closeConfirmDialog();
+
   };
+
+  const handleSaveCard = async (updatedCard: { quantity: number; price: number; desc: string; }) => {
+
+    const result = await updateStoreCards(updatedCard.quantity, updatedCard.price, updatedCard.desc);
+    if (await result === "updated") {
+      setText("修改成功");
+      openTextDialog();
+      setRerender(!rerender);
+    }
+    else {
+      setText("修改失敗")
+      openTextDialog();
+    }
+    closeConfirmDialog();
+
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,26 +191,40 @@ export default function StoreManager() {
     }
 
     fetchData()
-  }, [page])
+  }, [page, rerender, orderway, isAscending])
 
-  console.log(searchResults)
   return (
     <>
-      <ConfirmationDialog
-        open={isConFirmDialogOpen}
-        onClose={closeonFirmDialog}
-        onConfirm={handleConfirmDelete}
+      <AddCardDialog
+        open={isAddCardDialogOpen}
+        onClose={closeAddCardDialog}
+        onSave={handleAddCard}
       />
 
-      <EditProductDialog
+      <ConfirmDialog
+        open={isConfirmDialogOpen}
+        onClose={closeConfirmDialog}
+        onConfirm={() => { handleConfirmDelete() }}
+      />
+
+      <EditionDialog
         open={isEditDialogOpen}
         onClose={closeEditDialog}
-        onSave={handleSaveProduct}
+        onSave={handleSaveCard}
+        initialProduct={editedProduct}
+      />
+
+      <TextDialog
+        open={isTextDialogOpen}
+        onClose={closeTextDialog}
+        onConfirm={closeTextDialog}
+        Text={text}
       />
 
       <TopNav />
 
       <SortNav>
+        <AddButton onClick={openAddCardDialog}>新增</AddButton>
         <SortNavGroup>
           <SortNavText>排序方式：</SortNavText>
           <SortNavCombobox
@@ -184,47 +247,7 @@ export default function StoreManager() {
 
       <ItemContainer>
         <ContainerMain>
-          <FilterBoxWrap>
-            <form>
-              <FilterBox>
-                <FilterLi>
-                  <FilterTitle>卡片類型</FilterTitle>
-                  <FilterList>
-                    <Filter>
-                      <FilterLabel>
-                        <FilterInput
-                          type="checkbox"
-                          checked={currentCatagory == "怪獸卡"}
-                          onChange={() => handleComboxChange("怪獸卡")}
-                        />
-                        <span>怪獸卡</span>
-                      </FilterLabel>
-                    </Filter>
-                    <Filter>
-                      <FilterLabel>
-                        <FilterInput
-                          type="checkbox"
-                          checked={currentCatagory == "魔法卡"}
-                          onChange={() => handleComboxChange("魔法卡")}
-                        />
-                        <span>魔法卡</span>
-                      </FilterLabel>
-                    </Filter>
-                    <Filter>
-                      <FilterLabel>
-                        <FilterInput
-                          type="checkbox"
-                          checked={currentCatagory == "陷阱卡"}
-                          onChange={() => handleComboxChange("陷阱卡")}
-                        />
-                        <span>陷阱卡</span>
-                      </FilterLabel>
-                    </Filter>
-                  </FilterList>
-                </FilterLi>
-              </FilterBox>
-            </form>
-          </FilterBoxWrap>
+
 
           <ProductGridWrap>
             <article style={{ width: "100%" }}>
@@ -244,8 +267,10 @@ export default function StoreManager() {
                           <h4>簡介: {item.desc}</h4>
                         </ProductInfo>
                         <ButtonContainer>
-                          <RedButton onClick={openonFirmDialog}>刪除</RedButton>
-                          <BlueButton onClick={openEditDialog}>修改</BlueButton>
+                          <RedButton onClick={() => { setDeleteCardId(item.storeCardId); openConfirmDialog(); }}>刪除</RedButton>
+                          <BlueButton onClick={() => {
+                            setEditedProduct({ quantity: item.quantity, price: item.price, desc: item.desc }); setUpdateCardId(item.storeCardId); openEditDialog();
+                          }}>修改</BlueButton>
                         </ButtonContainer>
                       </ProductContentWrap>
                     </Productblock>
@@ -265,10 +290,10 @@ export default function StoreManager() {
 }
 
 const SortNav = styled.div`
+  justify-content: space-between;
   display: flex;
   height: 50px;
   padding: 0 40px;
-  justify-content: right;
   align-items: center;
   flex-shrink: 0;
   border-top: 1px solid #dfe3ea;
@@ -412,24 +437,24 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const RedButton = styled.button`
-  background-color: red;
-  color: white;
+const Button = styled.button`
+  color: white;	
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 16px;`
+
+const RedButton = styled(Button)`
+  background-color: red;
 `;
 
-const BlueButton = styled.button`
+const AddButton = styled(RedButton)`
+  background-color: #00ADEF;
+`;
+
+const BlueButton = styled(Button)`
   background-color: blue;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
 `;
 
 const SortNavCombobox = styled(Autocomplete)`
