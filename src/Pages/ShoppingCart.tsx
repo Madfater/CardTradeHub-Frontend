@@ -11,6 +11,7 @@ export default function ShoppingCart() {
   const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
   const [storeName, setStoreName] = useState<string>("玄玄店鋪");
   const { userId } = useAuth();
+  const [isCheckoutSuccessModalVisible, setCheckoutSuccessModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -132,6 +133,18 @@ export default function ShoppingCart() {
     return 60;
   };
 
+  const handleCheckoutButtonClick = () => {
+    // Perform checkout logic here
+
+    // Show the checkout success modal
+    setCheckoutSuccessModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    // Close the checkout success modal
+    setCheckoutSuccessModalVisible(false);
+  };
+
   return (
     <>
       <TopNav />
@@ -241,14 +254,31 @@ export default function ShoppingCart() {
               </CartPaymentInfoItem>
             </CartPaymentInfo>
             <CartPaymentFooter>
-              <CheckBTN>前往結帳</CheckBTN>
+              <CheckBTN onClick={handleCheckoutButtonClick}>前往結帳</CheckBTN>
             </CartPaymentFooter>
           </CartLi>
         </Container>
       </FrameWrapper>
+
+      {/* Checkout Success Modal */}
+      {isCheckoutSuccessModalVisible && (
+        <ModalWrapper>
+          <ModalContent>
+            <ModalHeader>結帳成功</ModalHeader>
+            <ModalBody>感謝您的購物！</ModalBody>
+            <ModalFooter>
+              <CloseModalBTN onClick={handleModalClose}>關閉</CloseModalBTN>
+            </ModalFooter>
+          </ModalContent>
+        </ModalWrapper>
+      )}
     </>
   );
 }
+
+// Rest of the code for Modal styling and interfaces...
+
+
 
 
 
@@ -546,6 +576,50 @@ const CartPaymentFooter = styled.footer`
   align-items: center;
   flex-flow: row;
   padding: 20px;
+`;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalContent = styled.div`
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalHeader = styled.h2`
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+`;
+
+const ModalBody = styled.p`
+  margin-bottom: 20px;
+`;
+
+const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const CloseModalBTN = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #3e51fe;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 `;
 
 interface Item {
