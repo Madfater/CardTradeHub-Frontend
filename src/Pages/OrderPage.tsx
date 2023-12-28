@@ -1,60 +1,207 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import api from "../Components/API";
+import { useAuth } from "../Contexts/AuthContext";
+
+// ...
+
+interface OrderItem {
+  actualCardID: number;
+  orderQuantity: number;
+  storeCardID: number;
+  storeCardPrice: number;
+  storeID: number;
+}
+
+interface OrderResponse {
+  items: Record<string, OrderItem[]>;
+  totalPage: number;
+}
+
+interface ActualCardInfo {
+  cardID: number;
+  catagory: string;
+  description: string;
+  name: string;
+}
+interface CardInfo {
+  actaulCardID: number;
+  name: string;
+  price: number;
+  quantity: number;
+  storeCardId: number;
+  storeId: number;
+  storeName: string;
+}
+
+interface CardDetails {
+  cardID: number;
+  catagory: string;
+  description: string;
+  name: string;
+}
+
+const getOrderInfo = async (orderId: number) => {
+  try {
+    const response = await api.get(`/order?id=${orderId}`);
+    const data: OrderResponse = response?.data;
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching order data:", error);
+  }
+};
 
 export default function ShoppingCart() {
+  const { userId } = useAuth();
+  const [orderData, setOrderData] = useState<OrderResponse | null>(null);
+  const [actualCardInfos, setActualCardInfos] = useState<(ActualCardInfo | null)[]>([]);
+  const [cardInfo, setCardInfo] = useState<CardInfo>();
+  const [cardDetails, setCardDetails] = useState<CardDetails>();
+  const [numberOption, setNumberOption] = useState<any>();
+
+  const getCardDetails = async () => {
+    try {
+      const response = await api.get(
+        `/actualCard?id=${cardInfo?.actaulCardID}`
+      );
+      const data = response?.data;;
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Replace '14' with the actual order ID you want to fetch
+    const orderId = 14;
+
+    const fetchData = async () => {
+      const data = await getOrderInfo(orderId);
+
+      if (data) {
+        setOrderData(data);
+
+        // Fetch actual card information for each order item
+        const actualCardPromises = data.items.flatMap(item =>
+          item.map(orderItem => getActualCardInfo(orderItem.actualCardID))
+        );
+
+        const results = await Promise.allSettled(actualCardPromises);
+
+        // Update actualCardInfos with the fulfilled promises
+        setActualCardInfos(
+          results
+            .filter(result => result.status === "fulfilled")
+            .map(result => (result as PromiseFulfilledResult<ActualCardInfo>).value)
+        );
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCardDetails = async () => {
+      const data = await getCardDetails();
+      setCardDetails(data || []);
+    };
+
+    if (cardInfo != undefined) {
+      fetchCardDetails();
+      const options = [];
+      for (let i = 1; i <= cardInfo.quantity; i++) {
+        options.push(
+          <option key={i} value={i}>
+            {i}
+          </option>
+        );
+      }
+      setNumberOption(options);
+    }
+  }, [cardInfo]);
+
+  const getActualCardInfo = async (actualCardId: number) => {
+    try {
+      const response = await api.get(`/actualCard?id=${actualCardId}`);
+      const data: ActualCardInfo = response?.data;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching actual card data:", error);
+      return null;
+    }
+  };
+
   return (
     <>
       <TopNav />
       <FrameWrapper>
         <Container>
           <h2>我的訂單</h2>
-          <Cart>
-            <CartLi>
-              <CartPackageHeader>
-                <CartSpan>玄玄卡鋪:遊戲王卡牌專門販售</CartSpan>
-              </CartPackageHeader>
+          {orderData && (
+            <Cart>
+              {Object.entries(orderData.items).map(
+                ([storeName, items]) => (
+                  <CartLi key={storeName}>
+                    <CartPackageHeader>
+                      <CartSpan>{storeName}</CartSpan>
+                    </CartPackageHeader>
 
-              <CartItems>
-                <CartItem>
-                  <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
-                  <CartItemSection>單價</CartItemSection>
-                  <CartItemSection>數量</CartItemSection>
-                  <CartItemSection>統計</CartItemSection>
-                </CartItem>
-                <CartItemFirst>
-                  <CartItemSectionFirst>
-                    <img
-                      src={card}
-                      width="60px"
-                      style={{ marginLeft: "10px" }}
-                    />
-                    <CartItemInfoSpan>
-                      <div>新時代的主角</div>
-                      <div>SD35-JP001</div>
-                      <div>索隆十郎(異圖卡)</div>
-                    </CartItemInfoSpan>
-                    <CartItemInfoSpan>
-                      <div>卡況:正常</div>
-                    </CartItemInfoSpan>
-                  </CartItemSectionFirst>
-                  <CartItemSection>$ 40</CartItemSection>
-                  <CartItemSection># 2</CartItemSection>
-                  <CartItemSection>$ 80</CartItemSection>
-                </CartItemFirst>
-              </CartItems>
+                    <CartItems>
+                      <CartItem>
+                        <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                        <CartItemSection>單價</CartItemSection>
+                        <CartItemSection>數量</CartItemSection>
+                        <CartItemSection>統計</CartItemSection>
+                      </CartItem>
+                      {items.map((item, index) => (
+                        <CartItemFirst key={index}>
+                          <CartItemSectionFirst>
+                            <img
+                              src={card}
+                              width="60px"
+                              style={{ marginLeft: "10px" }}
+                            />
+                            <CartItemInfoSpan>
+                              
+                              <div>商品名稱: {cardDetails?.description}</div>
+                              <div>類別: {actualCardInfos[index]?.catagory}</div>
+                              <div>描述: {actualCardInfos[index]?.description}</div>
+                            </CartItemInfoSpan>
+                            <CartItemInfoSpan>
+                              <div>卡況: 正常</div>
+                            </CartItemInfoSpan>
+                          </CartItemSectionFirst>
+                          <CartItemSection>${item.storeCardPrice}</CartItemSection>
+                          <CartItemSection># {item.orderQuantity}</CartItemSection>
+                          <CartItemSection>${item.storeCardPrice * item.orderQuantity}</CartItemSection>
+                        </CartItemFirst>
+                      ))}
+                    </CartItems>
 
-              <CartPackageFooter>
-                <CartPackageTotal>
-                  <CartPackageP />
-                  <CartPackageP>總計: $140</CartPackageP>
-                </CartPackageTotal>
-              </CartPackageFooter>
-            </CartLi>
-          </Cart>
+                    <CartPackageFooter>
+                      <CartPackageTotal>
+                        <CartPackageP />
+                        <CartPackageP>
+                          總計: $
+                          {items.reduce(
+                            (total, item) =>
+                              total + item.storeCardPrice * item.orderQuantity,
+                            0
+                          )}
+                        </CartPackageP>
+                      </CartPackageTotal>
+                    </CartPackageFooter>
+                  </CartLi>
+                )
+              )}
+            </Cart>
+          )}
 
           <Stack alignItems="center">
             <Pagination />
