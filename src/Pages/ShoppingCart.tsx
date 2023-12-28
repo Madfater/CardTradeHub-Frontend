@@ -109,15 +109,19 @@ export default function ShoppingCart() {
   };
 
   const getPackageCount = () => {
-    return cartData ? Object.keys(cartData).length : 0;
+    return Object.keys(checkedStores).filter((storeName) => checkedStores[storeName]).length;
   };
 
   const getItemCount = () => {
     let itemCount = 0;
 
     if (cartData) {
-      Object.values(cartData).forEach((items) => {
-        itemCount += items.length;
+      Object.entries(cartData).forEach(([storeName, items]) => {
+        items.forEach((_, index) => {
+          if (checkedItems[`${storeName}-${index}`]) {
+            itemCount++;
+          }
+        });
       });
     }
 
@@ -218,10 +222,6 @@ export default function ShoppingCart() {
             </CartPaymentHeader>
             <CartPaymentInfo>
               <CartPaymentInfoItem>
-                <CartPaymentSelectLi>
-                  <CartPackageP>包裹數 : </CartPackageP>
-                  <CartPackageP>{getPackageCount()}</CartPackageP>
-                </CartPaymentSelectLi>
                 <CartPaymentSelectLi>
                   <CartPackageP>商品數 : </CartPackageP>
                   <CartPackageP>{getItemCount()}</CartPackageP>
