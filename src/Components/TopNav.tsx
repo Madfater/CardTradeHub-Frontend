@@ -38,7 +38,6 @@ export default function MainPage() {
       console.error("Error fetching data:", error);
     }
   };
-  console.log(userId);
 
   useEffect(() => {
     if (userId != null) {

@@ -12,16 +12,16 @@ import useDialog from '../Hooks/useDialog';
 interface EditProductDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave: (updatedProduct: { quantity: number; cardId: string; price: number }) => void;
+  onSave: (updatedProduct: { quantity: number; price: number; description: string; }) => void;
 }
 
 const EditProductDialog: React.FC<EditProductDialogProps> = ({ open, onClose, onSave }) => {
 
-	const { isOpen, openDialog, closeDialog } = useDialog();
+  const { isOpen, openDialog, closeDialog } = useDialog();
   const [editedProduct, setEditedProduct] = useState({
     quantity: 0,
-    cardId: '',
     price: 0,
+    description: ''
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,19 +53,20 @@ const EditProductDialog: React.FC<EditProductDialogProps> = ({ open, onClose, on
         />
         <TextField
           margin="dense"
-          name="cardId"
-          label="卡片 ID"
-          fullWidth
-          value={editedProduct.cardId}
-          onChange={handleInputChange}
-        />
-        <TextField
-          margin="dense"
           name="price"
           label="價格"
           type="number"
           fullWidth
           value={editedProduct.price}
+          onChange={handleInputChange}
+        />
+        <TextField
+          margin="dense"
+          name="description"
+          label="描述"
+          type="string"
+          fullWidth
+          value={editedProduct.description}
           onChange={handleInputChange}
         />
       </DialogContent>
