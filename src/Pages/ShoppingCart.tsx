@@ -21,7 +21,7 @@ export default function ShoppingCart() {
           const renamedData = Object.fromEntries(
             await Promise.all(
               Object.entries(itemsData).map(async ([storeId, items]) => {
-                const storeResponse = await api.get(`https://cardshop.sub.jeff3.win/store?id=${storeId}`);
+                const storeResponse = await api.get(`https://cardshop.sub.jeff3.win/api/store?id=${storeId}`);
                 const storeData = storeResponse?.data;
                 const updatedStoreName = storeData?.storeName || 'Unknown Store';
                 setStoreName(updatedStoreName);
