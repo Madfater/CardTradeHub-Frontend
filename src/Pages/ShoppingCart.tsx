@@ -212,7 +212,6 @@ export default function ShoppingCart() {
                       {storeName}
                     </CartSpan>
                     <CartPackageHeaderAction>
-                      <MarginRightBTN>申請議價</MarginRightBTN>
                       <MarginRightBTN>刪除店家</MarginRightBTN>
                     </CartPackageHeaderAction>
                   </CartPackageHeader>
