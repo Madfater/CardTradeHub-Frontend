@@ -9,7 +9,9 @@ import useDialog from "../Hooks/useDialog";
 export default function MainPage() {
   const nav = useNavigate();
   const { userId, logout } = useAuth();
+
   const [userName, setUserName] = useState<string>();
+  const [searchValue, setSearchtValue] = useState("");
 
   const {
     isOpen: isTextDialogOpen,
@@ -75,9 +77,19 @@ export default function MainPage() {
 
           <SearchBar>
             <article style={{ boxSizing: "border-box", width: "100%" }}>
-              <SearchBarInput></SearchBarInput>
+              <SearchBarInput
+                value={searchValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchtValue(e.target.value)
+                }
+              ></SearchBarInput>
             </article>
-            <SearchBarButton>
+            <SearchBarButton
+              onClick={() => {
+                setSearchtValue("");
+                nav(`/search/${searchValue}`);
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="13"
@@ -134,18 +146,22 @@ export default function MainPage() {
         <Section2>
           <ButtonList>
             <NavButton>
-              <NavButtonFont>首頁</NavButtonFont>
+              <NavButtonFont onClick={() => nav("/")}>首頁</NavButtonFont>
             </NavButton>
             <NavButton>
-              <NavButtonFont>我的訂單</NavButtonFont>
+              <NavButtonFont onClick={() => nav("/orderpage")}>
+                我的訂單
+              </NavButtonFont>
             </NavButton>
             <NavButton>
-              <NavButtonFont>我的商店</NavButtonFont>
+              <NavButtonFont onClick={() => nav("/storemanager")}>
+                我的商店
+              </NavButtonFont>
             </NavButton>
           </ButtonList>
 
           <CircleNavButtonlist>
-            <ShopCartButton onClick={handleGoToCartButton}>
+            <ShopCartButton>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="17"
@@ -298,6 +314,9 @@ const Section2 = styled.section`
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
+  height: 50px;
+  background-color: #fff;
+  box-shadow: 0 2px 15px -10px #00000080;
 `;
 
 const ButtonList = styled.ul`
@@ -335,5 +354,4 @@ const ShopCartButton = styled.div`
   border-radius: 36px;
   opacity: 0.5;
   background: #3e51fe;
-  cursor: pointer;
 `;

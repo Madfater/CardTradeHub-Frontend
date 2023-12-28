@@ -7,13 +7,11 @@ import { useAuth } from "../Contexts/AuthContext";
 import useDialog from "../Hooks/useDialog";
 import TextDialog from "../Dialogs/TextDialog";
 
-
-
 export default function MemberLogin() {
   const nav = useNavigate();
 
   const [accountValue, setAccountValue] = useState("");
-  const [userIDValue, setuserIDValue] = useState("");
+  const [userIDValue, setUserIDValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [rpasswordValue, setRPasswordValue] = useState("");
   const [textContent, setTextContent] = useState("");
@@ -23,26 +21,6 @@ export default function MemberLogin() {
     openDialog: openTextDialog,
     closeDialog: closeTextDialog,
   } = useDialog();
-
-  const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccountValue(e.target.value);
-  };
-
-  const handleUserIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setuserIDValue(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordValue(e.target.value);
-  };
-
-  const handleRPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRPasswordValue(e.target.value);
-  };
-
-  const handleGotoLoginButton = () => {
-    nav("/login");
-  };
 
   const registerAccount = async () => {
     if (passwordValue != rpasswordValue) {
@@ -104,7 +82,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={accountValue}
-                        onChange={handleAccountChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setAccountValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -117,7 +97,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={userIDValue}
-                        onChange={handleUserIDChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setUserIDValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -130,7 +112,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={passwordValue}
-                        onChange={handlePasswordChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setPasswordValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -143,7 +127,9 @@ export default function MemberLogin() {
                       </FromLabel>
                       <FromInput
                         value={rpasswordValue}
-                        onChange={handleRPasswordChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setRPasswordValue(e.target.value)
+                        }
                       />
                     </section>
                   </FromRow>
@@ -155,7 +141,7 @@ export default function MemberLogin() {
 
                 <Formfooter>
                   您還已有帳號嗎？
-                  <BlueText onClick={handleGotoLoginButton}>
+                  <BlueText onClick={() => nav("/login")}>
                     即刻登入吧！
                   </BlueText>
                 </Formfooter>

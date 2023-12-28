@@ -1,52 +1,166 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import ConfirmationDialog from "../Dialogs/ConfirmDialog";
-import EditProductDialog from "../Dialogs/EditionDialog";
-import useDialog from "../Hooks/useDialog";
+import { Pagination, Stack } from "@mui/material/";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../Components/API";
+
+interface Comment {
+  commentID: number;
+  context: string;
+  score: number;
+  userID: number;
+  userName: string;
+}
+
+interface CommentList {
+  items: Comment[];
+  totalPage: number;
+}
+
+interface CardData {
+  actaulCardID: number;
+  name: string;
+  price: number;
+  quantity: number;
+  storeCardId: number;
+}
+
+interface StoreCards {
+  items: CardData[];
+  totalPage: number;
+}
+
+interface StoreData {
+  description: string;
+  storeID: number;
+  storeName: string;
+}
 
 export default function Store() {
+  const nav = useNavigate();
+  const { storeID } = useParams();
+
+  const [commentPage, setcommentPage] = useState<number>(1);
+  const [comments, setComments] = useState<CommentList>();
+  const commentPageLimit = 2;
+
+  const [page, setPage] = useState<number>(1);
+  const [storeCards, setStoreCards] = useState<StoreCards>();
+  const PageLimit = 12;
+
+  const [storeData, setStoreData] = useState<StoreData>();
+
+  const getComment = async () => {
+    try {
+      const response = await api.get(
+        `/comment?storeId=${storeID}&page=${commentPage}&pageLimit=${commentPageLimit}`
+      );
+      const data = response?.data;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const getStoreCards = async () => {
+    try {
+      const response = await api.get(
+        `/card/store?storeId=${storeID}&page=${page}&pageLimit=${PageLimit}&orderWay=id&ascending=false`
+      );
+      const data = response?.data;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const getStoreInfo = async () => {
+    try {
+      const response = await api.get(`/store?id=${storeID}`);
+      const data = response?.data;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCommentData = async () => {
+      const data = await getComment();
+      setComments(data || []);
+    };
+
+    fetchCommentData();
+  }, [commentPage]);
+
+  useEffect(() => {
+    const fetchCardsData = async () => {
+      const data = await getStoreCards();
+      setStoreCards(data || []);
+    };
+    fetchCardsData();
+  }, [page]);
+
+  useEffect(() => {
+    const fetchStoreData = async () => {
+      const data = await getStoreInfo();
+      setStoreData(data || []);
+    };
+
+    fetchStoreData();
+  }, [commentPage]);
+
   return (
     <>
       <TopNav />
       <ContainerWarp>
         <ContainerArticle>
           <ContainerHeader>
-            <BackButton>店家列表</BackButton>
+            <BackButton onClick={() => nav("/searchpage")}>店家列表</BackButton>
           </ContainerHeader>
           <StoreInfo>
             <Introduction>
               <ul>
-                <InfoTitle>測試</InfoTitle>
-                <InfoDescription>測試</InfoDescription>
+                <InfoTitle>{storeData?.storeName}</InfoTitle>
+                <InfoDescription>{storeData?.description}</InfoDescription>
               </ul>
             </Introduction>
 
             <Comment>
               <h2>商家評價</h2>
               <article style={{ width: "100%" }}>
-                <CommentGrid>
-                  <Commentblock>
-                    <CommentContentWrap>
-                      <CommentInfo>
-                        <h3>測試</h3>
-                      </CommentInfo>
-                    </CommentContentWrap>
-                  </Commentblock>
-
-                  <Commentblock>
-                    <CommentContentWrap>
-                      <CommentInfo>
-                        <h3>測試</h3>
-                      </CommentInfo>
-                    </CommentContentWrap>
-                  </Commentblock>
-                </CommentGrid>
+                {comments === undefined ? (
+                  <h3 style={{ textAlign: "center" }}>Not Found</h3>
+                ) : (
+                  <CommentGrid>
+                    {comments.items.map((item, index) => (
+                      <Commentblock key={index}>
+                        <CommentContentWrap>
+                          <CommentInfo>
+                            <h3>用戶: {item.userName}</h3>
+                          </CommentInfo>
+                          <CommentInfo>
+                            <h3>評價: {item.context}</h3>
+                          </CommentInfo>
+                          <CommentInfo>
+                            <h3>分數: {item.score}</h3>
+                          </CommentInfo>
+                        </CommentContentWrap>
+                      </Commentblock>
+                    ))}
+                  </CommentGrid>
+                )}
 
                 <Stack alignItems="center">
-                  <Pagination />
+                  <Pagination
+                    count={comments?.totalPage}
+                    page={commentPage}
+                    onChange={(value) =>
+                      setcommentPage(typeof value === "number" ? value : 0)
+                    }
+                  />
                 </Stack>
               </article>
             </Comment>
@@ -55,51 +169,50 @@ export default function Store() {
           <ContainerLineBar>店家商品列表</ContainerLineBar>
 
           <article style={{ width: "100%" }}>
+            {typeof storeCards === "undefined" ? (
+              <h3 style={{ textAlign: "center" }}>Not Found</h3>
+            ) : (
               <ProductGrid>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
-                <Productblock>
-                  <ProductContentWrap>
-                    <ProductImg></ProductImg>
-                    <ProductInfo>
-                      <h3>測試</h3>
-                    </ProductInfo>
-                  </ProductContentWrap>
-                </Productblock>
+                {storeCards.items.map((item, index) => (
+                  <Productblock
+                    key={index}
+                    onClick={() => nav(`/cardpage/${item.storeCardId}`)}
+                  >
+                    <ProductContentWrap>
+                      <ProductImg></ProductImg>
+                      <ProductInfo>
+                        <h4>遊戲王</h4>
+                        <ProductText>
+                          <h3>{item.name}</h3>
+                          <h5>
+                            {item.quantity}個存貨
+                            <br />
+                            價格
+                            <ProductPrice>NT{item.price}</ProductPrice>
+                          </h5>
+                        </ProductText>
+                      </ProductInfo>
+                    </ProductContentWrap>
+                  </Productblock>
+                ))}
               </ProductGrid>
+            )}
 
-              <Stack alignItems="center">
-                <Pagination />
-              </Stack>
-            </article>
+            <Stack alignItems="center">
+              <Pagination
+                count={storeCards?.totalPage}
+                page={page}
+                onChange={(event, value: number) =>
+                  setPage(typeof value === "number" ? value : 0)
+                }
+              />
+            </Stack>
+          </article>
         </ContainerArticle>
       </ContainerWarp>
     </>
   );
 }
-
 
 const ContainerWarp = styled.main`
   padding: 25px 40px;
@@ -169,7 +282,6 @@ const Comment = styled.section`
   flex-direction: column;
 `;
 
-
 const CommentGrid = styled.ul`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -186,7 +298,6 @@ const Commentblock = styled.li`
 const CommentContentWrap = styled.a`
   display: flex;
   flex-flow: row;
-  text-decoration: none;
 `;
 
 const CommentInfo = styled.article`
@@ -194,6 +305,7 @@ const CommentInfo = styled.article`
   flex: 1 1;
   color: #1f100b;
   font-size: 0.75rem;
+  text-align: center;
 `;
 
 const ContainerLineBar = styled.article`
@@ -213,7 +325,6 @@ const ContainerLineBar = styled.article`
   color: #fff;
 `;
 
-
 const ProductGrid = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -225,6 +336,7 @@ const Productblock = styled.li`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #dfe3ea;
+  cursor: pointer;
 `;
 
 const ProductContentWrap = styled.a`
@@ -248,4 +360,16 @@ const ProductInfo = styled.article`
   flex: 1 1;
   color: #1f100b;
   font-size: 0.75rem;
+`;
+
+const ProductText = styled.section`
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+`;
+
+const ProductPrice = styled.b`
+  color: #3e51fe;
+  font-weight: 700;
 `;

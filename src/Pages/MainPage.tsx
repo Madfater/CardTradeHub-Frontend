@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import { Pagination, Stack, Autocomplete, TextField } from "@mui/material";
-import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../Components/API";
-import SearchPage from "./SearchPage";
 
 interface RouteParams {
   page?: string;
@@ -53,19 +51,14 @@ export default function MainPage() {
   >("Not Found");
   const [countPageValue, setCountPageValue] = useState<number>();
 
-  const { page, pageLimit, keyword, orderWay, ascending, catagory } =
-    useParams<RouteParams>();
+  const { keyword } = useParams<RouteParams>();
 
-  const currentPage = page ? parseInt(page, 10) : 1;
-  const currentLimit = pageLimit ? parseInt(pageLimit, 10) : 3;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentLimit = 12;
   const currentKeyword = keyword === "null" ? "" : keyword || "";
-  const [currentCatagory, setCurrentCatagory] = useState<string>(
-    catagory === "null" ? "" : catagory || ""
-  );
-  const [currentOrderWay, setCurrentOrderWay] = useState<string>(
-    orderWay || "id"
-  );
-  const [isAscending, setIsAscending] = useState<boolean>(ascending === "true");
+  const [currentCatagory, setCurrentCatagory] = useState<string>("");
+  const [currentOrderWay, setCurrentOrderWay] = useState<string>("id");
+  const [isAscending, setIsAscending] = useState<boolean>(true);
 
   const searchCards = async () => {
     try {
@@ -83,11 +76,7 @@ export default function MainPage() {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    nav(
-      `/search/${value}/${currentLimit}/${currentOrderWay}/${isAscending}/${
-        currentKeyword === "" ? null : currentKeyword
-      }/${currentCatagory === "" ? null : currentCatagory}`
-    );
+    setCurrentPage(value);
   };
 
   const handleChangeOrderway = (
@@ -98,7 +87,6 @@ export default function MainPage() {
     setIsAscending(value.ascending);
   };
 
-  console.log(searchResults);
   useEffect(() => {
     const fetchData = async () => {
       const data = await searchCards();
@@ -107,17 +95,18 @@ export default function MainPage() {
 
     fetchData();
   }, [
+    currentKeyword,
     currentPage,
     currentLimit,
     currentOrderWay,
     isAscending,
-    currentKeyword,
     currentCatagory,
   ]);
 
   const handleComboxChange = (filter: string) => {
     if (currentCatagory == filter) setCurrentCatagory("");
     else setCurrentCatagory(filter);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -157,7 +146,9 @@ export default function MainPage() {
               <FilterBox>
                 <FilterLi>
                   <FilterTitle>進階搜尋</FilterTitle>
-                  <FilterButton>搜尋賣家</FilterButton>
+                  <FilterButton onClick={() => nav("/searchpage")}>
+                    搜尋賣家
+                  </FilterButton>
                 </FilterLi>
                 <FilterLi>
                   <FilterTitle>卡片類型</FilterTitle>
@@ -205,7 +196,12 @@ export default function MainPage() {
               ) : (
                 <ProductGrid>
                   {searchResults?.items.map((item, index) => (
-                    <Productblock key={index}>
+                    <Productblock
+                      key={index}
+                      onClick={() =>
+                        nav(`/cardpage/${item.storeCardId}`)
+                      }
+                    >
                       <ProductContentWrap>
                         <ProductImg></ProductImg>
                         <ProductInfo>
@@ -402,6 +398,7 @@ const Productblock = styled.li`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #dfe3ea;
+  cursor: pointer;
 `;
 
 const ProductContentWrap = styled.a`

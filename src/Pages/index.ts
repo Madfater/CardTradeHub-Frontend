@@ -4,6 +4,6 @@ export { default as ShoppingCart } from './ShoppingCart';
 export { default as StoreManager } from './StoreManager';
 export { default as SearchPage } from './SearchPage';
 export { default as RegisterPage } from './RegisterPage';
-export { default as CardIntro } from './CardIntro';
+export { default as CardIntro } from './CardPage';
 export { default as StorePage } from "./StorePage";
 export { default as OrderPage } from "./OrderPage";
