@@ -133,12 +133,60 @@ export default function ShoppingCart() {
     return 60;
   };
 
-  const handleCheckoutButtonClick = () => {
-    // Perform checkout logic here
-
-    // Show the checkout success modal
-    setCheckoutSuccessModalVisible(true);
+  const handleCheckoutButtonClick = async () => {
+    // Create an array to store the items for the order
+    const orderItems: { cardId: number; quantity: number }[] = [];
+  
+    // Iterate through the cart data to find checked items
+    if (cartData) {
+      Object.entries(cartData).forEach(([storeName, items]) => {
+        items.forEach((item, index) => {
+          const cartKey = `${storeName}-${index}`;
+  
+          if (checkedItems[cartKey]) {
+            // If the item is checked, add it to the orderItems array
+            orderItems.push({
+              cardId: item.storeCardId,
+              quantity: 1, // Assuming quantity is always 1 for each item
+            });
+  
+            // Remove the checked item from the shopping cart
+            // (You may want to handle this asynchronously or optimistically update the UI)
+            api.delete("/cart", {
+              data: {
+                userId: userId,
+                cardId: item.storeCardId,
+              },
+            });
+          }
+        });
+      });
+  
+      // If there are checked items, proceed to add an order
+      if (orderItems.length > 0) {
+        try {
+          // Call the API to add an order
+          await api.post("/order", {
+            userId: userId,
+            address: "", // Add the address information
+            items: orderItems.reduce((acc, curr) => {
+              acc[curr.cardId] = curr.quantity;
+              return acc;
+            }, {} as Record<string, number>),
+          });
+  
+          // Show the checkout success modal
+          setCheckoutSuccessModalVisible(true);
+  
+          // Clear the checked items state (uncheck items)
+          setCheckedItems({});
+        } catch (error) {
+          console.error("Error adding order:", error);
+        }
+      }
+    }
   };
+  
 
   const handleModalClose = () => {
     // Close the checkout success modal
