@@ -38,6 +38,8 @@ export default function CardIntro() {
   const [numberOption, setNumberOption] = useState<any>();
   const [textContent, setTextContent] = useState("");
 
+  const [quantity, setQuantity] = useState(1);
+
   const {
     isOpen: isTextDialogOpen,
     openDialog: openTextDialog,
@@ -74,9 +76,9 @@ export default function CardIntro() {
       const body = {
         userId: userId,
         cardId: cardInfo?.storeCardId,
-        quantity: cardInfo?.quantity,
+        quantity: quantity,
       };
-      const response = await api.post("/cart/add", body);
+      const response = await api.post("/cart", body);
       const data = response?.data;
       return data;
     } catch (error) {
@@ -87,7 +89,11 @@ export default function CardIntro() {
   const handleAddToCart = () => {
     const transData = async () => {
       const data = await addToShoppingcart();
+      console.log(data)
       if (data === "added") {
+        setTextContent("加入成功")
+        openTextDialog()
+      } else if (data === "updated") {
         setTextContent("加入成功")
         openTextDialog()
       }
@@ -143,22 +149,6 @@ export default function CardIntro() {
           <BackButton onClick={() => nav("/")}>商品列表</BackButton>
         </ContainerHeader>
         <ContainerMain>
-          <ToastBox>
-            <span>
-              <ToastIcon>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 26.846">
-                  <path
-                    id="Icon_awesome-check"
-                    data-name="Icon awesome-check"
-                    d="M12.227,30.9.527,19.2a1.8,1.8,0,0,1,0-2.546L3.073,14.1a1.8,1.8,0,0,1,2.546,0L13.5,21.986,30.382,5.1a1.8,1.8,0,0,1,2.546,0L35.473,7.65a1.8,1.8,0,0,1,0,2.546l-20.7,20.7A1.8,1.8,0,0,1,12.227,30.9Z"
-                    transform="translate(0 -4.577)"
-                  ></path>
-                </svg>
-                "成功加入購物車"
-              </ToastIcon>
-            </span>
-          </ToastBox>
-
           <ProductInfo>
             <ProductInfoContainer>
               <ProductInfoImage>
@@ -183,7 +173,7 @@ export default function CardIntro() {
                       </ItemInfo>
                       <CreateCart>
                         <ItemNumber>
-                          <select>{numberOption}</select>
+                          <select onChange={(event) => setQuantity(Number(event.target.value))}>{numberOption}</select>
                           <span>最多{cardInfo?.quantity}</span>
                         </ItemNumber>
                         <CreateBTN onClick={handleAddToCart}>
