@@ -2,21 +2,27 @@ import React, { useState, useEffect } from "react";
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
 import card from "../Images/SampleCard.png";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
+import { Pagination, Stack } from "@mui/material";
 import api from "../Components/API";
 import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { CommentDialog, TextDialog } from "../Dialogs"
+import useDialog from "../Hooks/useDialog";
 
 interface OrderItem {
   actualCardID: number;
   orderQuantity: number;
+  isComment: number;
+  storeCardID: number;
   storeCardPrice: number;
   storeID: number;
 }
 
 interface OrderResponse {
-  items: Record<string, OrderItem[]>;
+  items: { [orderID: string]: OrderItem[] };
+  totalPage: number;
 }
+
 
 interface ActualCardInfo {
   actualCardID: number;
@@ -41,16 +47,38 @@ interface StoreInfo {
 }
 
 export default function ShoppingCart() {
+
+  const nav = useNavigate()
+
   const { userId } = useAuth();
-  const [orderData, setOrderData] = useState<OrderResponse | null>(null);
+
+  const [orderData, setOrderData] = useState<OrderResponse>();
   const [actualCardInfos, setActualCardInfos] = useState<ActualCardInfo[]>([]);
   const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
   const [storeInfos, setStoreInfos] = useState<Record<string, StoreInfo>>({});
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  
+
+  const [page, setPage] = useState<number>(1);
+  const [countPageValue, setCountPageValue] = useState<number>();
+  const PageLimit = 4;
+
+
+  const [text, setText] = useState<string>("");
+  const {
+    isOpen: isTextDialogOpen,
+    openDialog: openTextDialog,
+    closeDialog: closeTextDialog,
+  } = useDialog();
+
+  const [rerender, setRerender] = useState(false);
+  const [orderItem, setOrderItem] = useState<OrderItem>();
+  const [orderId, setOrderId] = useState<string>();
+
+  const { isOpen: isCommentDialogOpen, openDialog: openCommentDialog, closeDialog: closeCommentDialog } = useDialog();
+
   const getOrderInfo = async () => {
     try {
-      const response = await api.get(`/order?id=${userId}`);
+      const response = await api.get(`/order?id=${userId}&pageLimit=${PageLimit}&page=${page}`);
       const data: OrderResponse = response?.data;
       return data;
     } catch (error) {
@@ -65,7 +93,6 @@ export default function ShoppingCart() {
       return data;
     } catch (error) {
       console.error("Error fetching actual card data:", error);
-      return null;
     }
   };
 
@@ -76,29 +103,71 @@ export default function ShoppingCart() {
       return data;
     } catch (error) {
       console.error("Error fetching card info:", error);
-      return null;
     }
+  };
+
+  const addComment = async (score: number, context: string) => {
+    try {
+      const body={
+        "storeId":orderItem?.storeID,
+        "score" : score,
+        "context" : context,
+        "userId":userId
+      }
+      const response = await api.post(`/comment`,body);
+      const data = response?.data;
+      return data;
+    } catch (error) {
+      console.error("Error fetching card info:", error);
+    }
+  };
+
+  const setIsCommentTrue = async () => {
+    try {
+      const body={
+        "Id": orderId
+      }
+      const response = await api.put(`/order`,body);
+      const data = response?.data;
+      return data;
+    } catch (error) {
+      console.error("Error fetching card info:", error);
+    }
+  };
+
+  const handleSaveComment = async (Comment: { score: number; context: string; }) => {
+
+    const result = await addComment(Comment.score, Comment.context);
+    if (await result === "added" && await setIsCommentTrue()=="updated") {
+      setText("評論成功");
+      openTextDialog();
+      setRerender(!rerender);
+    }
+    else {
+      setText("評論失敗")
+      openTextDialog();
+    }
+    closeCommentDialog();
+
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getOrderInfo();
-      setOrderData(data || null);
+      setOrderData(data);
     };
     fetchData();
-  }, []);
-
+  }, [page,rerender]);
 
   useEffect(() => {
-    console.log("orderData in useEffect:", orderData);
     if (orderData) {
       const fetchActualCardInfo = async () => {
         const actualCardInfoArray: ActualCardInfo[] = [];
         const storeInfos: Record<string, StoreInfo> = {};
-      
+
         for (const orderID in orderData.items) {
           const storeItems = orderData.items[orderID];
-      
+
           for (const item of storeItems) {
             const actualCardInfo = await getActualCardInfo(item.actualCardID);
             if (actualCardInfo) {
@@ -106,22 +175,26 @@ export default function ShoppingCart() {
             }
             const cardInfo = await getCardInfo(item.actualCardID);
             if (cardInfo) {
-              const storeId = item.storeID; 
+              const storeId = item.storeID;
               storeInfos[String(storeId)] = {
                 storeID: storeId,
                 storeName: cardInfo.storeName,
               };
-      
+
               setCardInfo(cardInfo);
             }
           }
         }
-      
+
         setActualCardInfos(actualCardInfoArray);
         setStoreInfos(storeInfos);
       };
 
       fetchActualCardInfo();
+      setCountPageValue(orderData.totalPage);
+    }
+    else {
+      setCountPageValue(0);
     }
   }, [orderData]);
 
@@ -133,11 +206,24 @@ export default function ShoppingCart() {
 
   return (
     <>
+      <CommentDialog
+        open={isCommentDialogOpen}
+        onClose={closeCommentDialog}
+        onSave={handleSaveComment}
+      />
+
+      <TextDialog
+        open={isTextDialogOpen}
+        onClose={closeTextDialog}
+        onConfirm={closeTextDialog}
+        Text={text}
+      />
+
       <TopNav />
       <FrameWrapper>
         <Container>
           <h2>我的訂單</h2>
-          {isDataLoaded && orderData && Object.keys(storeInfos).length > 0 && ( 
+          {isDataLoaded && orderData && Object.keys(storeInfos).length > 0 && (
             <Cart>
               {Object.entries(orderData.items).map(([orderID, items]) => (
                 <CartLi key={orderID}>
@@ -156,13 +242,12 @@ export default function ShoppingCart() {
                       <CartItemSection>統計</CartItemSection>
                     </CartItem>
                     {items.map((item, index) => (
-                      <CartItemFirst key={index}>
+                      <CartItemFirst key={index} onClick={() => nav(`/cardpage/${item.storeCardID}`)}>
                         <CartItemSectionFirst>
                           <img src={card} width="60px" style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
-                              <div>{actualCardInfos[index]?.name}</div>
-                              <div>{actualCardInfos[index]?.catagory}</div>
-                              <div>{actualCardInfos[index]?.description}</div>
+                            <div>{actualCardInfos[index]?.name}</div>
+                            <div>{actualCardInfos[index]?.catagory}</div>
                           </CartItemInfoSpan>
                           <CartItemInfoSpan>
                             <div>卡況: 正常</div>
@@ -177,6 +262,7 @@ export default function ShoppingCart() {
 
                   <CartPackageFooter>
                     <CartPackageTotal>
+                      {items[0].isComment === 0 ? <AddButton onClick={()=>{setOrderId(orderID);setOrderItem(items[0]);openCommentDialog();}}>留下你的評價吧</AddButton> : null}
                       <CartPackageP />
                       <CartPackageP>
                         總計: $
@@ -193,13 +279,25 @@ export default function ShoppingCart() {
           )}
 
           <Stack alignItems="center">
-            <Pagination />
+            <Pagination page={page} count={countPageValue} onChange={(event, value: number) => setPage(value)} />
           </Stack>
         </Container>
       </FrameWrapper>
     </>
   );
 }
+
+const Button = styled.button`
+  color: white;	
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;`
+
+const AddButton = styled(Button)`
+  background-color: #00ADEF;
+`;
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -290,6 +388,7 @@ const CartSpan = styled.span`
   font: inherit;
   font-size: 100%;
   color: #000;
+  cursor: pointer;
 `;
 
 const CartItems = styled.ul`
@@ -325,6 +424,7 @@ const CartItemFirst = styled.li`
   // flex-flow: row;
   align-items: center;
   display: flex;
+  cursor:pointer;
 `;
 
 const CartPackageFooter = styled.footer`
