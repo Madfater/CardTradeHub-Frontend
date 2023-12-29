@@ -115,6 +115,8 @@ export default function MainPage() {
     );
   }, [searchResults]);
 
+  console.log(searchResults)
+
   return (
     <>
       <TopNav />

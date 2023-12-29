@@ -112,6 +112,8 @@ export default function Store() {
     fetchStoreData();
   }, [commentPage]);
 
+  console.log(storeCards)
+
   return (
     <>
       <TopNav />
