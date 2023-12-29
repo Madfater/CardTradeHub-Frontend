@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import TextDialog from "../Dialogs/TextDialog";
 import useDialog from "../Hooks/useDialog";
+import { useNavigate } from "react-router-dom";
 
 interface CardItem {
   cardCategory: string;
@@ -24,6 +25,8 @@ interface ApiResponse {
 }
 
 export default function ShoppingCart() {
+
+  const nav = useNavigate();
 
   const [cartData, setCartData] = useState<ApiResponse>();
   const { userId } = useAuth();
@@ -270,8 +273,8 @@ export default function ShoppingCart() {
               <Cart key={storeID}>
                 <CartLi>
                   <CartPackageHeader>
-                    <CartSpan>
-                      <CartCheckBox type="checkbox" checked={selectAllItems[storeID.toString()]} onChange={() => handleStoreCheckboxChange(storeID.toString())} />
+                    <CartCheckBox type="checkbox" checked={selectAllItems[storeID.toString()]} onChange={() => handleStoreCheckboxChange(storeID.toString())} />
+                    <CartSpan onClick={() => nav(`/storepage/${storeID}`)}>
                       {items[0].storeName}
                     </CartSpan>
                     <CartPackageHeaderAction>
@@ -288,9 +291,10 @@ export default function ShoppingCart() {
                     </CartItem>
 
                     {items.map((item, index) => (
-                      <CartItemFirst key={index}>
-                        <CartItemSectionFirst>
+                      <CartItemFirst key={index} onClick={() => nav(`/cardpage/${item.storeCardId}`)}>
+                        <CartItemSectionFirst >
                           <CartCheckBox type="checkbox" checked={checkedItems[`${storeID}-${item.storeCardId}`]} onChange={() => handleItemCheckboxChange(item.storeCardId.toString(), storeID.toString())} />
+                          <img src={card} width="60px" style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
                             <div>{item.cardCategory}</div>
                             <div>{item.cardName}</div>
@@ -360,7 +364,7 @@ export default function ShoppingCart() {
             <CartPaymentFooter>
               <CheckBTN onClick={() => handlePlaceOrder()}>前往結帳</CheckBTN>
             </CartPaymentFooter>
-          </CartLi>:<h3 style={{textAlign:"center"}}>NOT FOUND</h3>}
+          </CartLi> : <h3 style={{ textAlign: "center" }}>NOT FOUND</h3>}
         </Container>
       </FrameWrapper>
     </>
@@ -464,12 +468,13 @@ const CartPackageHeader = styled.header`
 const CartSpan = styled.span`
   display: inline-flex;
   align-items: center;
-  margin: 0;
+  margin-left:10px;
   border: 0;
   vertical-align: baseline;
   font: inherit;
   font-size: 100%;
   color: #000;
+  cursor:pointer;
 `;
 
 const CartPackageHeaderAction = styled.section`
@@ -539,6 +544,7 @@ const CartItemFirst = styled.li`
   // flex-flow: row;
   align-items: center;
   display: flex;
+  cursor:pointer;
 `;
 
 const CartPackageFooter = styled.footer`
