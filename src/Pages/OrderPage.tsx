@@ -150,7 +150,7 @@ export default function ShoppingCart() {
                 <CartLi key={orderID}>
                   <CartPackageHeader>
                     <CartSpan>
-                      {items[0].storeName}
+                      {items[0].storeName} #{orderID}
                     </CartSpan>
                   </CartPackageHeader>
 
@@ -165,7 +165,7 @@ export default function ShoppingCart() {
                     {items.map((item, index) => (
                       <CartItemFirst key={index} onClick={() => nav(`/cardpage/${item.storeCardID}`)}>
                         <CartItemSectionFirst>
-                          <img src={card} width="60px" style={{ marginLeft: "10px" }} />
+                          <img src={`src/CardImgs/${item.actualCardID}.jpg`} width="60px" style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
                             <div>{item.actualCardName}</div>
                             <div>{item.actualCardCatagory}</div>

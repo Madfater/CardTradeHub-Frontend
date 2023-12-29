@@ -152,7 +152,9 @@ export default function CardIntro() {
           <ProductInfo>
             <ProductInfoContainer>
               <ProductInfoImage>
-                <ImageStyle></ImageStyle>
+                <ImageStyle>
+                  <img style={{width:"100%",height:"100%"}} src={`/src/CardImgsM/${cardInfo?.actaulCardID}.jpg`}/>
+                </ImageStyle>
               </ProductInfoImage>
 
               <ProductInfoContent>

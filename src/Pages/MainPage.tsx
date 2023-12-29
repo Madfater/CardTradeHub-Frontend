@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Pagination, Stack, Autocomplete, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../Components/API";
+import im from "../CardImgs/1.jpg"
 
 interface RouteParams {
   page?: string;
@@ -115,7 +116,6 @@ export default function MainPage() {
     );
   }, [searchResults]);
 
-  console.log(searchResults)
 
   return (
     <>
@@ -205,7 +205,9 @@ export default function MainPage() {
                       }
                     >
                       <ProductContentWrap>
-                        <ProductImg></ProductImg>
+                        <ProductImg >
+                          <img src={`src/CardImgs/${item.actaulCardID}.jpg`}/>
+                        </ProductImg>
                         <ProductInfo>
                           <ProductTitle>
                             <h4>遊戲王</h4>

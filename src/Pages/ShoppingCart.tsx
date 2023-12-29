@@ -1,6 +1,5 @@
 import TopNav from "../Components/TopNav";
 import styled from "styled-components";
-import card from "../Images/SampleCard.png";
 import api from "../Components/API";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
@@ -9,6 +8,7 @@ import useDialog from "../Hooks/useDialog";
 import { useNavigate } from "react-router-dom";
 
 interface CardItem {
+  cardId: number;
   cardCategory: string;
   cardDescription: string;
   cardName: string;
@@ -87,7 +87,7 @@ export default function ShoppingCart() {
 
     items.map((item, index) => {
       if (checkedItems[`${storeId}-${item.storeCardId}`]) {
-        total += item.storeCardPrice;
+        total += item.storeCardPrice*item.cartQuantity;
       }
     });
 
@@ -101,7 +101,7 @@ export default function ShoppingCart() {
       items.map((item, index) => {
         console.log(`${storeId}-${item.storeCardId}`)
         if (checkedItems[`${storeId}-${item.storeCardId}`]) {
-          total += item.storeCardPrice;
+          total += item.storeCardPrice*item.cartQuantity;
         }
       });
     });
@@ -214,7 +214,7 @@ export default function ShoppingCart() {
     if (typeof result1 === "number" && result2 === true) {
       setTextContent("下單成功");
       openTextDialog();
-      
+
     }
     else {
       setTextContent("下單失敗");
@@ -258,7 +258,7 @@ export default function ShoppingCart() {
       <TextDialog
         open={isTextDialogOpen}
         onClose={closeTextDialog}
-        onConfirm={()=>nav('/')}
+        onConfirm={() => nav('/')}
         Text={textContent}
       />
 
@@ -292,7 +292,7 @@ export default function ShoppingCart() {
                       <CartItemFirst key={index} >
                         <CartItemSectionFirst >
                           <CartCheckBox type="checkbox" checked={checkedItems[`${storeID}-${item.storeCardId}`]} onChange={() => handleItemCheckboxChange(item.storeCardId.toString(), storeID.toString())} />
-                          <img src={card} width="60px" onClick={() => nav(`/cardpage/${item.storeCardId}`)} style={{ marginLeft: "10px" }} />
+                          <img src={`src/CardImgs/${item.cardId}.jpg`} width="60px" onClick={() => nav(`/cardpage/${item.storeCardId}`)} style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
                             <div>{item.cardCategory}</div>
                             <div>{item.cardName}</div>
@@ -302,7 +302,7 @@ export default function ShoppingCart() {
                           </CartItemInfoSpan>
                         </CartItemSectionFirst>
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                        <CartItemSection># 1</CartItemSection>
+                        <CartItemSection>#{item.cartQuantity}</CartItemSection>
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
                         <MarginRightBTN onClick={() => { deleteItem(item); setrerender(!rerender); }}>刪除商品</MarginRightBTN>
                       </CartItemFirst>

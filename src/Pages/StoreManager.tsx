@@ -265,7 +265,9 @@ export default function StoreManager() {
                   {searchResults?.items.map((item, index) => (
                     <Productblock>
                       <ProductContentWrap>
-                        <ProductImg />
+                        <ProductImg>
+                          <img src={`/src/CardImgs/${item.actaulCardID}.jpg`}/>
+                        </ProductImg>
                         <ProductInfo>
                           <h3>{item.name}</h3>
                           <h4>數量: {item.quantity}</h4>
