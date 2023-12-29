@@ -11,11 +11,14 @@ import useDialog from "../Hooks/useDialog";
 
 interface OrderItem {
   actualCardID: number;
+  actualCardName: number;
+  actualCardCatagory: number;
   orderQuantity: number;
   isComment: number;
   storeCardID: number;
   storeCardPrice: number;
   storeID: number;
+  storeName:string;
 }
 
 interface OrderResponse {
@@ -24,28 +27,6 @@ interface OrderResponse {
 }
 
 
-interface ActualCardInfo {
-  actualCardID: number;
-  name: string;
-  catagory: string;
-  description: string;
-}
-
-interface CardInfo {
-  actualCardID: number;
-  name: string;
-  price: number;
-  quantity: number;
-  storeCardId: number;
-  storeId: number;
-  storeName: string;
-}
-
-interface StoreInfo {
-  storeID: number;
-  storeName: string;
-}
-
 export default function ShoppingCart() {
 
   const nav = useNavigate()
@@ -53,10 +34,6 @@ export default function ShoppingCart() {
   const { userId } = useAuth();
 
   const [orderData, setOrderData] = useState<OrderResponse>();
-  const [actualCardInfos, setActualCardInfos] = useState<ActualCardInfo[]>([]);
-  const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
-  const [storeInfos, setStoreInfos] = useState<Record<string, StoreInfo>>({});
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const [page, setPage] = useState<number>(1);
   const [countPageValue, setCountPageValue] = useState<number>();
@@ -86,35 +63,15 @@ export default function ShoppingCart() {
     }
   };
 
-  const getActualCardInfo = async (actualCardId: number) => {
-    try {
-      const response = await api.get(`/actualCard?id=${actualCardId}`);
-      const data: ActualCardInfo = response?.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching actual card data:", error);
-    }
-  };
-
-  const getCardInfo = async (actualCardId: number) => {
-    try {
-      const response = await api.get(`/card?id=${actualCardId}`);
-      const data: CardInfo = response?.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching card info:", error);
-    }
-  };
-
   const addComment = async (score: number, context: string) => {
     try {
-      const body={
-        "storeId":orderItem?.storeID,
-        "score" : score,
-        "context" : context,
-        "userId":userId
+      const body = {
+        "storeId": orderItem?.storeID,
+        "score": score,
+        "context": context,
+        "userId": userId
       }
-      const response = await api.post(`/comment`,body);
+      const response = await api.post(`/comment`, body);
       const data = response?.data;
       return data;
     } catch (error) {
@@ -124,10 +81,10 @@ export default function ShoppingCart() {
 
   const setIsCommentTrue = async () => {
     try {
-      const body={
+      const body = {
         "Id": orderId
       }
-      const response = await api.put(`/order`,body);
+      const response = await api.put(`/order`, body);
       const data = response?.data;
       return data;
     } catch (error) {
@@ -138,7 +95,7 @@ export default function ShoppingCart() {
   const handleSaveComment = async (Comment: { score: number; context: string; }) => {
 
     const result = await addComment(Comment.score, Comment.context);
-    if (await result === "added" && await setIsCommentTrue()=="updated") {
+    if (await result === "added" && await setIsCommentTrue() == "updated") {
       setText("評論成功");
       openTextDialog();
       setRerender(!rerender);
@@ -157,52 +114,16 @@ export default function ShoppingCart() {
       setOrderData(data);
     };
     fetchData();
-  }, [page,rerender]);
+  }, [page, rerender]);
 
   useEffect(() => {
     if (orderData) {
-      const fetchActualCardInfo = async () => {
-        const actualCardInfoArray: ActualCardInfo[] = [];
-        const storeInfos: Record<string, StoreInfo> = {};
-
-        for (const orderID in orderData.items) {
-          const storeItems = orderData.items[orderID];
-
-          for (const item of storeItems) {
-            const actualCardInfo = await getActualCardInfo(item.actualCardID);
-            if (actualCardInfo) {
-              actualCardInfoArray.push(actualCardInfo);
-            }
-            const cardInfo = await getCardInfo(item.actualCardID);
-            if (cardInfo) {
-              const storeId = item.storeID;
-              storeInfos[String(storeId)] = {
-                storeID: storeId,
-                storeName: cardInfo.storeName,
-              };
-
-              setCardInfo(cardInfo);
-            }
-          }
-        }
-
-        setActualCardInfos(actualCardInfoArray);
-        setStoreInfos(storeInfos);
-      };
-
-      fetchActualCardInfo();
       setCountPageValue(orderData.totalPage);
     }
     else {
       setCountPageValue(0);
     }
   }, [orderData]);
-
-  useEffect(() => {
-    if (orderData && Object.keys(storeInfos).length > 0) {
-      setIsDataLoaded(true);
-    }
-  }, [orderData, storeInfos]);
 
   return (
     <>
@@ -223,13 +144,13 @@ export default function ShoppingCart() {
       <FrameWrapper>
         <Container>
           <h2>我的訂單</h2>
-          {isDataLoaded && orderData && Object.keys(storeInfos).length > 0 && (
+          { orderData && (
             <Cart>
               {Object.entries(orderData.items).map(([orderID, items]) => (
                 <CartLi key={orderID}>
                   <CartPackageHeader>
                     <CartSpan>
-                      {storeInfos[orderData.items[orderID][0].storeID]?.storeName}
+                      {items[0].storeName}
                     </CartSpan>
                   </CartPackageHeader>
 
@@ -246,8 +167,8 @@ export default function ShoppingCart() {
                         <CartItemSectionFirst>
                           <img src={card} width="60px" style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
-                            <div>{actualCardInfos[index]?.name}</div>
-                            <div>{actualCardInfos[index]?.catagory}</div>
+                            <div>{item.actualCardName}</div>
+                            <div>{item.actualCardCatagory}</div>
                           </CartItemInfoSpan>
                           <CartItemInfoSpan>
                             <div>卡況: 正常</div>
@@ -262,7 +183,7 @@ export default function ShoppingCart() {
 
                   <CartPackageFooter>
                     <CartPackageTotal>
-                      {items[0].isComment === 0 ? <AddButton onClick={()=>{setOrderId(orderID);setOrderItem(items[0]);openCommentDialog();}}>留下你的評價吧</AddButton> : null}
+                      {items[0].isComment === 0 ? <AddButton onClick={() => { setOrderId(orderID); setOrderItem(items[0]); openCommentDialog(); }}>留下你的評價吧</AddButton> : null}
                       <CartPackageP />
                       <CartPackageP>
                         總計: $

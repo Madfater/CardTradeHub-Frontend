@@ -214,12 +214,12 @@ export default function ShoppingCart() {
     if (typeof result1 === "number" && result2 === true) {
       setTextContent("下單成功");
       openTextDialog();
+      
     }
     else {
       setTextContent("下單失敗");
       openTextDialog();
     }
-    setrerender(!rerender);
   }
 
   useEffect(() => {
@@ -258,7 +258,7 @@ export default function ShoppingCart() {
       <TextDialog
         open={isTextDialogOpen}
         onClose={closeTextDialog}
-        onConfirm={closeTextDialog}
+        onConfirm={()=>nav('/')}
         Text={textContent}
       />
 
@@ -360,7 +360,7 @@ export default function ShoppingCart() {
               </CartPaymentInfoItem>
             </CartPaymentInfo>
             <CartPaymentFooter>
-              <CheckBTN onClick={() => handlePlaceOrder()}>前往結帳</CheckBTN>
+              <CheckBTN onClick={() => { handlePlaceOrder(); }}>前往結帳</CheckBTN>
             </CartPaymentFooter>
           </CartLi> : <h3 style={{ textAlign: "center" }}>NOT FOUND</h3>}
         </Container>
