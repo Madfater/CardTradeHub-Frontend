@@ -69,6 +69,7 @@ export default function StoreManager() {
   const [orderway, setOrderway] = useState<string>("id");
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
+  const [countPageValue, setCountPageValue] = useState<number>();
   const PageLimit = 12;
 
   const getStoreCards = async () => {
@@ -190,6 +191,11 @@ export default function StoreManager() {
       setSearchResults(data)
     }
 
+    if(searchResults)
+      setCountPageValue(searchResults.totalPage)
+    else
+      setCountPageValue(0)
+
     fetchData()
   }, [page, rerender, orderway, isAscending])
 
@@ -279,7 +285,7 @@ export default function StoreManager() {
               )}
 
               <Stack alignItems="center">
-                <Pagination count={page} page={searchResults?.totalPage} onChange={(event, value: number) => setPage(value)} />
+                <Pagination count={countPageValue} page={page} onChange={(event, value: number) => setPage(value)} />
               </Stack>
             </article>
           </ProductGridWrap>
