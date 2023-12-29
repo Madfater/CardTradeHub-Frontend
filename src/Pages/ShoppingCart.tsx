@@ -4,89 +4,118 @@ import card from "../Images/SampleCard.png";
 import api from "../Components/API";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import TextDialog from "../Dialogs/TextDialog";
+import useDialog from "../Hooks/useDialog";
+
+interface CardItem {
+  cardCategory: string;
+  cardDescription: string;
+  cardName: string;
+  storeCardId: number;
+  storeCardPrice: number;
+  cartQuantity: number;
+  storeCardStatus: string;
+  storeName: string;
+}
+
+interface ApiResponse {
+  items: { [storeId: string]: CardItem[] };
+  totalPage: number;
+}
 
 export default function ShoppingCart() {
-  const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
-  const [storeName, setStoreName] = useState<string>("玄玄店鋪");
+
+  const [cartData, setCartData] = useState<ApiResponse>();
   const { userId } = useAuth();
+  const [textContent, setTextContent] = useState("");
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const response = await api.get(`cart?userId=${userId}`);
-        const data = response?.data;
-        if (data && typeof data.items === 'object') {
-          const itemsData = data.items as Record<string, Item[]>;
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [selectAllItems, setSelectAllItems] = useState<Record<string, boolean>>({});
 
-          const renamedData = Object.fromEntries(
-            await Promise.all(
-              Object.entries(itemsData).map(async ([storeId, items]) => {
-                const storeResponse = await api.get(`https://cardshop.sub.jeff3.win/api/store?id=${storeId}`);
-                const storeData = storeResponse?.data;
-                const updatedStoreName = storeData?.storeName || 'Unknown Store';
-                setStoreName(updatedStoreName);
+  const [rerender, setrerender] = useState<boolean>(false);
 
-                return [
-                  updatedStoreName,
-                  items.map((item) => ({
-                    cardCategory: item.cardCategory,
-                    cardDescription: item.cardDescription,
-                    cardName: item.cardName,
-                    storeCardId: item.storeCardId,
-                    storeCardPrice: item.storeCardPrice,
-                    storeCardQuantity: item.storeCardQuantity,
-                    storeCardStatus: item.storeCardStatus,
-                  })),
-                ];
-              })
-            )
-          );
-          setCartData(renamedData);
-        }
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
+  const {
+    isOpen: isTextDialogOpen,
+    openDialog: openTextDialog,
+    closeDialog: closeTextDialog,
+  } = useDialog();
 
-    fetchCartData();
-  }, [userId]);
-    
-  const calculateTotalForStore = (items: Item[]) => {
-    let total = 0;
-  
-    items.forEach((item) => {
-      total += item.storeCardPrice;
+  const handleStoreCheckboxChange = (storeId: string) => {
+    setSelectAllItems((prevCheckedStores) => {
+      const updatedCheckedStores = { ...prevCheckedStores, [storeId]: !prevCheckedStores[storeId] };
+      return updatedCheckedStores;
     });
-  
+    setCheckedItems((prevCheckedStores) => {
+      const updatedCheckedStores: Record<string, boolean> = {};
+      Object.keys(prevCheckedStores).forEach((storeCardID) => {
+        var resultArray = storeCardID.split('-');
+        if (resultArray[0] == storeId)
+          updatedCheckedStores[storeCardID] = !selectAllItems[storeId];
+        else
+          updatedCheckedStores[storeCardID] = prevCheckedStores[storeCardID];
+      });
+      return updatedCheckedStores;
+    });
+  };
+
+  const handleItemCheckboxChange = (storeCardID: string, storeId: string) => {
+
+    setCheckedItems((prevCheckedStores) => {
+      const updatedCheckedItems = { ...prevCheckedStores, [`${storeId}-${storeCardID}`]: !prevCheckedStores[`${storeId}-${storeCardID}`] };
+
+      const updatedCheckedStores: Record<string, boolean> = {};
+
+      Object.keys(selectAllItems).forEach((storeID) => {
+        if (storeID === storeId && updatedCheckedItems[`${storeId}-${storeCardID}`] === false) {
+          updatedCheckedStores[storeID] = false;
+        }
+        else {
+          updatedCheckedStores[storeID] = selectAllItems[storeID];
+        }
+      });
+      setSelectAllItems(updatedCheckedStores);
+
+      return updatedCheckedItems;
+    });
+  };
+
+  const calculateTotalForStore = (storeId: string, items: CardItem[]) => {
+    let total = 0;
+
+    items.map((item, index) => {
+      if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+        total += item.storeCardPrice;
+      }
+    });
+
     return total;
   };
 
   const calculateTotal = () => {
     let total = 0;
 
-    if (cartData) {
-      Object.values(cartData).forEach((items) => {
-        items.forEach((item) => {
+    cartData?.items && Object.entries(cartData.items).map(([storeId, items]) => {
+      items.map((item, index) => {
+        console.log(`${storeId}-${item.storeCardId}`)
+        if (checkedItems[`${storeId}-${item.storeCardId}`]) {
           total += item.storeCardPrice;
-        });
+        }
       });
-    }
+    });
 
     return total;
-  };
-
-  const getPackageCount = () => {
-    return cartData ? Object.keys(cartData).length : 0;
   };
 
   const getItemCount = () => {
     let itemCount = 0;
 
-    if (cartData) {
-      Object.values(cartData).forEach((items) => {
-        itemCount += items.length;
+    cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+      items.forEach((item, _) => {
+        if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+          itemCount++;
+        }
       });
-    }
+    });
 
     return itemCount;
   };
@@ -94,123 +123,249 @@ export default function ShoppingCart() {
   const getShippingCost = () => {
     return 60;
   };
-  
+
+  const placeOrder = async () => {
+    try {
+
+      const orderItems: { cardId: number; quantity: number }[] = [];
+
+      cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+        items.forEach((item, _) => {
+          if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+            orderItems.push({ cardId: item.storeCardId, quantity: item.cartQuantity })
+          }
+        });
+      });
+
+      if (orderItems.length <= 0)
+        return "fail";
+
+      const body = {
+        "userId": userId,
+        "address": "",
+        "items": orderItems
+      }
+      const response = await api.post(`order`, body);
+      const result = response?.data;
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  const deleteCart = async () => {
+    try {
+
+      let result = true;
+      cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+        items.forEach(async (item, _) => {
+          if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+            const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+            if (response?.data !== "removed")
+              result = false;
+          }
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  }
+
+  const deleteStore = async (items: CardItem[]) => {
+    try {
+
+      let result = true;
+
+      items.forEach(async (item, _) => {
+        const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+        if (response?.data !== "removed")
+          result = false;
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+    setrerender(!rerender);
+  }
+
+  const deleteItem = async (item: CardItem) => {
+    try {
+
+      let result = true;
+      const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+      if (response?.data !== "removed")
+        result = false;
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+    setrerender(!rerender);
+  }
+
+  const handlePlaceOrder = async () => {
+
+    const result1 = await placeOrder();
+    const result2 = await deleteCart();
+    if (typeof result1 === "number" && result2 === true) {
+      setTextContent("下單成功");
+      openTextDialog();
+    }
+    else {
+      setTextContent("下單失敗");
+      openTextDialog();
+    }
+    setrerender(!rerender);
+  }
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await api.get(`cart?userId=${userId}`);
+        const data = response?.data;
+        setCartData(data);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    fetchCartData();
+  }, [rerender]);
+  console.log(cartData)
+  useEffect(() => {
+
+    cartData?.items && Object.entries(cartData.items).map(([storeID, items]) => {
+      items.map((item, index) => {
+        setSelectAllItems((prevCheckedStores) => {
+          const updatedCheckedStores = { ...prevCheckedStores, [`${storeID}`]: false };
+          return updatedCheckedStores;
+        });
+        setCheckedItems((prevCheckedStores) => {
+          const updatedCheckedStores = { ...prevCheckedStores, [`${storeID}-${item.storeCardId}`]: false };
+          return updatedCheckedStores;
+        });
+      });
+    })
+  }, [cartData]);
+
+
   return (
     <>
-      <TopNav/>
+      <TextDialog
+        open={isTextDialogOpen}
+        onClose={closeTextDialog}
+        onConfirm={closeTextDialog}
+        Text={textContent}
+      />
+
+      <TopNav />
+
       <FrameWrapper>
         <Container>
-          {cartData && Object.entries(cartData).map(([storeName, items]) => (
-            <Cart key={storeName}>
-              <CartLi>
-                <CartPackageHeader>
-                  <CartSpan>
-                    <CartCheckBox type="checkbox" />
-                    {storeName}
-                  </CartSpan>
-                  <CartPackageHeaderAction>
-                    <MarginRightBTN>申請議價</MarginRightBTN>
-                    <MarginRightBTN>刪除店家</MarginRightBTN>
-                  </CartPackageHeaderAction>
-                </CartPackageHeader>
-                <CartItems>
-                  <CartItem>
-                    <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
-                    <CartItemSection>單價</CartItemSection>
-                    <CartItemSection>數量</CartItemSection>
-                    <CartItemSection>統計</CartItemSection>
-                    <CartItemSection>操作</CartItemSection>
-                  </CartItem>
+          {cartData?.items &&
+            Object.entries(cartData.items).map(([storeID, items]) => (
+              <Cart key={storeID}>
+                <CartLi>
+                  <CartPackageHeader>
+                    <CartSpan>
+                      <CartCheckBox type="checkbox" checked={selectAllItems[storeID.toString()]} onChange={() => handleStoreCheckboxChange(storeID.toString())} />
+                      {items[0].storeName}
+                    </CartSpan>
+                    <CartPackageHeaderAction>
+                      <MarginRightBTN onClick={() => deleteStore(items)}>刪除店家</MarginRightBTN>
+                    </CartPackageHeaderAction>
+                  </CartPackageHeader>
+                  <CartItems>
+                    <CartItem>
+                      <CartItemSectionFirst>商品資訊</CartItemSectionFirst>
+                      <CartItemSection>單價</CartItemSection>
+                      <CartItemSection>數量</CartItemSection>
+                      <CartItemSection>統計</CartItemSection>
+                      <CartItemSection>操作</CartItemSection>
+                    </CartItem>
 
-                  {items.map((item, index) => (
-                    <CartItemFirst key={`${storeName}-${index}`}>
-                      <CartItemSectionFirst>
-                        <CartCheckBox type="checkbox" />
-                        <img src={card} width="60px" style={{ marginLeft: "10px" }} alt="Card" />
-                        <CartItemInfoSpan>
-                          <div>{item.cardCategory}</div>
-                          <div>{item.cardName}</div>
-                          <div>{item.cardDescription}</div>
-                        </CartItemInfoSpan>
-                        <CartItemInfoSpan>
-                          <div>卡況: {item.storeCardStatus}</div>
-                        </CartItemInfoSpan>
-                      </CartItemSectionFirst>
-                      <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                      <CartItemSection># 1</CartItemSection>
-                      <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                      <MarginRightBTN>刪除商品</MarginRightBTN>
-                    </CartItemFirst>
-                  ))}
-                </CartItems>
+                    {items.map((item, index) => (
+                      <CartItemFirst key={index}>
+                        <CartItemSectionFirst>
+                          <CartCheckBox type="checkbox" checked={checkedItems[`${storeID}-${item.storeCardId}`]} onChange={() => handleItemCheckboxChange(item.storeCardId.toString(), storeID.toString())} />
+                          <CartItemInfoSpan>
+                            <div>{item.cardCategory}</div>
+                            <div>{item.cardName}</div>
+                          </CartItemInfoSpan>
+                          <CartItemInfoSpan>
+                            <div>{item.storeCardStatus}</div>
+                          </CartItemInfoSpan>
+                        </CartItemSectionFirst>
+                        <CartItemSection>${item.storeCardPrice}</CartItemSection>
+                        <CartItemSection># 1</CartItemSection>
+                        <CartItemSection>${item.storeCardPrice}</CartItemSection>
+                        <MarginRightBTN onClick={() => deleteItem(item)}>刪除商品</MarginRightBTN>
+                      </CartItemFirst>
+                    ))}
+                  </CartItems>
 
-                <CartPackageFooter>
-                  <CartPackageTotal>
-                    <CartPackageP>
-                      <CartPackageSpan>
-                        <CartPackageText>寄送方式 :</CartPackageText>
-                        <CartPackageSelect>
-                          <option value="standard">7-11</option>
-                          <option value="express">全家</option>
-                          <option value="pickup">萊爾富</option>
-                          <option value="pickup">OK</option>
-                        </CartPackageSelect>
-                        <CartPackageText>
-                          寄送費用: $60 (滿10,000免運費)
-                        </CartPackageText>
-                      </CartPackageSpan>
-                    </CartPackageP>
-                    <CartPackageP>總計: ${calculateTotalForStore(items)}</CartPackageP>
-                  </CartPackageTotal>
-                </CartPackageFooter>
-              </CartLi>
-            </Cart>
-          ))}
-                        <CartLi>
-              <CartPaymentHeader>
-                付款方式:
-                <CartPaymentSelect>
-                  <MarginRightBTN>信用卡</MarginRightBTN>
-                  <MarginRightBTN>網路ATM</MarginRightBTN>
-                  <MarginRightBTN>超商代碼</MarginRightBTN>
-                  <MarginRightBTN>貨到付款</MarginRightBTN>
-                </CartPaymentSelect>
-              </CartPaymentHeader>
-              <CartPaymentInfo>
-                <CartPaymentInfoItem>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>包裹數 : </CartPackageP>
-                    <CartPackageP>{getPackageCount()}</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品數 : </CartPackageP>
-                    <CartPackageP>{getItemCount()}</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>商品總金額 : </CartPackageP>
-                    <CartPackageP>${calculateTotal()}</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>運費總金額 : </CartPackageP>
-                    <CartPackageP>${getShippingCost()}</CartPackageP>
-                  </CartPaymentSelectLi>
-                  <CartPaymentSelectLi>
-                    <CartPackageP>交易總金額 : </CartPackageP>
-                    <CartPackageP>${calculateTotal() + getShippingCost()}</CartPackageP>
-                  </CartPaymentSelectLi>
-                </CartPaymentInfoItem>
-              </CartPaymentInfo>
-              <CartPaymentFooter>
-                <CheckBTN>前往結帳</CheckBTN>
-              </CartPaymentFooter>
-            </CartLi>
+                  <CartPackageFooter>
+                    <CartPackageTotal>
+                      <CartPackageP>
+                        <CartPackageSpan>
+                          <CartPackageText>寄送方式 :</CartPackageText>
+                          <CartPackageSelect>
+                            <option value="standard">7-11</option>
+                            <option value="express">全家</option>
+                            <option value="pickup">萊爾富</option>
+                            <option value="pickup">OK</option>
+                          </CartPackageSelect>
+                          <CartPackageText>寄送費用: $60 (滿10,000免運費)</CartPackageText>
+                        </CartPackageSpan>
+                      </CartPackageP>
+                      <CartPackageP>總計: ${calculateTotalForStore(storeID, items)}</CartPackageP>
+                    </CartPackageTotal>
+                  </CartPackageFooter>
+                </CartLi>
+              </Cart>
+            ))}
+          {cartData?.items && Object.keys(cartData.items).length > 0 ? <CartLi>
+            <CartPaymentHeader>
+              付款方式:
+              <CartPaymentSelect>
+                <MarginRightBTN>信用卡</MarginRightBTN>
+                <MarginRightBTN>網路ATM</MarginRightBTN>
+                <MarginRightBTN>超商代碼</MarginRightBTN>
+                <MarginRightBTN>貨到付款</MarginRightBTN>
+              </CartPaymentSelect>
+            </CartPaymentHeader>
+            <CartPaymentInfo>
+              <CartPaymentInfoItem>
+                <CartPaymentSelectLi>
+                  <CartPackageP>商品數 : </CartPackageP>
+                  <CartPackageP>{getItemCount()}</CartPackageP>
+                </CartPaymentSelectLi>
+                <CartPaymentSelectLi>
+                  <CartPackageP>商品總金額 : </CartPackageP>
+                  <CartPackageP>${calculateTotal()}</CartPackageP>
+                </CartPaymentSelectLi>
+                <CartPaymentSelectLi>
+                  <CartPackageP>運費總金額 : </CartPackageP>
+                  <CartPackageP>${getShippingCost()}</CartPackageP>
+                </CartPaymentSelectLi>
+                <CartPaymentSelectLi>
+                  <CartPackageP>交易總金額 : </CartPackageP>
+                  <CartPackageP>${calculateTotal() + getShippingCost()}</CartPackageP>
+                </CartPaymentSelectLi>
+              </CartPaymentInfoItem>
+            </CartPaymentInfo>
+            <CartPaymentFooter>
+              <CheckBTN onClick={() => handlePlaceOrder()}>前往結帳</CheckBTN>
+            </CartPaymentFooter>
+          </CartLi>:<h3 style={{textAlign:"center"}}>NOT FOUND</h3>}
         </Container>
       </FrameWrapper>
     </>
   );
 }
-  
-
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -508,12 +663,46 @@ const CartPaymentFooter = styled.footer`
   padding: 20px;
 `;
 
-interface Item {
-  cardCategory: string;
-  cardDescription: string;
-  cardName: string;
-  storeCardId: number;
-  storeCardPrice: number;
-  storeCardQuantity: number;
-  storeCardStatus: string;
-}
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalContent = styled.div`
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalHeader = styled.h2`
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+`;
+
+const ModalBody = styled.p`
+  margin-bottom: 20px;
+`;
+
+const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const CloseModalBTN = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #3e51fe;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+`;
