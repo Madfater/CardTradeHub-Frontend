@@ -76,7 +76,7 @@ export default function CardIntro() {
         cardId: cardInfo?.storeCardId,
         quantity: cardInfo?.quantity,
       };
-      const response = await api.post("/cart/add", body);
+      const response = await api.post("/cart", body);
       const data = response?.data;
       return data;
     } catch (error) {

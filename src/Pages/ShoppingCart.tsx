@@ -4,88 +4,86 @@ import card from "../Images/SampleCard.png";
 import api from "../Components/API";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import TextDialog from "../Dialogs/TextDialog";
+import useDialog from "../Hooks/useDialog";
+
+interface CardItem {
+  cardCategory: string;
+  cardDescription: string;
+  cardName: string;
+  storeCardId: number;
+  storeCardPrice: number;
+  cartQuantity: number;
+  storeCardStatus: string;
+  storeName: string;
+}
+
+interface ApiResponse {
+  items: { [storeId: string]: CardItem[] };
+  totalPage: number;
+}
 
 export default function ShoppingCart() {
-  const [checkedStores, setCheckedStores] = useState<Record<string, boolean>>({});
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
-  const [cartData, setCartData] = useState<Record<string, Item[]> | null>(null);
-  const [storeName, setStoreName] = useState<string>("玄玄店鋪");
+
+  const [cartData, setCartData] = useState<ApiResponse>();
   const { userId } = useAuth();
-  const [isCheckoutSuccessModalVisible, setCheckoutSuccessModalVisible] = useState(false);
+  const [textContent, setTextContent] = useState("");
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const response = await api.get(`cart?userId=${userId}`);
-        const data = response?.data;
-        if (data && typeof data.items === 'object') {
-          const itemsData = data.items as Record<string, Item[]>;
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [selectAllItems, setSelectAllItems] = useState<Record<string, boolean>>({});
 
-          const renamedData = Object.fromEntries(
-            await Promise.all(
-              Object.entries(itemsData).map(async ([storeId, items]) => {
-                const storeResponse = await api.get(`https://cardshop.sub.jeff3.win/api/store?id=${storeId}`);
-                const storeData = storeResponse?.data;
-                const updatedStoreName = storeData?.storeName || 'Unknown Store';
-                setStoreName(updatedStoreName);
+  const [rerender, setrerender] = useState<boolean>(false);
 
-                return [
-                  updatedStoreName,
-                  items.map((item) => ({
-                    cardCategory: item.cardCategory,
-                    cardDescription: item.cardDescription,
-                    cardName: item.cardName,
-                    storeCardId: item.storeCardId,
-                    storeCardPrice: item.storeCardPrice,
-                    storeCardQuantity: item.storeCardQuantity,
-                    storeCardStatus: item.storeCardStatus,
-                  })),
-                ];
-              })
-            )
-          );
-          setCartData(renamedData);
-        }
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
+  const {
+    isOpen: isTextDialogOpen,
+    openDialog: openTextDialog,
+    closeDialog: closeTextDialog,
+  } = useDialog();
 
-    fetchCartData();
-  }, [userId]);
-
-  const handleStoreCheckboxChange = (storeName: string) => {
-    setCheckedStores((prevCheckedStores) => ({
-      ...prevCheckedStores,
-      [storeName]: !prevCheckedStores[storeName],
-    }));
-
-    setCheckedItems((prevCheckedItems) => {
-      const updatedItems: Record<string, boolean> = {};
-      if (cartData && cartData[storeName]) {
-        cartData[storeName].forEach((_, index) => {
-          updatedItems[`${storeName}-${index}`] = !prevCheckedItems[`${storeName}-${index}`];
-        });
-      }
-      return {
-        ...prevCheckedItems,
-        ...updatedItems,
-      };
+  const handleStoreCheckboxChange = (storeId: string) => {
+    setSelectAllItems((prevCheckedStores) => {
+      const updatedCheckedStores = { ...prevCheckedStores, [storeId]: !prevCheckedStores[storeId] };
+      return updatedCheckedStores;
+    });
+    setCheckedItems((prevCheckedStores) => {
+      const updatedCheckedStores: Record<string, boolean> = {};
+      Object.keys(prevCheckedStores).forEach((storeCardID) => {
+        var resultArray = storeCardID.split('-');
+        if (resultArray[0] == storeId)
+          updatedCheckedStores[storeCardID] = !selectAllItems[storeId];
+        else
+          updatedCheckedStores[storeCardID] = prevCheckedStores[storeCardID];
+      });
+      return updatedCheckedStores;
     });
   };
 
-  const handleCheckboxChange = (key: string) => {
-    setCheckedItems((prevCheckedItems) => ({
-      ...prevCheckedItems,
-      [key]: !prevCheckedItems[key],
-    }));
+  const handleItemCheckboxChange = (storeCardID: string, storeId: string) => {
+
+    setCheckedItems((prevCheckedStores) => {
+      const updatedCheckedItems = { ...prevCheckedStores, [`${storeId}-${storeCardID}`]: !prevCheckedStores[`${storeId}-${storeCardID}`] };
+
+      const updatedCheckedStores: Record<string, boolean> = {};
+
+      Object.keys(selectAllItems).forEach((storeID) => {
+        if (storeID === storeId && updatedCheckedItems[`${storeId}-${storeCardID}`] === false) {
+          updatedCheckedStores[storeID] = false;
+        }
+        else {
+          updatedCheckedStores[storeID] = selectAllItems[storeID];
+        }
+      });
+      setSelectAllItems(updatedCheckedStores);
+
+      return updatedCheckedItems;
+    });
   };
 
-  const calculateTotalForStore = (storeName: string, items: Item[]) => {
+  const calculateTotalForStore = (storeId: string, items: CardItem[]) => {
     let total = 0;
 
-    items.forEach((item, index) => {
-      if (checkedItems[`${storeName}-${index}`]) {
+    items.map((item, index) => {
+      if (checkedItems[`${storeId}-${item.storeCardId}`]) {
         total += item.storeCardPrice;
       }
     });
@@ -96,35 +94,28 @@ export default function ShoppingCart() {
   const calculateTotal = () => {
     let total = 0;
 
-    if (cartData) {
-      Object.entries(cartData).forEach(([storeName, items]) => {
-        items.forEach((item, index) => {
-          if (checkedItems[`${storeName}-${index}`]) {
-            total += item.storeCardPrice;
-          }
-        });
+    cartData?.items && Object.entries(cartData.items).map(([storeId, items]) => {
+      items.map((item, index) => {
+        console.log(`${storeId}-${item.storeCardId}`)
+        if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+          total += item.storeCardPrice;
+        }
       });
-    }
+    });
 
     return total;
-  };
-
-  const getPackageCount = () => {
-    return Object.keys(checkedStores).filter((storeName) => checkedStores[storeName]).length;
   };
 
   const getItemCount = () => {
     let itemCount = 0;
 
-    if (cartData) {
-      Object.entries(cartData).forEach(([storeName, items]) => {
-        items.forEach((_, index) => {
-          if (checkedItems[`${storeName}-${index}`]) {
-            itemCount++;
-          }
-        });
+    cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+      items.forEach((item, _) => {
+        if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+          itemCount++;
+        }
       });
-    }
+    });
 
     return itemCount;
   };
@@ -133,86 +124,158 @@ export default function ShoppingCart() {
     return 60;
   };
 
-  const handleCheckoutButtonClick = async () => {
-    // Create an array to store the items for the order
-    const orderItems: { cardId: number; quantity: number }[] = [];
-  
-    // Iterate through the cart data to find checked items
-    if (cartData) {
-      Object.entries(cartData).forEach(([storeName, items]) => {
-        items.forEach((item, index) => {
-          const cartKey = `${storeName}-${index}`;
-  
-          if (checkedItems[cartKey]) {
-            // If the item is checked, add it to the orderItems array
-            orderItems.push({
-              cardId: item.storeCardId,
-              quantity: 1, // Assuming quantity is always 1 for each item
-            });
-  
-            // Remove the checked item from the shopping cart
-            // (You may want to handle this asynchronously or optimistically update the UI)
-            api.delete("/cart", {
-              data: {
-                userId: userId,
-                cardId: item.storeCardId,
-              },
-            });
+  const placeOrder = async () => {
+    try {
+
+      const orderItems: { cardId: number; quantity: number }[] = [];
+
+      cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+        items.forEach((item, _) => {
+          if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+            orderItems.push({ cardId: item.storeCardId, quantity: item.cartQuantity })
           }
         });
       });
-  
-      // If there are checked items, proceed to add an order
-      if (orderItems.length > 0) {
-        try {
-          // Call the API to add an order
-          await api.post("/order", {
-            userId: userId,
-            address: "", // Add the address information
-            items: orderItems.reduce((acc, curr) => {
-              acc[curr.cardId] = curr.quantity;
-              return acc;
-            }, {} as Record<string, number>),
-          });
-  
-          // Show the checkout success modal
-          setCheckoutSuccessModalVisible(true);
-  
-          // Clear the checked items state (uncheck items)
-          setCheckedItems({});
-        } catch (error) {
-          console.error("Error adding order:", error);
-        }
+
+      if (orderItems.length <= 0)
+        return "fail";
+
+      const body = {
+        "userId": userId,
+        "address": "",
+        "items": orderItems
       }
+      const response = await api.post(`order`, body);
+      const result = response?.data;
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
     }
   };
-  
 
-  const handleModalClose = () => {
-    // Close the checkout success modal
-    setCheckoutSuccessModalVisible(false);
-  };
+  const deleteCart = async () => {
+    try {
+
+      let result = true;
+      cartData?.items && Object.entries(cartData.items).forEach(([storeId, items]) => {
+        items.forEach(async (item, _) => {
+          if (checkedItems[`${storeId}-${item.storeCardId}`]) {
+            const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+            if (response?.data !== "removed")
+              result = false;
+          }
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  }
+
+  const deleteStore = async (items: CardItem[]) => {
+    try {
+
+      let result = true;
+
+      items.forEach(async (item, _) => {
+        const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+        if (response?.data !== "removed")
+          result = false;
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+    setrerender(!rerender);
+  }
+
+  const deleteItem = async (item: CardItem) => {
+    try {
+
+      let result = true;
+      const response = await api.delete(`cart?userId=${userId}&cardId=${item.storeCardId}`);
+      if (response?.data !== "removed")
+        result = false;
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+    setrerender(!rerender);
+  }
+
+  const handlePlaceOrder = async () => {
+
+    const result1 = await placeOrder();
+    const result2 = await deleteCart();
+    if (typeof result1 === "number" && result2 === true) {
+      setTextContent("下單成功");
+      openTextDialog();
+    }
+    else {
+      setTextContent("下單失敗");
+      openTextDialog();
+    }
+    setrerender(!rerender);
+  }
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await api.get(`cart?userId=${userId}`);
+        const data = response?.data;
+        setCartData(data);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    fetchCartData();
+  }, [rerender]);
+  console.log(cartData)
+  useEffect(() => {
+
+    cartData?.items && Object.entries(cartData.items).map(([storeID, items]) => {
+      items.map((item, index) => {
+        setSelectAllItems((prevCheckedStores) => {
+          const updatedCheckedStores = { ...prevCheckedStores, [`${storeID}`]: false };
+          return updatedCheckedStores;
+        });
+        setCheckedItems((prevCheckedStores) => {
+          const updatedCheckedStores = { ...prevCheckedStores, [`${storeID}-${item.storeCardId}`]: false };
+          return updatedCheckedStores;
+        });
+      });
+    })
+  }, [cartData]);
+
 
   return (
     <>
+      <TextDialog
+        open={isTextDialogOpen}
+        onClose={closeTextDialog}
+        onConfirm={closeTextDialog}
+        Text={textContent}
+      />
+
       <TopNav />
+
       <FrameWrapper>
         <Container>
-          {cartData &&
-            Object.entries(cartData).map(([storeName, items]) => (
-              <Cart key={storeName}>
+          {cartData?.items &&
+            Object.entries(cartData.items).map(([storeID, items]) => (
+              <Cart key={storeID}>
                 <CartLi>
                   <CartPackageHeader>
                     <CartSpan>
-                      <CartCheckBox
-                        type="checkbox"
-                        checked={checkedStores[storeName]}
-                        onChange={() => handleStoreCheckboxChange(storeName)}
-                      />
-                      {storeName}
+                      <CartCheckBox type="checkbox" checked={selectAllItems[storeID.toString()]} onChange={() => handleStoreCheckboxChange(storeID.toString())} />
+                      {items[0].storeName}
                     </CartSpan>
                     <CartPackageHeaderAction>
-                      <MarginRightBTN>刪除店家</MarginRightBTN>
+                      <MarginRightBTN onClick={() => deleteStore(items)}>刪除店家</MarginRightBTN>
                     </CartPackageHeaderAction>
                   </CartPackageHeader>
                   <CartItems>
@@ -225,27 +288,21 @@ export default function ShoppingCart() {
                     </CartItem>
 
                     {items.map((item, index) => (
-                      <CartItemFirst key={`${storeName}-${index}`}>
+                      <CartItemFirst key={index}>
                         <CartItemSectionFirst>
-                          <CartCheckBox
-                            type="checkbox"
-                            checked={checkedItems[`${storeName}-${index}`]}
-                            onChange={() => handleCheckboxChange(`${storeName}-${index}`)}
-                          />
-                          <img src={card} width="60px" style={{ marginLeft: "10px" }} alt="Card" />
+                          <CartCheckBox type="checkbox" checked={checkedItems[`${storeID}-${item.storeCardId}`]} onChange={() => handleItemCheckboxChange(item.storeCardId.toString(), storeID.toString())} />
                           <CartItemInfoSpan>
                             <div>{item.cardCategory}</div>
                             <div>{item.cardName}</div>
-                            <div>{item.cardDescription}</div>
                           </CartItemInfoSpan>
                           <CartItemInfoSpan>
-                            <div>卡況: {item.storeCardStatus}</div>
+                            <div>{item.storeCardStatus}</div>
                           </CartItemInfoSpan>
                         </CartItemSectionFirst>
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
                         <CartItemSection># 1</CartItemSection>
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                        <MarginRightBTN>刪除商品</MarginRightBTN>
+                        <MarginRightBTN onClick={() => deleteItem(item)}>刪除商品</MarginRightBTN>
                       </CartItemFirst>
                     ))}
                   </CartItems>
@@ -264,13 +321,13 @@ export default function ShoppingCart() {
                           <CartPackageText>寄送費用: $60 (滿10,000免運費)</CartPackageText>
                         </CartPackageSpan>
                       </CartPackageP>
-                      <CartPackageP>總計: ${calculateTotalForStore(storeName, items)}</CartPackageP>
+                      <CartPackageP>總計: ${calculateTotalForStore(storeID, items)}</CartPackageP>
                     </CartPackageTotal>
                   </CartPackageFooter>
                 </CartLi>
               </Cart>
             ))}
-          <CartLi>
+          {cartData?.items && Object.keys(cartData.items).length > 0 ? <CartLi>
             <CartPaymentHeader>
               付款方式:
               <CartPaymentSelect>
@@ -301,33 +358,14 @@ export default function ShoppingCart() {
               </CartPaymentInfoItem>
             </CartPaymentInfo>
             <CartPaymentFooter>
-              <CheckBTN onClick={handleCheckoutButtonClick}>前往結帳</CheckBTN>
+              <CheckBTN onClick={() => handlePlaceOrder()}>前往結帳</CheckBTN>
             </CartPaymentFooter>
-          </CartLi>
+          </CartLi>:<h3 style={{textAlign:"center"}}>NOT FOUND</h3>}
         </Container>
       </FrameWrapper>
-
-      {/* Checkout Success Modal */}
-      {isCheckoutSuccessModalVisible && (
-        <ModalWrapper>
-          <ModalContent>
-            <ModalHeader>結帳成功</ModalHeader>
-            <ModalBody>感謝您的購物！</ModalBody>
-            <ModalFooter>
-              <CloseModalBTN onClick={handleModalClose}>關閉</CloseModalBTN>
-            </ModalFooter>
-          </ModalContent>
-        </ModalWrapper>
-      )}
     </>
   );
 }
-
-// Rest of the code for Modal styling and interfaces...
-
-
-
-
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -668,14 +706,3 @@ const CloseModalBTN = styled.button`
   border-radius: 4px;
   transition: background-color 0.3s;
 `;
-
-interface Item {
-  cardCategory: string;
-  cardDescription: string;
-  cardName: string;
-  storeCardId: number;
-  storeCardPrice: number;
-  storeCardQuantity: number;
-  storeCardStatus: string;
-}
-
