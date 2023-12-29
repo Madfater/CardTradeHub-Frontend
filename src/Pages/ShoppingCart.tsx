@@ -291,10 +291,10 @@ export default function ShoppingCart() {
                     </CartItem>
 
                     {items.map((item, index) => (
-                      <CartItemFirst key={index} onClick={() => nav(`/cardpage/${item.storeCardId}`)}>
+                      <CartItemFirst key={index} >
                         <CartItemSectionFirst >
                           <CartCheckBox type="checkbox" checked={checkedItems[`${storeID}-${item.storeCardId}`]} onChange={() => handleItemCheckboxChange(item.storeCardId.toString(), storeID.toString())} />
-                          <img src={card} width="60px" style={{ marginLeft: "10px" }} />
+                          <img src={card} width="60px" onClick={() => nav(`/cardpage/${item.storeCardId}`)} style={{ marginLeft: "10px" }} />
                           <CartItemInfoSpan>
                             <div>{item.cardCategory}</div>
                             <div>{item.cardName}</div>
