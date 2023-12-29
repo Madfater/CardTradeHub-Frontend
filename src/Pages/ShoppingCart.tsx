@@ -191,7 +191,6 @@ export default function ShoppingCart() {
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
-    setrerender(!rerender);
   }
 
   const deleteItem = async (item: CardItem) => {
@@ -206,7 +205,6 @@ export default function ShoppingCart() {
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
-    setrerender(!rerender);
   }
 
   const handlePlaceOrder = async () => {
@@ -237,7 +235,7 @@ export default function ShoppingCart() {
 
     fetchCartData();
   }, [rerender]);
-  console.log(cartData)
+
   useEffect(() => {
 
     cartData?.items && Object.entries(cartData.items).map(([storeID, items]) => {
@@ -278,7 +276,7 @@ export default function ShoppingCart() {
                       {items[0].storeName}
                     </CartSpan>
                     <CartPackageHeaderAction>
-                      <MarginRightBTN onClick={() => deleteStore(items)}>刪除店家</MarginRightBTN>
+                      <MarginRightBTN onClick={() => { deleteStore(items); setrerender(!rerender); }}>刪除店家</MarginRightBTN>
                     </CartPackageHeaderAction>
                   </CartPackageHeader>
                   <CartItems>
@@ -306,7 +304,7 @@ export default function ShoppingCart() {
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
                         <CartItemSection># 1</CartItemSection>
                         <CartItemSection>${item.storeCardPrice}</CartItemSection>
-                        <MarginRightBTN onClick={() => deleteItem(item)}>刪除商品</MarginRightBTN>
+                        <MarginRightBTN onClick={() => { deleteItem(item); setrerender(!rerender); }}>刪除商品</MarginRightBTN>
                       </CartItemFirst>
                     ))}
                   </CartItems>
