@@ -1,21 +1,15 @@
----
-title: Basics
-toc: false
-order: 1
----
+# CardTradeHub-Frontend
 
-# Basic Example
+## 如何使用
 
-This example demonstrates some of the basic features of React Router, including:
-
-- Layouts and nested `<Route>`s
-- Index `<Route>`s
-- Catch-all `<Route>`s
-- Using `<Outlet>` as a placeholder for child routes
-- Using `<Link>`s for navigation
-
-## Preview
-
-Open this example on [StackBlitz](https://stackblitz.com):
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router/tree/main/examples/basic?file=src/App.tsx)
+1. 確認環境是否正確安裝node.js及npm
+2. 確認將專案clone到本地並且切換至專案資料夾
+3. 使用以下指令安裝Library
+``` bash
+npm ci
+```
+4. 使用以下指令開始使用
+``` bash
+ npm run dev
+```
+   
